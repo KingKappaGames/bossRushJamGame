@@ -1,0 +1,1 @@
+draw_circle(x, y, 1 + damage, false);
