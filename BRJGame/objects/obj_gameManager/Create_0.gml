@@ -1,5 +1,7 @@
 global.gameManager = id;
 
+randomize();
+
 gameState = "starting";
 gameStateTimer = 0;
 
@@ -17,7 +19,7 @@ setGameState = function(state, timer = -1, titleText = 0) {
 	} else {
 		gameStateText = "";
 	}
-	if(timer != -1) {
+	if(timer == -1) {
 		gameStateTimer = timer; // establishing default values for non set states
 	} else {
 		gameStateTimer = 0;
@@ -35,7 +37,7 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		instance_create_layer(300, 400, "Instances", obj_boss);
 	} else if(state == "victory") {
 		_stateText = "You won!";
-		_stateTimer = 90;
+		_stateTimer = 120;
 	} else if(state == "respawn") {
 		_stateText = "Click to respawn!";
 		_stateTimer = 0;
@@ -65,5 +67,16 @@ part_type_direction(_fluff, 0, 360, 0, 0);
 part_type_speed(_fluff, .1, 1.5, -.01, 0);
 
 instance_create_layer(200, 400, "Instances", obj_player);
+instance_create_layer(400, 400, "Instances", obj_boss);
 
-instance_create_layer(200, 400, "Instances", obj_boss);
+//var _x = -200;
+//var _y = -200;
+
+//repeat(40) {
+//	repeat(40) {
+//		instance_create_layer(400 + _x, 400 + _y, "Instances", obj_boss);
+//		_x += 10;
+//	}
+//	_x = -200;
+//	_y += 10;
+//}

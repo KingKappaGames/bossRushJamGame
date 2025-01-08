@@ -18,11 +18,28 @@ linkOrb = function(otherOrb) {
 	
 	var _orbsRing = script_checkOrbLoop(id, id);
 	
-	show_debug_message(_orbsRing);
-	
 	if(_orbsRing != -1) {
+		
+		var _collisionPoints = [];
+		var _orb = noone;
+		
 		for(var _triggerI = array_length(_orbsRing) - 1; _triggerI >= 0; _triggerI--) {
-			_orbsRing[_triggerI].activateOrb();
+			_orb = _orbsRing[_triggerI];
+			
+			array_push(_collisionPoints, [_orb.x, _orb.y]);
+			_orb.activateOrb();
+		}
+		
+		var _bosses = [];
+		with(obj_boss) {
+			array_push(_bosses, id);
+		}
+		
+		for(var _i = array_length(_bosses) - 1; _i >= 0; _i--) {
+			var _boss = _bosses[_i];
+			if(script_pointInComplexPolygon(_boss.x, _boss.y, _collisionPoints)) {
+				_boss.hit(10);
+			}
 		}
 	}
 }

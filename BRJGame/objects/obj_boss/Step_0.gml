@@ -1,5 +1,9 @@
 if(!instance_exists(player)) {
 	player = noone;
+} else {
+	var _dirToPlayer = point_direction(x, y, player.x, player.y);
+	x += dcos(_dirToPlayer) * 1;
+	y -= dsin(_dirToPlayer) * 1;
 }
 
 var _dir = point_direction(x, y, moveGoalX, moveGoalY);

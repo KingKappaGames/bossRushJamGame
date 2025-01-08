@@ -1,6 +1,8 @@
 global.player = id;
 
-Health = 10;
+HealthMax = 12;
+Health = HealthMax;
+
 hitColor = 0;
 hitColorTimer = 0;
 

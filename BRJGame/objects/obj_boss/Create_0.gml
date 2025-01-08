@@ -1,6 +1,9 @@
+global.boss = id;
+
 player = global.player;
 
-Health = 50;
+HealthMax = 40;
+Health = HealthMax;
 
 moveSpeed = .5;
 speedDecay = .8;

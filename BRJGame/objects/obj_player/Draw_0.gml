@@ -1,5 +1,5 @@
 if(hitColor != 0) {
-	draw_set_color(hitColor);	
+	draw_set_color(hitColor);
 	hitColorTimer--;
 	if(hitColorTimer <= 0) {
 		hitColor = 0;
@@ -10,6 +10,8 @@ if(hitColor != 0) {
 
 draw_circle(x, y, 10, false);
 draw_set_color(c_white);
+
+draw_circle_color(x, y, 10 - (Health / HealthMax) * 10, c_red, #880000, false);
 
 var _dirToMouse = point_direction(x, y, mouse_x, mouse_y);
 

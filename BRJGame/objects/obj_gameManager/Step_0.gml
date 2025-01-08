@@ -10,7 +10,7 @@ if(gameState == "gameOver") {
 } else if(gameState == "victory") {
 	gameStateTimer--;
 	if(gameStateTimer <= 0) {
-		setGameState("");
+		setGameState("respawn");
 	}
 }
 
