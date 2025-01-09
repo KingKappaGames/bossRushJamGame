@@ -1,12 +1,21 @@
-///@desc This function is specifically for checking even/odd polygon collisions and does not check two lines but instead always uses one horizontal line
-function script_checkLineIntersectsFlatline(firstX, firstY, secondX, secondY, thirdX, thirdY) {	
-	if(thirdY < max(firstY, secondY) && thirdY > min(firstY, secondY)) { // this bit checks whether the point is vertically in range before checking the horizontal areas (since vertical is the simple part)
-		var _slope = (secondX - firstX) / (secondY - firstY);
-			
-		if(thirdX < firstX + (thirdY - firstY) * _slope) { // this is the range of y over y range turned into x values that would be behind the line to the left 
-			return true;
+function script_checkLineIntersectsLine(x1, y1, x2, y2, x3, y3, x4, y4, segment){
+	var ua, ub, ud, ux, uy, vx, vy, wx, wy;
+	ua = 0;
+	ux = x2 - x1;
+	uy = y2 - y1;
+	vx = x4 - x3;
+	vy = y4 - y3;
+	wx = x1 - x3;
+	wy = y1 - y3;
+	ud = vy * ux - vx * uy;
+	if (ud != 0) 
+	{
+		ua = (vx * wy - vy * wx) / ud;
+		if (segment) 
+		{
+		    ub = (ux * wy - uy * wx) / ud;
+		    if (ua < 0 || ua > 1 || ub < 0 || ub > 1) ua = 0;
 		}
 	}
-	
-	return false; // if no success then default failure
+	return ua;
 }

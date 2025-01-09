@@ -1,3 +1,5 @@
+global.linksTotalThisFrame = [];
+
 if(gameState == "gameOver") {
 	gameStateTimer--;
 	if(gameStateTimer <= 0) {
@@ -14,7 +16,11 @@ if(gameState == "gameOver") {
 	}
 }
 
-
+//if(gameState == "fight") {
+	//var _linksTotal = global.linksTotalThisFrame;
+	
+	
+//}
 
 
 

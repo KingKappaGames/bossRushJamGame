@@ -1,4 +1,6 @@
 global.gameManager = id;
+global.bossStickingOrbs = 0;
+global.linksTotalThisFrame = [];
 
 randomize();
 

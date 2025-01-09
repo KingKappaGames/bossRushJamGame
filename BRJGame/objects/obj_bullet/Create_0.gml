@@ -6,7 +6,7 @@ yChange = 0;
 
 damage = 1;
 
-duration = 180;
+duration = 120;
 
 hit = function() {
 	part_particles_create_color(global.partSys, x, y, global.fluffPart, c_red, irandom_range(3, 5));

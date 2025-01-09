@@ -1,11 +1,12 @@
 function script_checkOrbsConnected(firstOrb, secondOrb){
 	if(instance_exists(firstOrb) && instance_exists(secondOrb)) {
 		if(firstOrb != secondOrb) {
-			if(!array_contains(firstOrb.connections, secondOrb) && !array_contains(secondOrb.connections, firstOrb)) { // bit redundant to check both but hey
-				return false;
-			} else {
-				return true;
+			for(var _checkI = array_length(firstOrb.connections) - 1; _checkI >= 0; _checkI--) {
+				if(firstOrb.connections[_checkI][0] == secondOrb) {
+					return true;
+				}
 			}
+			return false;
 		} else {
 			return -1; // being the same orb also (-1)?
 		}

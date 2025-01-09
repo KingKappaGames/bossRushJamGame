@@ -14,6 +14,8 @@ yChange = 0;
 moveGoalX = 0;
 moveGoalY = 0;
 
+blockingLinksRef = 0;
+
 hit = function(damage) {
 	Health -= damage;
 	if(Health <= 0) {

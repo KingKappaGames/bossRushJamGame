@@ -1,20 +1,27 @@
 radius = 8;
+weight = 1;
 
 xChange = 0;
 yChange = 0;
 speedDecay = .9;
 
 type = 0;
+fakeOrb = false;
+
+stuckToId = noone;
 
 linked = false;
 
 connections = [];
 
 linkOrb = function(otherOrb) {
-	array_push(connections, otherOrb);
-	array_push(otherOrb.connections, id);
+	var _dist = point_distance(x, y, otherOrb.x, otherOrb.y);
+	
+	array_push(connections, [otherOrb, _dist]);
+	array_push(otherOrb.connections, [id, _dist]);
 	
 	linked = true;
+	//linkDistMax = _dist * 1.25 + 15;
 	
 	var _orbsRing = script_checkOrbLoop(id, id);
 	
@@ -48,9 +55,13 @@ activateOrb = function() {
 	part_particles_create(global.partSys, x, y, global.fluffPart, irandom_range(15, 30));
 	
 	for(var _disconnectI = array_length(connections) - 1; _disconnectI >= 0; _disconnectI--) {
-		var _orb = connections[_disconnectI];
+		var _orb = connections[_disconnectI][0];
 		
-		array_delete(_orb.connections, array_get_index(_orb.connections, id), 1);
+		var _searchIdFunc = function(_element, _index) {
+			return _element[0] == id; // so called, "predicate function" well, this runs for each index of the searched array
+		}
+		
+		array_delete(_orb.connections, array_find_index(_orb.connections, _searchIdFunc), 1);
 	}
 	
 	instance_destroy(); // ??

@@ -1,9 +1,9 @@
-var _drawnLinks = []; // pairs of [orb1, orb2]
+var _drawnLinks = global.linksTotalThisFrame; // pairs of [orb1, orb2, linkDist]
 
 with(obj_orb) { // with each orb
 	if(linked) {
 		for(var _connectionI = array_length(connections) - 1; _connectionI >= 0; _connectionI--) { // with each connected orb to that orb
-			var _orb = connections[_connectionI];
+			var _orb = connections[_connectionI][0];
 			var _alreadyDrawn = false;
 			
 			if(instance_exists(_orb)) {
@@ -18,9 +18,15 @@ with(obj_orb) { // with each orb
 				if(!_alreadyDrawn) {
 					draw_line_width_color(_orb.x, _orb.y, x, y, 3, c_white, c_ltgray);
 				
-					array_push(_drawnLinks, [id, _orb]);
+					var _dist = point_distance(x, y, _orb.x, _orb.y);
+					
+					array_push(_drawnLinks, [id, _orb, _dist]);
 				}
 			}
 		}
 	}
+}
+
+if(array_length(_drawnLinks) > 0) {
+	global.boss.blockingLinksRef = _drawnLinks;
 }
