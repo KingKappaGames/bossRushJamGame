@@ -25,6 +25,7 @@ setGameState = function(state, timer = -1, titleText = 0) {
 	
 	instance_destroy(obj_boss);
 	instance_destroy(obj_player);
+	instance_destroy(obj_orb);
 	
 	if(titleText != 0) {
 		gameStateText = titleText;
