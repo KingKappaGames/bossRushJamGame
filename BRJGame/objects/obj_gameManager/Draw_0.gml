@@ -1,6 +1,6 @@
 var _drawnLinks = global.linksTotalThisFrame; // pairs of [orb1, orb2, linkDist]
 
-with(obj_orb) { // with each orb
+with(obj_orb) { // with each orb draw links but not duplicates
 	if(linked) {
 		for(var _connectionI = array_length(connections) - 1; _connectionI >= 0; _connectionI--) { // with each connected orb to that orb
 			var _orb = connections[_connectionI][0];
@@ -30,3 +30,5 @@ with(obj_orb) { // with each orb
 if(array_length(_drawnLinks) > 0) {
 	global.boss.blockingLinksRef = _drawnLinks;
 }
+
+draw_surface(script_getDebrisSurface(), 0, 0);

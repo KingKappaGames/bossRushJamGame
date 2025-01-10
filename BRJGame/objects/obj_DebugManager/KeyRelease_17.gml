@@ -1,0 +1,1 @@
+acceptInput = 1 - acceptInput;

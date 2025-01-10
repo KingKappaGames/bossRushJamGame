@@ -1,3 +1,5 @@
+depth = -y;
+
 directionToMouse = point_direction(x, y, mouse_x, mouse_y);
 
 #region movement and controls
@@ -28,7 +30,7 @@ if(state == "idle") {
 	
 	if(keyboard_check_released(ord("E"))) {
 		var _orb = instance_create_layer(x, y, "Instances", obj_orb);
-		image_blend = make_color_rgb(irandom(255), irandom(255), irandom(255));
+		_orb.image_blend = make_color_rgb(irandom(255), irandom(255), irandom(255));
 	}
 } else if(state == "spin") {
 	if(keyboard_check_released(vk_shift)) {
@@ -36,7 +38,7 @@ if(state == "idle") {
 	} else {
 		var _dirFromCenter = point_direction(spinCenterX, spinCenterY, x, y);
 		
-		if(abs(angle_difference(spinLastAngleOrb, _dirFromCenter)) > 500 / spinDist) { // well... this basically creates an orb web every few degrees of travel but more on bigger circles becauese bigger circle = more distance per angle traveleed.... Don't ask me to be reasonable
+		if(abs(angle_difference(spinLastAngleOrb, _dirFromCenter)) > 1200 / spinDist) { // well... this basically creates an orb web every few degrees of travel but more on bigger circles becauese bigger circle = more distance per angle traveleed.... Don't ask me to be reasonable
 			var _orb = instance_create_layer(x, y, "Instances", obj_orb);
 			if(instance_exists(spinLastOrbId)) {
 				_orb.linkOrb(spinLastOrbId);
@@ -75,6 +77,13 @@ if(state == "idle") {
 x = clamp(x + xChange, 0, room_width);
 y = clamp(y + yChange, 0, room_height);
 
+//var _anglePushSpiderDirection = angle_difference(point_direction(0, 0, xChange, yChange), directionFacing);
+if(state != "jump" && state != "knock") {
+	directionFacing += angle_difference(point_direction(0, 0, xChange, yChange), directionFacing) / 10;
+} else if(state == "knock") {
+	directionFacing += 10;
+}
+
 xChange *= speedDecay;
 yChange *= speedDecay;
 
@@ -86,6 +95,17 @@ if(state == "idle") {
 		if(stateTimer <= 0) {
 			setState("idle");
 		}
+	}
+}
+
+if(immunityFrames > 0) {
+	immunityFrames--;
+}
+
+if(hitColorTimer > 0) {
+	hitColorTimer--;
+	if(hitColorTimer <= 0) {
+		image_blend = c_white;
 	}
 }
 
@@ -117,9 +137,7 @@ if(mouse_check_button_released(mb_right)) {
 var _bulletNearest = instance_nearest(x, y, obj_bullet);
 if(_bulletNearest != noone) {
 	if(point_distance(x, y, _bulletNearest.x, _bulletNearest.y) < 12) { // 12 is just player width plus a little
-		takeHit(_bulletNearest.damage, point_direction(_bulletNearest.x, _bulletNearest.y, x, y));
+		takeHit(_bulletNearest.damage, undefined, point_direction(_bulletNearest.x, _bulletNearest.y, x, y), 120);
 		_bulletNearest.hit();
 	}
 }
-
-camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), x - camWidth / 2, .2), 0, room_width - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), y - camHeight / 2, .2), 0, room_height - camHeight)); // loosely follow player and clamp without room bounds of camera

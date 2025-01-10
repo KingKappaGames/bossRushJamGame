@@ -33,7 +33,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_bossIdle",
+    "path":"sprites/spr_bossIdle/spr_bossIdle.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

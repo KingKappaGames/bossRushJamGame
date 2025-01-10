@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"script_createTextPop",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"script_createTextPop",
+  "parent":{
+    "name":"debugManagerStuff",
+    "path":"folders/debugManagerStuff.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

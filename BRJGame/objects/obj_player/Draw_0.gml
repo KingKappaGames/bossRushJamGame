@@ -1,15 +1,11 @@
-if(hitColor != 0) {
-	draw_set_color(hitColor);
-	hitColorTimer--;
-	if(hitColorTimer <= 0) {
-		hitColor = 0;
-	}
-} else {
-	draw_set_color(#00ff00);
+var _alphaFlash = 1;
+if(immunityFrames > 0) {
+	_alphaFlash = .4 + round(current_time % 250 / 250) * .6; // flashing while immune
 }
 
-draw_circle(x, y, 10, false);
-draw_set_color(c_white);
+draw_sprite_ext(sprite_index, image_index, x, y, 1, 1, directionFacing - 90, image_blend, image_alpha * _alphaFlash);
+draw_set_alpha(1);
+draw_set_color(c_white); // undo hit and immune visual effects
 
 draw_circle_color(x, y, 10 - (Health / HealthMax) * 10, c_red, #880000, false);
 

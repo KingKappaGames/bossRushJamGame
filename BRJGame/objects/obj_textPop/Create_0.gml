@@ -1,0 +1,2 @@
+displayText = "";
+duration = 60;
