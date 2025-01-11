@@ -4,6 +4,8 @@ player = global.player;
 
 partSys = global.partSys;
 swirlParticle = global.swirlParticles;
+fluffParticle = global.fluffPart;
+plowParticle = global.trailPlowParticles;
 
 state = "idle";
 stateTimer = 0;
@@ -63,22 +65,51 @@ setState = function(stateGoal, stateDuration = -1) {
 	stateTimer = stateDuration;
 	stateTimerMax = stateDuration;
 	
+	image_angle = 0;
+	
 	if(stateGoal == "idle") {
 		sprite_index = spr_bossIdle;
 		image_speed = 2;
+		stateType = "idle";
+		
+		speedDecay = .8;
 		
 		if(stateTimer == -1) {
 			stateTimer = 0;
 			stateTimerMax = 0;
 		}
-	} else if(stateGoal == "attack") {
+	} else if(stateGoal == "spinAttack") {
 		sprite_index = spr_bossAttack;
 		image_speed = (60 / stateTimer) * image_number; // setting frame rate to line up with time of state, maybe don't if you need something else idk (60 is for game fps, switch to 1000 if you want ms timings, you'll have to change the code for this it's not either or)
+		stateType = "attack";
+		
+		speedDecay = .4;
 		
 		attackHit = false;
 		
-		attackTimings = [   [[.4, .95], 66, 48, 0, -10, [15, 12, 0, 120]]  ];
+		attackTimings = [   [[.55, .95], 54, 44, 0, -10, [10, 12, 0, 120]]  ];
+	} else if(stateGoal == "rolling") {
+		sprite_index = spr_bossRoll;
+		image_speed = 5;
+		stateType = "attack";
+		
+		speedDecay = 1;
+		
+		attackHit = false;
+		
+		attackTimings = [   [[.05, .95], 30, 30, 0, -8, [10, 9, 0, 120]]  ];
+	} else if(stateGoal == "chargingRoll") {
+		xChange = 0;
+		yChange = 0;
+		
+		speedDecay = .5;
+		
+		sprite_index = spr_bossCharge;
+		image_speed = (60 / stateTimer) * image_number;
+		stateType = "charge";
 	}
+	
+	image_index = 0;
 }
 
 setState("idle"); // initialize at idle

@@ -1,14 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"obj_orb",
+  "%Name":"obj_levelVisuals",
   "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":12,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_orb",
+  "name":"obj_levelVisuals",
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
@@ -33,8 +30,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_redOrb",
-    "path":"sprites/spr_redOrb/spr_redOrb.yy",
+    "name":"spr_brushVisuals",
+    "path":"sprites/spr_brushVisuals/spr_brushVisuals.yy",
   },
   "spriteMaskId":null,
   "visible":true,

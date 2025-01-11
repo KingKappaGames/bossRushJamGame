@@ -72,7 +72,7 @@ part_system_depth(global.partSys, -1000); // at the front! I think...
 global.fluffPart = part_type_create();
 var _fluff = global.fluffPart;
 part_type_shape(_fluff, pt_shape_square);
-part_type_size(_fluff, .3, 1, -.01, 0);
+part_type_size(_fluff, .2, .6, -.01, 0);
 part_type_color1(_fluff, c_yellow);
 part_type_life(_fluff, 20, 75);
 part_type_alpha2(_fluff, 1, 0);
@@ -88,6 +88,40 @@ part_type_life(_swirly, 28, 42);
 part_type_alpha2(_swirly, 1, 0);
 part_type_direction(_swirly, 0, 360, 0, 0);
 part_type_speed(_swirly, 7, 8.5, 0, 0); // specific numbers for going around the 100ish wide attack of the one boss, changable for sure but it relates to that boss's visual width...
+
+global.trailPlowParticles = part_type_create();
+var _plow = global.trailPlowParticles;
+part_type_shape(_plow, pt_shape_square);
+part_type_size(_plow, .3, .5, .004, 0);
+part_type_color_mix(_plow, #47371a, #9e7f55);
+part_type_life(_plow, 40, 130);
+part_type_alpha3(_plow, 1, .5, 0);
+part_type_direction(_plow, 0, 360, 0, 0);
+part_type_orientation(_plow, 0, 360, 0, 0, 0);
+part_type_speed(_plow, .7, 1.6, -.03, 0);
+
+global.projectileTrail = part_type_create();
+var _trail = global.projectileTrail;
+part_type_life(_trail, 38, 45);
+part_type_shape(_trail, pt_shape_square);
+part_type_size(_trail, .08, .15, -.002, 0);
+part_type_speed(_trail, .1, .28, -.01, 0);
+part_type_direction(_trail, 0, 360, 0, 30);
+part_type_orientation(_trail, 0, 360, 0, 10, 0);
+part_type_color_mix(_trail, #bbbbbb, #777777); 
+part_type_alpha1(_trail, 1);
+
+//
+//	var createdParticle = part_type_create();
+//	part_type_life(createdParticle, 50, 70);
+//	part_type_shape(createdParticle, pt_shape_square);
+//	part_type_size(createdParticle, .1, .2, -.003, .03);
+//	part_type_speed(createdParticle, 0.2, .8, -.01, .1);
+//	part_type_direction(createdParticle, 0, 360, 0, 30);
+//	part_type_orientation(createdParticle, 0, 360, 0, 10, 0);
+		
+//	part_type_alpha2(createdParticle, 1, .4);
+//	part_type_color_mix(createdParticle, merge_color(#bbbbbb, color, colorStrength), merge_color(#777777, color, colorStrength));
 
 #endregion
 
