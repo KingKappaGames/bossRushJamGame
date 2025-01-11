@@ -1,12 +1,14 @@
-draw_set_halign(fa_center);
-if(gameState == "gameOver") {
-	draw_text_transformed(view_wport[0] / 2, + view_hport[0] / 3, gameStateText, 5, 5, 2 * dsin(current_time));
-} else if(gameState == "respawn") {
-	draw_text_transformed(view_wport[0] / 2 + irandom_range(-1, 1), view_hport[0] / 3 + irandom_range(-1, 1), gameStateText, 5, 5, 0);
-} else if(gameState == "victory") {
-	draw_text_transformed(view_wport[0] / 2 + irandom_range(-1, 1), view_hport[0] / 3 + irandom_range(-1, 1), gameStateText, 5, 5, 0);
+if(!global.is_paused) {
+	draw_set_halign(fa_center);
+	if(gameState == "gameOver") {
+		draw_text_transformed(view_wport[0] / 2, + view_hport[0] / 3, gameStateText, 5, 5, 2 * dsin(current_time));
+	} else if(gameState == "respawn") {
+		draw_text_transformed(view_wport[0] / 2 + irandom_range(-1, 1), view_hport[0] / 3 + irandom_range(-1, 1), gameStateText, 5, 5, 0);
+	} else if(gameState == "victory") {
+		draw_text_transformed(view_wport[0] / 2 + irandom_range(-1, 1), view_hport[0] / 3 + irandom_range(-1, 1), gameStateText, 5, 5, 0);
+	}
+	draw_set_halign(fa_left);
 }
-draw_set_halign(fa_left);
 
 
 

@@ -127,9 +127,6 @@ part_type_alpha1(_trail, 1);
 
 #endregion
 
-instance_create_layer(200, 400, "Instances", obj_player);
-instance_create_layer(400, 400, "Instances", obj_boss);
-
 //var _x = -200;
 //var _y = -200;
 

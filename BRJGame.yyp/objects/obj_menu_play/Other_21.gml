@@ -1,6 +1,7 @@
 /// @description 
 
 //Set to Game Room
-room_goto(Room1);
+global.is_paused = false;
+room_goto(rm_grassyArena);
 
 

@@ -24,7 +24,7 @@
     {"name":"obj_player","order":6,"path":"objects/obj_player/obj_player.yy",},
     {"name":"obj_rollie","order":7,"path":"objects/obj_rollie/obj_rollie.yy",},
     {"name":"obj_textPop","order":2,"path":"objects/obj_textPop/obj_textPop.yy",},
-    {"name":"Room1","order":1,"path":"rooms/Room1/Room1.yy",},
+    {"name":"rm_grassyArena","order":1,"path":"rooms/rm_grassyArena/rm_grassyArena.yy",},
     {"name":"script_cameraShake","order":9,"path":"scripts/script_cameraShake/script_cameraShake.yy",},
     {"name":"script_checkLineIntersectsFlatline","order":4,"path":"scripts/script_checkLineIntersectsFlatline/script_checkLineIntersectsFlatline.yy",},
     {"name":"script_checkLineIntersectsLine","order":5,"path":"scripts/script_checkLineIntersectsLine/script_checkLineIntersectsLine.yy",},

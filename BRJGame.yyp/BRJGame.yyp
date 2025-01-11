@@ -45,8 +45,8 @@
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_rollie","path":"objects/obj_rollie/obj_rollie.yy",},},
     {"id":{"name":"obj_textPop","path":"objects/obj_textPop/obj_textPop.yy",},},
+    {"id":{"name":"rm_grassyArena","path":"rooms/rm_grassyArena/rm_grassyArena.yy",},},
     {"id":{"name":"rm_Main_Menu","path":"rooms/rm_Main_Menu/rm_Main_Menu.yy",},},
-    {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"script_cameraShake","path":"scripts/script_cameraShake/script_cameraShake.yy",},},
     {"id":{"name":"script_checkLineIntersectsFlatline","path":"scripts/script_checkLineIntersectsFlatline/script_checkLineIntersectsFlatline.yy",},},
     {"id":{"name":"script_checkLineIntersectsLine","path":"scripts/script_checkLineIntersectsLine/script_checkLineIntersectsLine.yy",},},
@@ -74,7 +74,7 @@
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
     {"roomId":{"name":"rm_Main_Menu","path":"rooms/rm_Main_Menu/rm_Main_Menu.yy",},},
-    {"roomId":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"roomId":{"name":"rm_grassyArena","path":"rooms/rm_grassyArena/rm_grassyArena.yy",},},
   ],
   "templateType":null,
   "TextureGroups":[

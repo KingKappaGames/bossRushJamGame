@@ -1,8 +1,5 @@
 /// @description 
 
-if(room == rm_Main_Menu)
-{
-	camera_set_view_pos(view_camera[0], x,y);
+//set up in room start
 
-};
-
+depth = 1; // behind buttons (in front of black background thank you game maker for not infinite depthing those)
