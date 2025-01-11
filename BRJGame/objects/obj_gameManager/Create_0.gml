@@ -139,3 +139,8 @@ instance_create_layer(400, 400, "Instances", obj_boss);
 //	_x = -200;
 //	_y += 10;
 //}
+
+
+global.is_paused = false;
+
+
