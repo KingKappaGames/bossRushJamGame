@@ -11,7 +11,7 @@ if(blockingLinksRef != 0) { // get web blocks
 	for(var _i = array_length(blockingLinksRef) - 1; _i >= 0; _i--) {
 		var _orbPair = blockingLinksRef[_i];
 		if(_orbPair[0].fakeOrb == false && _orbPair[1].fakeOrb == false) {
-			if(script_checkLineIntersectsLine(_orbPair[0].x, _orbPair[0].y, _orbPair[1].x, _orbPair[1].y, x - xChange * 2, y - yChange * 2, x + xChange * 2, y + yChange * 2, true)) { // check all web links for collision with this boss and create fake collision point if so
+			if(script_checkLineIntersectsLine(_orbPair[0].x, _orbPair[0].y, _orbPair[1].x, _orbPair[1].y, x - xChange * 2, y - yChange * 2, x + xChange * 2, y + yChange * 2, true) != 0) { // check all web links for collision with this boss and create fake collision point if so
 				script_createWebStuckPoint(id, _orbPair); // blocking links is a sub array of both orbs in the link, perfect for this
 			}
 		}
