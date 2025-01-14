@@ -1,6 +1,6 @@
 if(acceptInput == 1) {
 	if(mouse_check_button_released(mb_left)) {
-		idSelect = instance_nearest(mouse_x, mouse_y, obj_boss);
+		idSelect = instance_nearest(mouse_x, mouse_y, obj_bossRoller);
 		if(idSelect != noone) {
 			script_createTextPop(idSelect.x, idSelect.y, $"Selected! {object_get_name(idSelect.object_index)}", 120);
 		}

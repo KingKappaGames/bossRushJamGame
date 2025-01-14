@@ -12,7 +12,7 @@ randomize();
 global.debrisSurface = surface_create(room_width, room_height);
 global.debrisBuffer = buffer_create(room_width * room_height * 4, buffer_fixed, 1);
 
-debrisSaveTimer = 300;
+debrisSaveTimer = 0;
 instance_create_layer(x, y, "Instances", obj_surfaceDrawer);
 
 camWidth = camera_get_view_width(view_camera[0]);
@@ -26,7 +26,7 @@ gameStateTimer = 0;
 setGameState = function(state, timer = -1, titleText = 0) {
 	gameState = state;
 	
-	instance_destroy(obj_boss);
+	instance_destroy(obj_bossRoller);
 	instance_destroy(obj_player);
 	instance_destroy(obj_orb);
 	
@@ -50,7 +50,7 @@ setGameState = function(state, timer = -1, titleText = 0) {
 	} else if(state == "fight") {
 		instance_create_layer(200, 400, "Instances", obj_player);
 
-		instance_create_layer(300, 400, "Instances", obj_boss);
+		instance_create_layer(300, 400, "Instances", obj_bossRoller);
 	} else if(state == "victory") {
 		_stateText = "You won!";
 		_stateTimer = 120;
