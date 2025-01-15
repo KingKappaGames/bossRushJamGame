@@ -5,7 +5,7 @@ global.bossStickingOrbs = 0;
 global.linksTotalThisFrame = [];
 
 global.is_paused = false;
-
+menu_close = false;
 randomize();
 
 #endregion surface / buffer stuff for floor debris and markings

@@ -1,0 +1,15 @@
+{
+  "FolderOrderSettings":[
+    {"name":"Menu","order":2,"path":"folders/Objects/Menu.yy",},
+    {"name":"Menu","order":1,"path":"folders/Sprites/Menu.yy",},
+  ],
+  "ResourceOrderSettings":[
+    {"name":"fnt_normal","order":1,"path":"fonts/fnt_normal/fnt_normal.yy",},
+    {"name":"obj_Button_Controller","order":4,"path":"objects/obj_Button_Controller/obj_Button_Controller.yy",},
+    {"name":"obj_Button_Parent","order":1,"path":"objects/obj_Button_Parent/obj_Button_Parent.yy",},
+    {"name":"obj_menu_play","order":2,"path":"objects/obj_menu_play/obj_menu_play.yy",},
+    {"name":"obj_menu_quit","order":3,"path":"objects/obj_menu_quit/obj_menu_quit.yy",},
+    {"name":"rm_Main_Menu","order":1,"path":"rooms/rm_Main_Menu/rm_Main_Menu.yy",},
+    {"name":"spr_button","order":1,"path":"sprites/spr_button/spr_button.yy",},
+  ],
+}

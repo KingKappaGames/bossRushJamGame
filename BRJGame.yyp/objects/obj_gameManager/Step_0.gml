@@ -1,10 +1,16 @@
 if(keyboard_check_released(ord("F"))) { window_set_fullscreen(!window_get_fullscreen()); } // toggle fullscreen on "F" key released
 
 if(!global.is_paused) {
-	
-	if(keyboard_check_released(vk_escape)) {
+	menu_close = false;
+	if(keyboard_check_released(vk_escape) && room != rm_Main_Menu) {
+		
 		global.is_paused = true;
-		room_goto(rm_Main_Menu);
+		//room_goto(rm_Main_Menu);
+		instance_deactivate_all(true);
+		instance_activate_object(obj_Menu_Manager);
+		
+		obj_Menu_Manager.menu_up = true;
+		
 		exit; // break out of the non paused stuff when pausing initially
 	}
 	
@@ -52,7 +58,16 @@ if(!global.is_paused) {
 		}
 	}
 }
-
+else
+{
+	if(keyboard_check_released(vk_escape) || menu_close)
+	{
+		global.is_paused = false;
+		instance_activate_all();
+		obj_Menu_Manager.menu_up = false;
+		
+	};
+};
 
 /*
 show_debug_message("#");
