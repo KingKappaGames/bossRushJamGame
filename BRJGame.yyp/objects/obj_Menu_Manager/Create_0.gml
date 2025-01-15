@@ -67,9 +67,10 @@ key_up = -1;
 key_down = -1;
 key_enter = -1;
 
-
-
-
+///@desc janky function to clear button inputs not set per step when menus are closed
+clearButtons = function() {
+	key_enter = -1;
+}
 
 
 

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"script_pullAndBreakLinks",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"script_orbFunctions",
+    "path":"folders/Scripts/script_orbFunctions.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

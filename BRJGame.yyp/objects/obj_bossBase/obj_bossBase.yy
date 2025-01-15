@@ -14,8 +14,8 @@
   "name":"obj_bossBase",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"obj_bosses",
+    "path":"folders/Objects/obj_bosses.yy",
   },
   "parentObjectId":null,
   "persistent":false,

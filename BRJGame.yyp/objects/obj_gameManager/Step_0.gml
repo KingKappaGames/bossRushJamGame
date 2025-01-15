@@ -8,7 +8,9 @@ if(!global.is_paused) {
 		//room_goto(rm_Main_Menu);
 		instance_deactivate_all(true);
 		instance_activate_object(obj_Menu_Manager);
+		instance_activate_object(obj_DebugManager);
 		
+		obj_Menu_Manager.clearButtons();
 		obj_Menu_Manager.menu_up = true;
 		
 		exit; // break out of the non paused stuff when pausing initially

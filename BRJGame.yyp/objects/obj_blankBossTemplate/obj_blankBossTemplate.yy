@@ -11,8 +11,8 @@
   "name":"obj_blankBossTemplate",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"obj_bosses",
+    "path":"folders/Objects/obj_bosses.yy",
   },
   "parentObjectId":{
     "name":"obj_bossBase",

@@ -44,6 +44,10 @@ parseCommand = function() {
 		for(var _i = 0; _i < _chunkCount; _i++) {
 			if(_chunkArray[_i] == "id") {
 				_chunkArray[_i] = idSelect;
+			} else if(_chunkArray[_i] == "manager") {
+				_chunkArray[_i] = global.gameManager;
+			} else if(_chunkArray[_i] == "menuManager") {
+				_chunkArray[_i] = instance_find(obj_Menu_Manager, 0);
 			}
 		}
 	

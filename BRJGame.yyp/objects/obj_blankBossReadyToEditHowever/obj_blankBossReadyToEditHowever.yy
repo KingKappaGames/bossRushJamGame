@@ -11,8 +11,8 @@
   "name":"obj_blankBossReadyToEditHowever",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"obj_bosses",
+    "path":"folders/Objects/obj_bosses.yy",
   },
   "parentObjectId":{
     "name":"obj_bossBase",

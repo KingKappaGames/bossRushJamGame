@@ -1,7 +1,7 @@
 /// @description 
 
 
-show_debug_message(menu_up);
+//show_debug_message(menu_up);
 
 if(menu_up)
 {
