@@ -65,10 +65,12 @@ takeHit = function(damage, knockback = 0, hitDirection = 0, immunityFramesSet = 
 }
 
 die = function() {
+	setState("dead");
 	global.gameManager.setGameState("gameOver");
 }
 
 setState = function(stateSet, stateTimerSet = infinity) {
+	if(state == "dead") { exit; } // exit immediately if the player already dead, simple solution
 	state = stateSet;
 	stateTimer = stateTimerSet;
 	
@@ -88,6 +90,8 @@ setState = function(stateSet, stateTimerSet = infinity) {
 	} else if(stateSet == "knock") {
 		speedDecay = .92;
 		image_speed = 0;
+	} else if(stateSet == "dead") {
+		// nothing... but block other states (:
 	} else {
 		image_speed = 12;
 		speedDecay = .7;

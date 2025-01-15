@@ -141,3 +141,7 @@ if(_bulletNearest != noone) {
 		_bulletNearest.hit();
 	}
 }
+
+if(keyboard_check_released(vk_backspace)) {
+	instance_create_layer(x, y -100, "Instances", obj_bossSpider);
+}

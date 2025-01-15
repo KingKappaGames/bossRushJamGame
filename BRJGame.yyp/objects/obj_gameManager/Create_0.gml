@@ -1,5 +1,7 @@
 depth = -2000;
 
+game_set_speed(60, gamespeed_fps);
+
 global.gameManager = id;
 global.bossStickingOrbs = 0;
 global.linksTotalThisFrame = [];
@@ -26,10 +28,6 @@ gameStateTimer = 0;
 setGameState = function(state, timer = -1, titleText = 0) {
 	gameState = state;
 	
-	instance_destroy(obj_bossRoller);
-	instance_destroy(obj_player);
-	instance_destroy(obj_orb);
-	
 	if(titleText != 0) {
 		gameStateText = titleText;
 	} else {
@@ -48,9 +46,14 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		_stateText = "You died!";
 		_stateTimer = 120;
 	} else if(state == "fight") {
+		instance_destroy(obj_player);
+		instance_destroy(obj_bossBase);
+		instance_destroy(obj_orb);
+		instance_destroy(obj_bullet);
+		
 		instance_create_layer(200, 400, "Instances", obj_player);
 
-		instance_create_layer(300, 400, "Instances", obj_bossRoller);
+		instance_create_layer(300, 400, "Instances", obj_bossSpider);
 	} else if(state == "victory") {
 		_stateText = "You won!";
 		_stateTimer = 120;

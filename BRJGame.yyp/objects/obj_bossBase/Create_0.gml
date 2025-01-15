@@ -24,7 +24,7 @@ xChange = 0;
 yChange = 0;
 
 dirToPlayer = 0;
-directionFacing = 0;
+directionFacing = 1;
 moveGoalX = 0;
 moveGoalY = 0;
 
@@ -64,6 +64,7 @@ setState = function(stateGoal, stateDuration = -1) {
 	stateTimerMax = stateDuration;
 	
 	image_angle = 0;
+	directionFacing = sign(directionFacing); 
 	
 	setStateCore(stateGoal, stateDuration);
 	
