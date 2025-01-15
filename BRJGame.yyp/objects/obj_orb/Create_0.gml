@@ -38,7 +38,7 @@ linkOrb = function(otherOrb) {
 		}
 		
 		var _bosses = [];
-		with(obj_boss) {
+		with(obj_bossRoller) {
 			array_push(_bosses, id);
 		}
 		

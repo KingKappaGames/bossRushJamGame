@@ -1,35 +1,6 @@
-depth = -y; // el classico, que quapo
-
-var _dirToPlayer = -1;
-if(!instance_exists(player)) {
-	player = noone;
-} else {
-	_dirToPlayer = point_direction(x, y, player.x, player.y);
-}
-
-if(blockingLinksRef != 0) { // get web blocks
-	for(var _i = array_length(blockingLinksRef) - 1; _i >= 0; _i--) {
-		var _orbPair = blockingLinksRef[_i];
-		if(_orbPair[0].fakeOrb == false && _orbPair[1].fakeOrb == false) {
-			if(script_checkLineIntersectsLine(_orbPair[0].x, _orbPair[0].y, _orbPair[1].x, _orbPair[1].y, x - xChange * 2, y - yChange * 2, x + xChange * 2, y + yChange * 2, true) != 0) { // check all web links for collision with this boss and create fake collision point if so
-				script_createWebStuckPoint(id, _orbPair); // blocking links is a sub array of both orbs in the link, perfect for this
-			}
-		}
-	}
-}
-
-if(xChange >= 0) { // face in direction you're moving (depends on the sprite art direction..
-	directionFacing = 1;
-} else {
-	directionFacing = -1;
-}
+event_inherited();
 
 var _dirMoving = point_direction(0, 0, xChange, yChange);
-x = clamp(x + xChange, 0, room_width);
-y = clamp(y + yChange, 0, room_height);
-
-xChange *= speedDecay;
-yChange *= speedDecay;
 
 if(stateType == "idle") {
 	var _moveDir = point_direction(x, y, moveGoalX, moveGoalY);
@@ -104,29 +75,7 @@ if(stateType == "idle") {
 		part_particles_create(partSys, x + dcos(_partDir) * _partDist, y - dsin(_partDir) * _partDist, plowParticle, 2);
 	}
 	
-	var _hitBox = 0; // hit boxes / doing damage via attacks
-	for(var _hitBoxCheck = array_length(attackTimings) - 1; _hitBoxCheck >= 0; _hitBoxCheck--) {
-		_hitBox = attackTimings[_hitBoxCheck];
-		if(stateTimer > stateTimerMax * _hitBox[0][0] && stateTimer < stateTimerMax * _hitBox[0][1]) {
-			if(!attackHit) { // _hitbox[1-4] = width, height, xOff, yOff
-				var _hit = collision_rectangle(x - _hitBox[3] * directionFacing - _hitBox[1], y - _hitBox[4] + _hitBox[2], x - _hitBox[3] * directionFacing + _hitBox[1], y - _hitBox[4] - _hitBox[2], obj_player, false, true);
-				var _hitRect = instance_create_depth(x, y, -100, obj_debugHelper); 
-				_hitRect.shape = "quadRect";
-				_hitRect.quadLeft = x - _hitBox[3] * directionFacing - _hitBox[1];
-				_hitRect.quadRight = x - _hitBox[3] * directionFacing + _hitBox[1]; // debug that doesn't even work in this project but should show the hitboxes in theory with the other object i use in all my projects
-				_hitRect.quadTop = y - _hitBox[4] + _hitBox[2];
-				_hitRect.quadBottom = y - _hitBox[4] - _hitBox[2];
-			
-				if(instance_exists(_hit)) {
-					var _hitInfo = _hitBox[5];
-					_hit.takeHit(_hitInfo[0], _hitInfo[1], _dirToPlayer, _hitInfo[3]);
-					attackHit = true;
-					
-					//audio_play_sound(snd_punch, 1, 0, 2);
-				}
-			}
-		}
-	}
+	script_doHitboxCollisionsAndDamage();
 	
 	if(stateTimer <= 0) {
 		setState("idle");
@@ -135,7 +84,7 @@ if(stateType == "idle") {
 	if(state == "chargingRoll") {
 		//... count down timer then start roll attack
 		if(stateTimer <= 0) {
-			var _dir = _dirToPlayer + irandom_range(-6, 6);
+			var _dir = dirToPlayer + irandom_range(-6, 6);
 			xChange = dcos(_dir) * 5; // shoot out roughly at player
 			yChange = -dsin(_dir) * 5;
 			
@@ -143,16 +92,3 @@ if(stateType == "idle") {
 		}
 	}
 }
-
-if(stateTimer >= 0) {
-	stateTimer--;
-	//stateTimer -= delta_time / 1000; // this is if we do attack timing in ms instead of frames..
-}
-
-
-
-
-
-
-
-blockingLinksRef = 0;

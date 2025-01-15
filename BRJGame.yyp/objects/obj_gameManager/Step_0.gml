@@ -13,8 +13,6 @@ if(!global.is_paused) {
 		
 		exit; // break out of the non paused stuff when pausing initially
 	}
-	
-	global.linksTotalThisFrame = [];
 
 	if(gameState == "gameOver") {
 		gameStateTimer--;
