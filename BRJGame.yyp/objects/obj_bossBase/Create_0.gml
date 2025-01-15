@@ -63,6 +63,8 @@ setState = function(stateGoal, stateDuration = -1) {
 	stateTimer = stateDuration;
 	stateTimerMax = stateDuration;
 	
+	image_angle = 0;
+	
 	setStateCore(stateGoal, stateDuration);
 	
 	image_index = 0;

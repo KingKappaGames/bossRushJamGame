@@ -30,8 +30,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_brushVisuals",
-    "path":"sprites/spr_brushVisuals/spr_brushVisuals.yy",
+    "name":"spr_mapAssets",
+    "path":"sprites/spr_mapAssets/spr_mapAssets.yy",
   },
   "spriteMaskId":null,
   "visible":true,

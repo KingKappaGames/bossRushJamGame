@@ -65,7 +65,6 @@ else
 		global.is_paused = false;
 		instance_activate_all();
 		obj_Menu_Manager.menu_up = false;
-		
 	};
 };
 

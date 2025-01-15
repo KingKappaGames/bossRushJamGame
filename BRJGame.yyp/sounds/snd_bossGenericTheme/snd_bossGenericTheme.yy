@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_bossGenericTheme",
+  "audioGroupId":{
+    "name":"ag_Music",
+    "path":"audiogroups/ag_Music",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":88.448,
+  "name":"snd_bossGenericTheme",
+  "parent":{
+    "name":"Music",
+    "path":"folders/Sound/Music.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_bossGenericTheme.wav",
+  "type":0,
+  "volume":0.5,
+}

@@ -1,4 +1,4 @@
-depth = -y;
+depth = -(y + 12);
 
 directionToMouse = point_direction(x, y, mouse_x, mouse_y);
 
