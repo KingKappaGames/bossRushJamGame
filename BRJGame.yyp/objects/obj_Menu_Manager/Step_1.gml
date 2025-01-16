@@ -15,17 +15,8 @@ if(menu_up)
 }
 else
 {
-	
 	selector = 1;
-	key_enter = false;
-	bselect = 0; //Boss Selector Panel - Reset on menu close
-	mselect = 0; //Music Volume - Reset on menu close
-	sselect = 0; //SFX Volume - Reset on menu close
 	
-	if(current_menu == "Settings" && room != rm_Main_Menu)
-	{
-		current_menu = "Pause Menu";
-	};
 	
 };
 

@@ -63,9 +63,7 @@ else
 	if(keyboard_check_released(vk_escape) || menu_close)
 	{
 		global.is_paused = false;
-		//instance_activate_all();
-		alarm_set(1, 5);
-		
+		instance_activate_all();
 		obj_Menu_Manager.menu_up = false;
 	};
 };

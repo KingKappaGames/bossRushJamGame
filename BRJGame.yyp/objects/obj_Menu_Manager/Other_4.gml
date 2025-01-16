@@ -3,8 +3,6 @@
 if(room == rm_Main_Menu)
 {
 	menu_up = true;
-	
-	
 }
 else
 {
