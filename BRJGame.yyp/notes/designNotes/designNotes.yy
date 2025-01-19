@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"",
+  "%Name":"designNotes",
+  "name":"designNotes",
+  "parent":{
+    "name":"stuffIDontUseOften",
+    "path":"folders/stuffIDontUseOften.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"2.0",
+}

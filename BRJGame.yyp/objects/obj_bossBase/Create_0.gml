@@ -47,6 +47,7 @@ hit = function(damage, knockback = 0, knockbackDir = 0, immunityFrames = 0) { //
 
 die = function() {
 	global.gameManager.setGameState("victory");
+	setState("dead");
 	//play death animation
 	//clear or do other set up to level..?
 	//endGame();
@@ -59,11 +60,13 @@ setStateCore = function(stateGoal, stateDuration) {
 
 
 setState = function(stateGoal, stateDuration = -1) {
+	
+	show_debug_message("RUNNING STATE SET")
+	
 	state = stateGoal;
 	stateTimer = stateDuration;
 	stateTimerMax = stateDuration;
 	
-	image_angle = 0;
 	directionFacing = sign(directionFacing); 
 	
 	setStateCore(stateGoal, stateDuration);

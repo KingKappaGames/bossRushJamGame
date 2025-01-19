@@ -38,7 +38,7 @@ linkOrb = function(otherOrb) {
 		}
 		
 		var _bosses = [];
-		with(obj_bossRoller) {
+		with(obj_bossBase) {
 			array_push(_bosses, id);
 		}
 		
@@ -52,7 +52,7 @@ linkOrb = function(otherOrb) {
 }
 
 activateOrb = function() {
-	part_particles_create(global.partSys, x, y, global.fluffPart, irandom_range(15, 30));
+	part_particles_create_color(global.partSys, x, y, global.fluffPart, c_yellow, irandom_range(15, 30));
 	
 	for(var _disconnectI = array_length(connections) - 1; _disconnectI >= 0; _disconnectI--) {
 		var _orb = connections[_disconnectI][0];

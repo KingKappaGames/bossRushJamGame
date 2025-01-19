@@ -29,6 +29,9 @@ speedDecay = .8;
 
 ///@desc The state setting info specific to the boss of this kind, runs within setState that does the basic set up for all bosses (this is a basic way of doing script inheritance, not ideal but works well)
 setStateCore = function(stateGoal, stateDuration = -1) {
+	
+	image_angle = 0;
+	
 	if(stateGoal == "idle") {
 		sprite_index = spr_bossIdle;
 		image_speed = 2;
@@ -69,5 +72,11 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		sprite_index = spr_bossCharge;
 		image_speed = (60 / stateTimer) * image_number;
 		stateType = "charge";
+	} else if(stateGoal == "dead") {
+		stateType = "dead";
+		
+		sprite_index = spr_bossIdle;
+		image_speed = 0;
+		image_angle = 90;
 	}
 }

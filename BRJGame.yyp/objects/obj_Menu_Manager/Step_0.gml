@@ -60,6 +60,7 @@ if(menu_up)
 					{
 						room_goto(rm_grassyArena);
 						menu_up = false;
+						global.gameManager.bossSummon = global.boss_selected;
 					};
 					
 				break;

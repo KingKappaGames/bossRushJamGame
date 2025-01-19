@@ -40,8 +40,8 @@ draw_sprite(button_select, 0, selectorx, selectory);
 if(current_menu == "Main Menu")
 {
 	//Boss Selector
-	draw_sprite(boss_overlay, 0, boss_slotx, boss_sloty); 
-	draw_sprite(button_arrows, 0, boss_slotx, boss_sloty);
+	draw_sprite(boss_overlay, 0, boss_slotx + 20, boss_sloty - 13); // manual shifting dgaf
+	draw_sprite(button_arrows, 0, boss_slotx, boss_sloty - 10);
 	//Difficulty Selector
 	draw_sprite(dif_overlay, 0, dif_slotx, dif_sloty);
 	draw_sprite(button_arrows, 0, dif_slotx, dif_sloty);

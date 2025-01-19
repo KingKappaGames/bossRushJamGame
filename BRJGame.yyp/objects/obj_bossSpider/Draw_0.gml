@@ -5,10 +5,27 @@ var _legPosGoal = 0;
 var _legOrigin = 0;
 var _legBeginX = 0;
 var _legBeginY = 0;
+
+var _thighSpriteWidth = sprite_get_width(spr_spiderThigh);
+var _footSpriteHeight = sprite_get_width(spr_spiderFoot);
+
+var _legOrder = variable_clone(legPositions);
+
+for(var _i = 0; _i < 8; _i++) {
+	_legOrder[_i][0] = _i; // set the x value (useless here so overwriting) to the index of the leg
+}
+
+array_sort(_legOrder, function(elm1, elm2)
+{
+    return elm1[1] - elm2[1]; // sort the position array by position 1 (y value) (thus giving you a sorted list of which indexs go in what order
+});
+
+var _legDrawI = -1;
 for(var _legI = 0; _legI < 8; _legI++) {
-	_legPos = legPositions[_legI];
-	_legPosGoal = legPositionGoals[_legI];
-	_legOrigin = legOrigins[_legI];
+	_legDrawI = _legOrder[_legI][0]; // set the leg index based on the next to draw order and the index stored in the array
+	_legPos = legPositions[_legDrawI];
+	_legPosGoal = legPositionGoals[_legDrawI];
+	_legOrigin = legOrigins[_legDrawI];
 
 	var _distFoot = point_distance(x, y, _legPos[0], _legPos[1]);
 	var _footJointDist = sqrt(abs(sqr(legSegLen) - sqr(_distFoot / 2))); // abs does nothing here in theory but if you ever get a negative number (which again you shouldn't but hey) it'll make it positive. Presumably this negative number would be tiny and the difference would be unnoticable. Ergo abs is the easiest way to prevent the negative besides clamp with is ugly
@@ -16,11 +33,20 @@ for(var _legI = 0; _legI < 8; _legI++) {
 	var _legMidX = (_legOrigin[0] + _legPos[0]) / 2;
 	var _legMidY = (_legOrigin[1] + _legPos[1]) / 2 - _footJointDist;
 	
-	draw_line_width(_legOrigin[0], _legOrigin[1], _legMidX, _legMidY, 5);
-	draw_line_width(_legMidX, _legMidY, _legPos[0], _legPos[1], 3);
+	var _kneeDir = point_direction(_legOrigin[0], _legOrigin[1], _legMidX, _legMidY);
+	var _footDir = point_direction(_legMidX, _legMidY, _legPos[0], _legPos[1]);
+	var _kneeDist = point_distance(_legOrigin[0], _legOrigin[1], _legMidX, _legMidY);
+	var _footDist = point_distance(_legMidX, _legMidY, _legPos[0], _legPos[1]);
+	
+	var _footWidth = -dcos(_footDir);
+	
+	var _footFacingDir = _footWidth / 2 + sign(_footWidth) / 2;
+	
+	draw_sprite_ext(spr_spiderFoot, 0, _legMidX, _legMidY, _footFacingDir, _footDist / _footSpriteHeight, _footDir + 90, c_white, 1);
+	draw_sprite_ext(spr_spiderThigh, 0, _legOrigin[0], _legOrigin[1], _kneeDist / _thighSpriteWidth, 1, _kneeDir, c_white, 1);
 }
 
-
+draw_text(x, y - 100, state);
 
 
 

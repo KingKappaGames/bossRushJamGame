@@ -53,7 +53,19 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		
 		instance_create_layer(200, 400, "Instances", obj_player);
 
-		instance_create_layer(300, 400, "Instances", obj_bossSpider);
+		if(bossSummon != -1) {
+			if(bossSummon == spr_temp_boss_1) {
+				instance_create_layer(300, 400, "Instances", obj_bossRoller);
+			} else if(bossSummon == spr_temp_boss_2) {
+				instance_create_layer(300, 400, "Instances", obj_bossSpider);
+			} else if(bossSummon == spr_temp_boss_3) {
+				instance_create_layer(300, 400, "Instances", obj_bossRoller);
+			}
+			
+			bossSummon = -1;
+		} else {
+			instance_create_layer(300, 400, "Instances", choose(obj_bossRoller, obj_bossSpider));
+		}
 	} else if(state == "victory") {
 		_stateText = "You won!";
 		_stateTimer = 120;
@@ -79,7 +91,6 @@ global.fluffPart = part_type_create();
 var _fluff = global.fluffPart;
 part_type_shape(_fluff, pt_shape_square);
 part_type_size(_fluff, .2, .6, -.01, 0);
-part_type_color1(_fluff, c_yellow);
 part_type_life(_fluff, 20, 75);
 part_type_alpha2(_fluff, 1, 0);
 part_type_direction(_fluff, 0, 360, 0, 0);
@@ -116,6 +127,17 @@ part_type_direction(_trail, 0, 360, 0, 30);
 part_type_orientation(_trail, 0, 360, 0, 10, 0);
 part_type_color_mix(_trail, #bbbbbb, #777777); 
 part_type_alpha1(_trail, 1);
+
+global.webLineSnap = part_type_create();
+var _webLineSnap = global.webLineSnap;
+part_type_life(_webLineSnap, 38, 45);
+part_type_shape(_webLineSnap, pt_shape_square);
+part_type_size(_webLineSnap, .07, .12, -.002, 0);
+part_type_size_x(_webLineSnap, .5, .5, 0, 0);
+part_type_speed(_webLineSnap, .1, .28, -.01, 0);
+part_type_direction(_webLineSnap, 145, 145, 0, 0);
+part_type_orientation(_webLineSnap, 0, 0, 0, 10, 0);
+
 
 //
 //	var createdParticle = part_type_create();
