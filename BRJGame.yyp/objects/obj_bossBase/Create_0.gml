@@ -17,6 +17,8 @@ attackTimings = []; // array of some number of hitbox entries in one attack stat
 HealthMax = 40;
 Health = HealthMax;
 
+healthBarFade = 1;
+
 moveSpeed = .5;
 speedDecay = .8;
 
@@ -36,6 +38,7 @@ hit = function(damage, knockback = 0, knockbackDir = 0, immunityFrames = 0) { //
 	Health -= damage;
 	
 	if(Health <= 0) {
+		Health = 0;
 		die();
 	} else {
 		if(knockback != 0) {
@@ -46,11 +49,13 @@ hit = function(damage, knockback = 0, knockbackDir = 0, immunityFrames = 0) { //
 }
 
 die = function() {
-	global.gameManager.setGameState("victory");
-	setState("dead");
-	//play death animation
-	//clear or do other set up to level..?
-	//endGame();
+	if(state != "dead") {
+		global.gameManager.setGameState("victory");
+		setState("dead");
+		//play death animation
+		//clear or do other set up to level..?
+		//endGame();
+	}
 }
 
 ///@desc The state setting info specific to the boss of this kind, runs within setState that does the basic set up for all bosses (this is a basic way of doing script inheritance, not ideal but works well)

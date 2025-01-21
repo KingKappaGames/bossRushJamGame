@@ -6,6 +6,8 @@ global.gameManager = id;
 global.bossStickingOrbs = 0;
 global.linksTotalThisFrame = [];
 
+global.player = noone;
+
 global.is_paused = false;
 menu_close = false;
 randomize();
@@ -72,6 +74,11 @@ setGameState = function(state, timer = -1, titleText = 0) {
 	} else if(state == "respawn") {
 		_stateText = "Click to respawn!";
 		_stateTimer = 0;
+	} else if(state == "moveZone") {
+		_stateText = "Go to the right to find the boat";
+		_stateTimer = 0;
+	} else if(state == "sail") {
+		//... nothing for sailing
 	}
 	
 	if(gameStateTimer != 0) {
@@ -86,6 +93,9 @@ setGameState = function(state, timer = -1, titleText = 0) {
 #region particles
 global.partSys = part_system_create();
 part_system_depth(global.partSys, -1000); // at the front! I think...
+
+global.partUnderSys = part_system_create();
+part_system_depth(global.partUnderSys, 3001); // at the front! I think...
 
 global.fluffPart = part_type_create();
 var _fluff = global.fluffPart;
@@ -138,6 +148,14 @@ part_type_speed(_webLineSnap, .1, .28, -.01, 0);
 part_type_direction(_webLineSnap, 145, 145, 0, 0);
 part_type_orientation(_webLineSnap, 0, 0, 0, 10, 0);
 
+global.waterPart = part_type_create();
+var _water = global.waterPart;
+part_type_shape(_water, pt_shape_square);
+part_type_size(_water, .3, .5, -.005, 0);
+part_type_life(_water, 50, 75);
+part_type_alpha2(_water, 1, 0);
+part_type_direction(_water, 280, 290, 0, 15);
+part_type_speed(_water, .9, 1.1, -.01, 0);
 
 //
 //	var createdParticle = part_type_create();

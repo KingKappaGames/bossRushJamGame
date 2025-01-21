@@ -2,11 +2,25 @@ event_inherited();
 
 var _dirMoving = point_direction(0, 0, xChange, yChange);
 
+if(xChange >= 0) { // face in direction you're moving (depends on the sprite art direction..
+	directionFacing = 1;
+} else {
+	directionFacing = -1;
+}
+
 if(stateType == "idle") {
 	var _moveDir = point_direction(x, y, moveGoalX, moveGoalY);
 
 	xChange += dcos(_moveDir) * moveSpeed  * (1 - clamp(global.bossStickingOrbs / 10, 0, 1));
 	yChange += -dsin(_moveDir) * moveSpeed * (1 - clamp(global.bossStickingOrbs / 10, 0, 1)); // with at speed but also move slower the more stuck you are in webs
+	
+	if(yChange >= 0) {
+		//face camera
+		sprite_index = spr_rollieForwardStand;
+	} else {
+		//face away from camera
+		sprite_index = spr_rollieBackwardStand;
+	}
 	
 	var _goalDist = point_distance(x, y, moveGoalX, moveGoalY);
 	if(_goalDist < 50) {
@@ -91,10 +105,4 @@ if(stateType == "idle") {
 			setState("rolling", 180);
 		}
 	}
-}
-
-if(xChange >= 0) { // face in direction you're moving (depends on the sprite art direction..
-	directionFacing = 1;
-} else {
-	directionFacing = -1;
 }

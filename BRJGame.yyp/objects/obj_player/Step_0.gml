@@ -74,8 +74,35 @@ if(state == "idle") {
 	}
 }
 
-x = clamp(x + xChange, 0, room_width);
-y = clamp(y + yChange, 0, room_height);
+if(global.gameManager.gameState != "sail") {
+	if(global.gameManager.gameState != "moveZone") {
+		x = clamp(x + xChange, 0, room_width);
+		y = clamp(y + yChange, 0, room_height);
+	} else { // victory
+		x = clamp(x + xChange, 0, room_width * 1.75); // how wide is continued area?
+	
+		if(abs(y - room_height / 2) > 50) { // the middle path in the room
+			if(x > room_width) {
+				x = room_width;
+			}
+		}
+	
+		if(x <= room_width + 1) { // if in extra area
+			y = clamp(y + yChange, 0, room_height);
+		} else {
+			y = clamp(y + yChange, room_height / 2 - 49, room_height / 2 + 49);
+		}
+	
+		repeat(5) {
+			part_particles_create(underSys, irandom_range(room_width * 1.7, room_width * 2), irandom(room_height), waterParts, 1);
+		}
+	}
+} else { // boat
+	repeat(5) { // redundant other water set
+		part_particles_create(underSys, irandom_range(room_width * 1.7, room_width * 2.3), irandom(room_height), waterParts, 1);
+	}
+	// nothing
+}
 
 //var _anglePushSpiderDirection = angle_difference(point_direction(0, 0, xChange, yChange), directionFacing);
 if(state != "jump" && state != "knock") {
@@ -109,39 +136,40 @@ if(hitColorTimer > 0) {
 	}
 }
 
-
-if(mouse_check_button_released(mb_left)) {
-	var _orbNearest = instance_nearest(mouse_x, mouse_y, obj_orb);
-	if(instance_exists(_orbNearest)) {
-		var _orbDist = point_distance(_orbNearest.x, _orbNearest.y, x, y);
-		if(_orbDist < orbClickRange) {
-			if(instance_exists(orbLinkFromId)) { // coming from one orb to the next
-				if(script_checkOrbsConnected(_orbNearest, orbLinkFromId) == false) { // can be -1 or bool
-					_orbNearest.linkOrb(orbLinkFromId);
+if(state != "dead" && state != "sail") {
+	if(mouse_check_button_released(mb_left)) {
+		var _orbNearest = instance_nearest(mouse_x, mouse_y, obj_orb);
+		if(instance_exists(_orbNearest)) {
+			var _orbDist = point_distance(_orbNearest.x, _orbNearest.y, x, y);
+			if(_orbDist < orbClickRange) {
+				if(instance_exists(orbLinkFromId)) { // coming from one orb to the next
+					if(script_checkOrbsConnected(_orbNearest, orbLinkFromId) == false) { // can be -1 or bool
+						_orbNearest.linkOrb(orbLinkFromId);
+						orbLinkFromId = _orbNearest;
+					}
+				} else {
 					orbLinkFromId = _orbNearest;
 				}
-			} else {
-				orbLinkFromId = _orbNearest;
 			}
-		}
 		
+		}
 	}
-}
 
-if(mouse_check_button_released(mb_right)) {
-	orbLinkFromId = noone;
-}
-
-#endregion
-
-var _bulletNearest = instance_nearest(x, y, obj_bullet);
-if(_bulletNearest != noone) {
-	if(point_distance(x, y, _bulletNearest.x, _bulletNearest.y) < 12) { // 12 is just player width plus a little
-		takeHit(_bulletNearest.damage, undefined, point_direction(_bulletNearest.x, _bulletNearest.y, x, y), 120);
-		_bulletNearest.hit();
+	if(mouse_check_button_released(mb_right)) {
+		orbLinkFromId = noone;
 	}
-}
 
-if(keyboard_check_released(vk_backspace)) {
-	instance_create_layer(x, y -100, "Instances", obj_bossSpider);
+	#endregion
+
+	var _bulletNearest = instance_nearest(x, y, obj_bullet);
+	if(_bulletNearest != noone) {
+		if(point_distance(x, y, _bulletNearest.x, _bulletNearest.y) < 12) { // 12 is just player width plus a little
+			takeHit(_bulletNearest.damage, undefined, point_direction(_bulletNearest.x, _bulletNearest.y, x, y), 120); // random stuff related to combat that doesn't need to run while sailing...
+			_bulletNearest.hit();
+		}
+	}
+
+	if(keyboard_check_released(vk_backspace)) {
+		instance_create_layer(x, y -100, "Instances", obj_bossSpider);
+	}
 }

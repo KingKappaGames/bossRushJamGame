@@ -28,7 +28,7 @@ if(!global.is_paused) {
 	} else if(gameState == "victory") {
 		gameStateTimer--;
 		if(gameStateTimer <= 0) {
-			setGameState("respawn");
+			setGameState("moveZone");
 		}
 	} else if(gameState == "fight") {
 		debrisSaveTimer--;
@@ -48,13 +48,17 @@ if(!global.is_paused) {
 
 	camShake *= .98;
 
-	var _player = instance_nearest(room_width / 2, room_height / 2, obj_player);
-	if(_player != noone) {
-		var _camGoalX = ((_player.x * 3 + mouse_x) / 4) - camWidth / 2;
-		var _camGoalY = ((_player.y * 3 + mouse_y) / 4) - camHeight / 2;
+	if(gameState != "sail") {
+		var _player = instance_nearest(room_width / 2, room_height / 2, obj_player);
+		if(instance_exists(_player)) {
+			var _camGoalX = ((_player.x * 3 + mouse_x) / 4) - camWidth / 2;
+			var _camGoalY = ((_player.y * 3 + mouse_y) / 4) - camHeight / 2;
 
-		if(_player != noone) {
-			camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .2) + irandom_range(-camShake, camShake), 0, room_width - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .2) + irandom_range(-camShake * .5, camShake * .5), 0, room_height - camHeight)); // loosely follow player and clamp without room bounds of camera
+			if(_player.x > room_width) {
+				_camGoalY = room_height / 2 - camHeight / 2 - 10; // set to middle of room if along extra area to water
+			}
+		
+			camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .05) + irandom_range(-camShake, camShake), 0, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .05) + irandom_range(-camShake * .5, camShake * .5), 0, room_height - camHeight)); // loosely follow player and clamp without room bounds of camera
 		}
 	}
 }

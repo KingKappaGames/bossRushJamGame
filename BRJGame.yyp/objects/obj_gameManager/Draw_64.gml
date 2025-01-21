@@ -6,6 +6,8 @@ if(!global.is_paused) {
 		draw_text_transformed(view_wport[0] / 2 + irandom_range(-1, 1), view_hport[0] / 3 + irandom_range(-1, 1), gameStateText, 5, 5, 0);
 	} else if(gameState == "victory") {
 		draw_text_transformed(view_wport[0] / 2 + irandom_range(-1, 1), view_hport[0] / 3 + irandom_range(-1, 1), gameStateText, 5, 5, 0);
+	} else if(gameState == "moveZone") {
+		draw_text_transformed(view_wport[0] / 2, view_hport[0] / 10, gameStateText, 3.5, 3.5, 0);
 	}
 	draw_set_halign(fa_left);
 }

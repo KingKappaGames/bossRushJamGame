@@ -1,5 +1,8 @@
 global.player = id;
 
+underSys = global.partUnderSys;
+waterParts = global.waterPart;
+
 state = "idle"; // idle, jump, stun
 stateTimer = 0;
 
@@ -92,6 +95,11 @@ setState = function(stateSet, stateTimerSet = infinity) {
 		image_speed = 0;
 	} else if(stateSet == "dead") {
 		// nothing... but block other states (:
+	} else if(stateSet == "sail") {
+		xChange = 0;
+		yChange = 0;
+		image_speed = 0;
+		image_angle = 270;
 	} else {
 		image_speed = 12;
 		speedDecay = .7;
