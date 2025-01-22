@@ -20,14 +20,6 @@ if(menu_up)
 	{
 		
 		case "Main Menu":
-		
-			if(audio_group_is_loaded(ag_Music))
-			{
-				if(!audio_is_playing(snd_mainMenuSong))
-				{
-					audio_play_sound(snd_mainMenuSong, 10, true);
-				};
-			};
 				
 			slot_1 = button_start;
 			slot_2 = button_settings;

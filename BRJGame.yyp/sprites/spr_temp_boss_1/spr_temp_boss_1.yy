@@ -23,7 +23,7 @@
   ],
   "name":"spr_temp_boss_1",
   "nineSlice":null,
-  "origin":7,
+  "origin":4,
   "parent":{
     "name":"Boss Select",
     "path":"folders/Sprites/Menu/Buttons/Boss Select.yy",
@@ -76,7 +76,7 @@
     "visibleRange":null,
     "volume":1.0,
     "xorigin":32,
-    "yorigin":64,
+    "yorigin":32,
   },
   "swatchColours":null,
   "swfPrecision":0.5,

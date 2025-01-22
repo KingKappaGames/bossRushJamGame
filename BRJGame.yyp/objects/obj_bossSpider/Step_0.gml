@@ -2,7 +2,7 @@ event_inherited();
 
 var _dirMoving = point_direction(0, 0, xChange, yChange);
 var _stuckMoveMultiplier = clamp(1 - global.bossStickingOrbs / 10, .1, 1);
-						   
+
 if(stateType == "idle") {
 	var _moveDir = point_direction(x, y, moveGoalX, moveGoalY);
 	
@@ -74,8 +74,10 @@ if(stateType == "idle") {
 	 if(state == "chase") {
 		image_angle += _stuckMoveMultiplier * angle_difference(dirToPlayer, image_angle) / 12; // target player
 		 
-		xChange += dcos(dirToPlayer) * moveSpeed * .8 * _stuckMoveMultiplier;
-		yChange -= dsin(dirToPlayer) * moveSpeed * .8 * _stuckMoveMultiplier;
+		 var _speedMultFromDifficulty = array_get([.8, .99, 1.05], global.gameDifficultySelected); // get speeds from difficulty selection, that being said, the speed is very close to being too much so 1.03 is harder than 1 while .85 is quite easy
+		 
+		xChange += dcos(dirToPlayer) * moveSpeed * .8 * _stuckMoveMultiplier * _speedMultFromDifficulty;
+		yChange -= dsin(dirToPlayer) * moveSpeed * .8 * _stuckMoveMultiplier * _speedMultFromDifficulty;
 		
 		if(point_distance(x, y, player.x, player.y) < 45) {
 			setState("bite", 90);
@@ -119,21 +121,21 @@ if(stateType == "idle") {
 		} else if(_distToPlayer > 250) {
 			if(irandom(180) == 0) {
 				setState("idle");
-			} else if(irandom(180) == 0) {
+			} else if(irandom(300) == 0) {
 				setState("chargeCast", 130);
 			}
 		} else { // 170 - 250 ?
 			xChange += dcos(dirToPlayer + 50 * strafeDir) * moveSpeed * .38 * _stuckMoveMultiplier;
 			yChange -= dsin(dirToPlayer + 50 * strafeDir) * moveSpeed * .38 * _stuckMoveMultiplier;
 			
-			 if(irandom(600) == 0) {
+			 if(irandom(700) == 0) {
 				setState("chargeCast", 120);
 			}
 		}
 	}
 } else if(stateType == "cast") {
-	if(irandom(21) == 0) {
-		var _speed = random_range(2, 8.5);
+	if(irandom(26 - global.gameDifficultySelected * 2) == 0) {
+		var _speed = random_range(3, 9.5);
 		script_createOrbProjectile(x - dcos(image_angle) * 10, y + dsin(image_angle) * 10, irandom(360), _speed, sqr(_speed + 4) + 25);
 	}
 	
@@ -152,21 +154,22 @@ if(state != "dead") {
 		_legPosGoal = legPositionGoals[_legI];
 		_legOrigin = legOrigins[_legI];
 	
-		_legOrigin[0] = x + dcos(_legAngle) * 17;
-		_legOrigin[1] = y - dsin(_legAngle) * 17;
+		_legOrigin[0] = x + dcos(_legAngle) * 16;
+		_legOrigin[1] = y - dsin(_legAngle) * 16;
 	
-		var _goalX = _legOrigin[0] + dcos(_legAngle) * legStepDist + (x - xprevious) * 18; // maybe clamp the prediction values
-		var _goalY = _legOrigin[1] - dsin(_legAngle) * legStepDist + (y - yprevious) * 18; // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
+		var _goalX = _legOrigin[0] + dcos(_legAngle) * legStepDist + (x - xprevious) * 21; // maybe clamp the prediction values
+		var _goalY = _legOrigin[1] - dsin(_legAngle) * legStepDist + (y - yprevious) * 21; // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
 	
 		var _legStepDist = point_distance(_goalX, _goalY, _legPos[0], _legPos[1]);
-		if(_legStepDist > legUpdateDistance) {
+		if(_legStepDist > legUpdateDistance || irandom(210) == 0) {
+			legStepDistances[_legI] = point_distance(_legPos[0], _legPos[1], _goalX, _goalY);
 			_legPosGoal[0] = _goalX;
 			_legPosGoal[1] = _goalY; // set the next step point to the goal positions
 		}
 	
 		// moving the legs to the goals
-		_legPos[0] = lerp(_legPos[0], _legPosGoal[0], .13);
-		_legPos[1] = lerp(_legPos[1], _legPosGoal[1], .13);
+		_legPos[0] = lerp(_legPos[0], _legPosGoal[0], .16);
+		_legPos[1] = lerp(_legPos[1], _legPosGoal[1], .16);
 	
 		_legAngle += 33; // add between 40 and 140
 		if(_legI == 3) {

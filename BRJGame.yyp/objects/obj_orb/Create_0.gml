@@ -45,7 +45,8 @@ linkOrb = function(otherOrb) {
 		for(var _i = array_length(_bosses) - 1; _i >= 0; _i--) {
 			var _boss = _bosses[_i];
 			if(script_pointInComplexPolygon(_boss.x, _boss.y, _collisionPoints)) {
-				_boss.hit(10);
+				var _damageExtraFromDifficulty = (2 - global.gameDifficultySelected) * 2.5;
+				_boss.hit(10 + _damageExtraFromDifficulty);
 			}
 		}
 	}

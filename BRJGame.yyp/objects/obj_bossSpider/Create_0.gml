@@ -6,12 +6,13 @@ Health = HealthMax;
 moveSpeed = .5;
 speedDecay = .8;
 
-legUpdateDistance = 74;
-legStepDist = 47;
-legSegLen = 55;
+legUpdateDistance = 80;
+legStepDist = 44;
+legSegLen = 56;
 legPositions = array_create(8, 0);
 legPositionGoals = array_create(8, 0);
 legOrigins = array_create(8, 0);
+legStepDistances = array_create(8, 50);
 
 strafeDir = 1;
 

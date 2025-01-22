@@ -5,6 +5,7 @@ var _legPosGoal = 0;
 var _legOrigin = 0;
 var _legBeginX = 0;
 var _legBeginY = 0;
+var _stepDistance = 0;
 
 var _thighSpriteWidth = sprite_get_width(spr_spiderThigh);
 var _footSpriteHeight = sprite_get_width(spr_spiderFoot);
@@ -23,9 +24,14 @@ array_sort(_legOrder, function(elm1, elm2)
 var _legDrawI = -1;
 for(var _legI = 0; _legI < 8; _legI++) {
 	_legDrawI = _legOrder[_legI][0]; // set the leg index based on the next to draw order and the index stored in the array
-	_legPos = legPositions[_legDrawI];
+	
+	_legPos = [legPositions[_legDrawI][0], legPositions[_legDrawI][1]]; // rebuild the array to break reference
 	_legPosGoal = legPositionGoals[_legDrawI];
 	_legOrigin = legOrigins[_legDrawI];
+	_stepDistance = max(legStepDistances[_legDrawI], 20); // 20 here is just a filler value to avoid 0s (divide by 0 errors..)
+	
+	var _stepHeight = dsin(180 * (point_distance(_legPos[0], _legPos[1], _legPosGoal[0], _legPosGoal[1]) / _stepDistance)) * power(_stepDistance, .75);
+	_legPos[1] -= _stepHeight;
 
 	var _distFoot = point_distance(x, y, _legPos[0], _legPos[1]);
 	var _footJointDist = sqrt(abs(sqr(legSegLen) - sqr(_distFoot / 2))); // abs does nothing here in theory but if you ever get a negative number (which again you shouldn't but hey) it'll make it positive. Presumably this negative number would be tiny and the difference would be unnoticable. Ergo abs is the easiest way to prevent the negative besides clamp with is ugly

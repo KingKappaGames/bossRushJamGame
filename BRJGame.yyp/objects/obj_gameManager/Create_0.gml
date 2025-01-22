@@ -56,11 +56,11 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		instance_create_layer(200, 400, "Instances", obj_player);
 
 		if(bossSummon != -1) {
-			if(bossSummon == spr_temp_boss_1) {
+			if(bossSummon == 0) {
 				instance_create_layer(300, 400, "Instances", obj_bossRoller);
-			} else if(bossSummon == spr_temp_boss_2) {
+			} else if(bossSummon == 1) {
 				instance_create_layer(300, 400, "Instances", obj_bossSpider);
-			} else if(bossSummon == spr_temp_boss_3) {
+			} else if(bossSummon == 2) {
 				instance_create_layer(300, 400, "Instances", obj_bossRoller);
 			}
 			

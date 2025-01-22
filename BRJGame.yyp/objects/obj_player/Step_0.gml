@@ -106,9 +106,9 @@ if(global.gameManager.gameState != "sail") {
 
 //var _anglePushSpiderDirection = angle_difference(point_direction(0, 0, xChange, yChange), directionFacing);
 if(state != "jump" && state != "knock") {
-	directionFacing += angle_difference(point_direction(0, 0, xChange, yChange), directionFacing) / 10;
+	image_angle += angle_difference(point_direction(0, 0, xChange, yChange), image_angle) / 10;
 } else if(state == "knock") {
-	directionFacing += 10;
+	image_angle += 10;
 }
 
 xChange *= speedDecay;
@@ -173,3 +173,58 @@ if(state != "dead" && state != "sail") {
 		instance_create_layer(x, y -100, "Instances", obj_bossSpider);
 	}
 }
+
+#region leg stuff
+if(state != "dead") {
+	var _legPos = 0;
+	var _legPosGoal = 0;
+	var _legOrigin = 0;
+	var _legAngle = image_angle + 40;
+	for(var _legI = 0; _legI < 8; _legI++) {
+		_legPos = legPositions[_legI];
+		_legPosGoal = legPositionGoals[_legI];
+		_legOrigin = legOrigins[_legI];
+	
+		_legOrigin[0] = x + dcos(_legAngle) * 7;
+		_legOrigin[1] = y - dsin(_legAngle) * 7;
+	
+		var _goalX = _legOrigin[0] + dcos(_legAngle) * legStepDist + clamp((x - xprevious) * 15, -60, 60);
+		var _goalY = _legOrigin[1] - dsin(_legAngle) * legStepDist + clamp((y - yprevious) * 15, -60, 60); // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
+	
+		var _legStepDist = point_distance(_goalX, _goalY, _legPos[0], _legPos[1]);
+		if(_legStepDist > legUpdateDistance || irandom(180) == 0) { // randly replace the step even if it's not out of range, this helps to center a stopped leg and also add random choice to the leg pattern
+			_legPosGoal[0] = _goalX;
+			_legPosGoal[1] = _goalY; // set the next step point to the goal positions
+		}
+	
+		// moving the legs to the goals
+		_legPos[0] = lerp(_legPos[0], _legPosGoal[0], .17);
+		_legPos[1] = lerp(_legPos[1], _legPosGoal[1], .17);
+	
+		_legAngle += 33; // add between 40 and 140
+		if(_legI == 3) {
+			_legAngle += 47; // flip from left set of legs to right, these values are all hard coded so no they won't be correct if you change things. Basically though it's 4 legs between 40 and 140 counter clockwise from the head direction then add 80 to do 4 legs 220 to 320
+		}
+	}
+	
+	if(instance_exists(orbLinkFromId)) {
+		handX = mouse_x;
+		handY = mouse_y;
+
+		if(point_distance(handX, handY, x, y) > handDist) {
+			handX = x + dcos(directionToMouse) * handDist;
+			handY = y - dsin(directionToMouse) * handDist;
+		}
+		
+		legPositionGoals[7][0] = handX;
+		legPositionGoals[7][1] = handY;
+		legPositions[7][0] = handX;
+		legPositions[7][1] = handY;
+	}
+} else {
+	for(var _i = 0; _i < 8; _i++) {
+		legPositions[_i][0] = lerp(legPositions[_i][0], legPositionGoals[_i][0], .06);
+		legPositions[_i][1] = lerp(legPositions[_i][1], legPositionGoals[_i][1], .06);
+	}
+}
+#endregion leg stuff
