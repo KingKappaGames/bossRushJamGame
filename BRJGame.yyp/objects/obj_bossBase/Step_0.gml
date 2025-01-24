@@ -19,11 +19,19 @@ if(player != noone) {
 	}
 }
 
-x = clamp(x + xChange, 0, room_width);
-y = clamp(y + yChange, 0, room_height);
+x = clamp(x + xChange * frozenSpeedMult, 0, room_width);
+y = clamp(y + yChange * frozenSpeedMult, 0, room_height);
 
 xChange *= speedDecay;
 yChange *= speedDecay;
+
+if(frozenSpeedMult < .98) { // cut off for mathing and draw
+	frozenSpeedMult = 1 - (1 - frozenSpeedMult) * .995;
+} else {
+	frozenSpeedMult = 1;
+}
+
+highlightHealth = lerp(highlightHealth, Health, .035); // health lag behind bar (dark souls style)
 
 if(stateTimer >= 0) {
 	stateTimer--;

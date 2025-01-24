@@ -21,6 +21,9 @@ array_sort(_legOrder, function(elm1, elm2)
     return elm1[1] - elm2[1]; // sort the position array by position 1 (y value) (thus giving you a sorted list of which indexs go in what order
 });
 
+shader_set(shd_greyScale); // SET SHADER FOR GREY SCALE WHEN FROZEN
+shader_set_uniform_f((shader_get_uniform(shd_greyScale, "u_GrayscaleAmount")), clamp((1 - frozenSpeedMult) * 2, 0, 1)); // twice as greyscale'd as value
+
 var _legDrawI = -1;
 for(var _legI = 0; _legI < 8; _legI++) {
 	_legDrawI = _legOrder[_legI][0]; // set the leg index based on the next to draw order and the index stored in the array
@@ -51,6 +54,8 @@ for(var _legI = 0; _legI < 8; _legI++) {
 	draw_sprite_ext(spr_spiderFoot, 0, _legMidX, _legMidY, _footFacingDir, _footDist / _footSpriteHeight, _footDir + 90, c_white, 1);
 	draw_sprite_ext(spr_spiderThigh, 0, _legOrigin[0], _legOrigin[1], _kneeDist / _thighSpriteWidth, 1, _kneeDir, c_white, 1);
 }
+
+shader_reset();
 
 draw_text(x, y - 100, state);
 

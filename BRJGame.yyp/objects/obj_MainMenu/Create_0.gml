@@ -247,13 +247,3 @@ menuSwitchPosition = function(positionChange) {
 menuSwitchOptionGroup(0);
 
 initializeMenu();
-
-// load the sound groups
-if(!audio_group_is_loaded(ag_Music))
-{
-	audio_group_load(ag_Music);
-};
-if(!audio_group_is_loaded(ag_SFX))
-{
-	audio_group_load(ag_SFX);
-};

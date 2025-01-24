@@ -1,8 +1,9 @@
 global.linksTotalThisFrame = [];
 	
-var _drawnLinks = global.linksTotalThisFrame; // pairs of [orb1, orb2, linkDist]
+var _webLinks = [];
+var _drawnLinks = global.linksTotalThisFrame;
 
-with(obj_orb) { // with each orb draw links but not duplicates
+with(obj_orbParent) { // with each orb draw links but not duplicates
 	if(linked) {
 		for(var _connectionI = array_length(connections) - 1; _connectionI >= 0; _connectionI--) { // with each connected orb to that orb
 			var _orb = connections[_connectionI][0];
@@ -21,12 +22,15 @@ with(obj_orb) { // with each orb draw links but not duplicates
 					var _dist = point_distance(x, y, _orb.x, _orb.y);
 					
 					array_push(_drawnLinks, [id, _orb, _dist]);
+					if(object_index == obj_webOrb) {
+						array_push(_webLinks, [id, _orb, _dist]); // add web links specifically to the web linking array for collisions, the others are simply drawn (though still marked in the global for reference..)
+					}
 				}
 			}
 		}
 	}
 }
 
-if(array_length(_drawnLinks) > 0) {
-	global.boss.blockingLinksRef = _drawnLinks;
+if(array_length(_webLinks) > 0) {
+	global.boss.blockingLinksRef = _webLinks;
 }

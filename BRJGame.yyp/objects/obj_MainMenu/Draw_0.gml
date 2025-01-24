@@ -19,6 +19,7 @@ for(var _bossI = 0; _bossI < _bossWheelCount; _bossI++) {
 		draw_sprite_ext(wheelSprites[_bossI], 0, wheelCenterX + dcos(_drawAngle) * wheelWidth, wheelCenterY - _sin * wheelWidth, _drawCenterness * 5, _drawCenterness * 5, 0, make_color_rgb(127 + _drawCenterness * 128, 127 + _drawCenterness * 128, 127 + _drawCenterness * 128), 1);
 	} else {
 		shader_set(shd_greyScale);
+		shader_set_uniform_f((shader_get_uniform(shd_greyScale, "u_GrayscaleAmount")), 1);
 		draw_sprite_ext(wheelSprites[_bossI], 0, wheelCenterX + dcos(_drawAngle) * wheelWidth, wheelCenterY - _sin * wheelWidth, _drawCenterness * 5, _drawCenterness * 5, 0, make_color_rgb(_drawCenterness * 255, _drawCenterness * 255, _drawCenterness * 255), 1);
 		shader_reset();
 	}

@@ -16,11 +16,14 @@ attackTimings = []; // array of some number of hitbox entries in one attack stat
 
 HealthMax = 40;
 Health = HealthMax;
+highlightHealth = HealthMax;
 
-healthBarFade = 1;
+healthBarFade = 0;
 
 moveSpeed = .5;
 speedDecay = .8;
+
+frozenSpeedMult = 1;
 
 xChange = 0;
 yChange = 0;

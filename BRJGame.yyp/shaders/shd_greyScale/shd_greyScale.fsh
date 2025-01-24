@@ -1,6 +1,14 @@
-varying vec2 vTc;
+varying vec2 v_vTexcoord;
+varying vec4 v_vColour;
+
+uniform float u_GrayscaleAmount;
+
 void main() {
-  vec4 irgba=texture2D(gm_BaseTexture,vTc);
-  float luminance=dot(irgba.rgb,vec3(0.2125,0.7154,0.0721));
-  gl_FragColor=vec4(luminance,luminance,luminance,irgba.a);
+	vec4 originalColor = v_vColour * texture2D(gm_BaseTexture, v_vTexcoord);
+  
+	float luminance = dot(originalColor.rgb, vec3(0.299, 0.587, 0.114));
+  
+	vec4 grayscaleColor = vec4(luminance, luminance, luminance, originalColor.a);
+ 
+	gl_FragColor = mix(originalColor, grayscaleColor, u_GrayscaleAmount);
 }

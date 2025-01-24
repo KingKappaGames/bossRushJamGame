@@ -6,6 +6,8 @@ global.gameManager = id;
 global.bossStickingOrbs = 0;
 global.linksTotalThisFrame = [];
 
+global.shadowRotation = 140;
+
 global.player = noone;
 
 global.is_paused = false;
@@ -13,8 +15,8 @@ menu_close = false;
 randomize();
 
 #endregion surface / buffer stuff for floor debris and markings
-global.debrisSurface = surface_create(room_width, room_height);
-global.debrisBuffer = buffer_create(room_width * room_height * 4, buffer_fixed, 1);
+global.debrisSurface = 0;
+global.debrisBuffer = 0;
 
 debrisSaveTimer = 0;
 instance_create_layer(x, y, "Instances", obj_surfaceDrawer);
@@ -50,7 +52,7 @@ setGameState = function(state, timer = -1, titleText = 0) {
 	} else if(state == "fight") {
 		instance_destroy(obj_player);
 		instance_destroy(obj_bossBase);
-		instance_destroy(obj_orb);
+		instance_destroy(obj_webOrb);
 		instance_destroy(obj_bullet);
 		
 		instance_create_layer(200, 400, "Instances", obj_player);
@@ -79,6 +81,10 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		_stateTimer = 0;
 	} else if(state == "sail") {
 		//... nothing for sailing
+	} else if(state == "bossIntro") {
+		
+	} else if(state == "prefight") {
+		
 	}
 	
 	if(gameStateTimer != 0) {
@@ -182,3 +188,23 @@ part_type_speed(_water, .9, 1.1, -.01, 0);
 //	_x = -200;
 //	_y += 10;
 //}
+
+
+//load sounds and fmod stuff
+if(!audio_group_is_loaded(ag_Music))
+{
+	audio_group_load(ag_Music);
+};
+if(!audio_group_is_loaded(ag_SFX))
+{
+	audio_group_load(ag_SFX);
+};
+
+global.fmodSys = fmod_studio_system_create();
+fmod_studio_system_init(1024, FMOD_STUDIO_INIT.NORMAL);
+fmod_main_system = fmod_studio_system_get_core_system();
+
+rollerSound = fmod_studio_system_load_bank_file(fmod_path_bundle("Boss Theme 3.bank"), FMOD_STUDIO_LOAD_BANK.NORMAL);
+event_description_ref = fmod_studio_system_get_event("event:/Ambience/Country");
+event_description_instance_ref = fmod_studio_event_description_create_instance(event_description_ref);
+fmod_studio_event_instance_start(event_description_instance_ref);

@@ -4,7 +4,7 @@ function script_createWebStuckPoint(stuckId, orbPairArray){
 	
 	script_severLink(_orb1, _orb2); // cut the connections of these two orbs from each other
 	
-	var _fakeStickOrb = instance_create_layer(stuckId.x, stuckId.y, "Instances", obj_orb);
+	var _fakeStickOrb = instance_create_layer(stuckId.x, stuckId.y, "Instances", obj_webOrb);
 	_fakeStickOrb.fakeOrb = true;
 	_fakeStickOrb.stuckToId = stuckId;
 	

@@ -29,8 +29,7 @@ if(state == "idle") {
 	}
 	
 	if(keyboard_check_released(ord("E"))) {
-		var _orb = instance_create_layer(x, y, "Instances", obj_orb);
-		_orb.image_blend = make_color_rgb(irandom(255), irandom(255), irandom(255));
+		var _orb = instance_create_layer(x, y, "Instances", array_get([obj_fireOrb, obj_webOrb, obj_iceOrb], orbSpawnType));
 	}
 } else if(state == "spin") {
 	if(keyboard_check_released(vk_shift)) {
@@ -39,7 +38,7 @@ if(state == "idle") {
 		var _dirFromCenter = point_direction(spinCenterX, spinCenterY, x, y);
 		
 		if(abs(angle_difference(spinLastAngleOrb, _dirFromCenter)) > 1200 / spinDist) { // well... this basically creates an orb web every few degrees of travel but more on bigger circles becauese bigger circle = more distance per angle traveleed.... Don't ask me to be reasonable
-			var _orb = instance_create_layer(x, y, "Instances", obj_orb);
+			var _orb = instance_create_layer(x, y, "Instances", obj_webOrb);
 			if(instance_exists(spinLastOrbId)) {
 				_orb.linkOrb(spinLastOrbId);
 			}
@@ -74,41 +73,49 @@ if(state == "idle") {
 	}
 }
 
-if(global.gameManager.gameState != "sail") {
-	if(global.gameManager.gameState != "moveZone") {
-		x = clamp(x + xChange, 0, room_width);
-		y = clamp(y + yChange, 0, room_height);
-	} else { // victory
-		x = clamp(x + xChange, 0, room_width * 1.75); // how wide is continued area?
+if(global.gameManager.gameState == "fight") {
+	x = clamp(x + xChange, 0, room_width);
+	y = clamp(y + yChange, 0, room_height);
+} else {
+	repeat(10) {
+		part_particles_create(underSys, irandom_range(room_width * 1.7, room_width * 2), irandom(room_height), waterParts, 1);
+	}
 	
-		if(abs(y - room_height / 2) > 50) { // the middle path in the room
+	if(global.gameManager.gameState == "sail") {
+		//don't flip with sailing
+	} else { // other times...
+		if(global.gameManager.gameState == "prefight") {
+			if(x > room_width / 3) {
+				//start cutscene and then boss "fight" state
+				global.gameManager.setGameState("fight");
+			}
+		}
+		
+		x = clamp(x + xChange, -room_width * .72, room_width * 1.76); // how wide is continued area?
+	
+		if(abs(y - room_height / 2) > 50) { // the middle path in the rooma
 			if(x > room_width) {
 				x = room_width;
+			} else if(x < 0) {
+				x = 0;
 			}
 		}
 	
-		if(x <= room_width + 1) { // if in extra area
+		if(x <= room_width + 1 && x >= 0) { // if in extra area
 			y = clamp(y + yChange, 0, room_height);
 		} else {
 			y = clamp(y + yChange, room_height / 2 - 49, room_height / 2 + 49);
 		}
-	
-		repeat(5) {
-			part_particles_create(underSys, irandom_range(room_width * 1.7, room_width * 2), irandom(room_height), waterParts, 1);
-		}
 	}
-} else { // boat
-	repeat(5) { // redundant other water set
-		part_particles_create(underSys, irandom_range(room_width * 1.7, room_width * 2.3), irandom(room_height), waterParts, 1);
-	}
-	// nothing
 }
 
-//var _anglePushSpiderDirection = angle_difference(point_direction(0, 0, xChange, yChange), directionFacing);
-if(state != "jump" && state != "knock") {
-	image_angle += angle_difference(point_direction(0, 0, xChange, yChange), image_angle) / 10;
-} else if(state == "knock") {
-	image_angle += 10;
+if(state != "jump") {
+	//var _anglePushSpiderDirection = angle_difference(point_direction(0, 0, xChange, yChange), directionFacing);
+	if(state != "jump" && state != "knock") {
+		image_angle += angle_difference(point_direction(0, 0, xChange, yChange), image_angle) / 10;
+	} else if(state == "knock") {
+		image_angle += 10;
+	}
 }
 
 xChange *= speedDecay;
@@ -136,9 +143,16 @@ if(hitColorTimer > 0) {
 	}
 }
 
+highlightHealth = lerp(highlightHealth, Health, .035);
+
 if(state != "dead" && state != "sail") {
 	if(mouse_check_button_released(mb_left)) {
-		var _orbNearest = instance_nearest(mouse_x, mouse_y, obj_orb);
+		var _heldOrbType = obj_orbParent;
+		if(instance_exists(orbLinkFromId)) {
+			_heldOrbType = orbLinkFromId.object_index; // only try to connect to orbs of the same kind as the one you're holding or all if none held currently
+		}
+		
+		var _orbNearest = instance_nearest(mouse_x, mouse_y, _heldOrbType);
 		if(instance_exists(_orbNearest)) {
 			var _orbDist = point_distance(_orbNearest.x, _orbNearest.y, x, y);
 			if(_orbDist < orbClickRange) {
@@ -156,7 +170,11 @@ if(state != "dead" && state != "sail") {
 	}
 
 	if(mouse_check_button_released(mb_right)) {
-		orbLinkFromId = noone;
+		if(orbLinkFromId == noone) {
+			orbSpawnType = (orbSpawnType + 1) % 3;
+		} else {
+			orbLinkFromId = noone;
+		}
 	}
 
 	#endregion

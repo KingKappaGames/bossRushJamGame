@@ -1,7 +1,7 @@
 event_inherited();
 
 var _dirMoving = point_direction(0, 0, xChange, yChange);
-
+/*
 if(stateType == "idle") {
 	var _moveDir = point_direction(x, y, moveGoalX, moveGoalY);
 
@@ -91,4 +91,4 @@ if(stateType == "idle") {
 			setState("rolling", 180);
 		}
 	}
-}
+}*/

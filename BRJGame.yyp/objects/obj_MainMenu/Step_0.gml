@@ -1,14 +1,17 @@
 menuSwitchPosition(keyboard_check_released(ord("S")) - keyboard_check_released(ord("W")));
 menuChangeField(keyboard_check_released(ord("D")) - keyboard_check_released(ord("A")));
 
-if(keyboard_check_released(vk_space) || keyboard_check_released(ord("E")) || (mouse_check_button_released(mb_left) && mouse_x > x + 130)) {
+if(keyboard_check_released(vk_space) || keyboard_check_released(ord("E")) || (mouse_check_button_released(mb_left) && mouse_x > x + 350)) {
+	if(mouse_check_button_released(mb_left)) {
+		var _optionHeight = (53 * display_get_gui_height() / room_height); // set the mouse position here
+		optionPosition = clamp((mouse_y - (y - (_optionHeight * 2.85))) div _optionHeight, 0, optionAmount - 1);
+	}
 	menuSelectOption();
 } else {
 	if(mouse_check_button_released(mb_left)) {
 		if(mouse_x < x + 130) {
 			var _bossCount = array_length(wheelMembers);
 			global.boss_selected = wheelMembers[(((360 - wheelAngle) + 140) div (360 / _bossCount)) % _bossCount];
-			show_debug_message(global.boss_selected);
 		}
 	}
 }
@@ -20,13 +23,14 @@ if(window_mouse_get_delta_x() != 0 || window_mouse_get_delta_y() != 0) {
 }
 
 
-show_debug_message(mouseSelecting)
 //do selection based on mouse
-if(mouseSelecting) {
-	if(mouse_x > x + 300) {
+if(mouse_x > x + 350) {
+	if(mouseSelecting) {
 		var _optionHeight = (53 * display_get_gui_height() / room_height);
 		optionPosition = clamp((mouse_y - (y - (_optionHeight * 2.85))) div _optionHeight, 0, optionAmount - 1);
 	}
+} else {
+	mouseSelecting = false;
 }
 
 
