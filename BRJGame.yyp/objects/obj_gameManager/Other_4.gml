@@ -17,4 +17,6 @@ if(room == rm_grassyArena) {
 	} else {
 		//??
 	}
+} else if(room == rm_Main_Menu) {
+	setGameState("starting");
 }

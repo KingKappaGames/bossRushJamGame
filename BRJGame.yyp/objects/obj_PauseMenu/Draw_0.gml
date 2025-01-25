@@ -1,31 +1,20 @@
-if(optionGroup == 4) { // custom draw groups
+if(surface_exists(pauseSurface)) {
+	shader_set(shd_blur);
+	shader_set_uniform_f_array(shader_get_uniform(shd_blur, "size"), [1920, 1080, 14]); 
+	draw_surface_ext(pauseSurface, camera_get_view_x(view_camera[0]), camera_get_view_y(view_camera[0]), .25, .25, 0, c_white, 1);
+	shader_reset();
+} else {
+	pauseSurface = surface_create(1960, 1080);
+	buffer_set_surface(pauseSurfaceBuffer, pauseSurface, 0);
+}
+
+if(optionGroup == 5) { // custom draw groups
 	draw_sprite(spr_controlDiagram, 0, x, y);
 } else if(optionGroup == 2) {
-	draw_sprite_ext(spr_optionMeter, gameEffectVolume, x + 114, y - 141, 2.5, 2.5, 0, c_white, 1);
-	draw_sprite_ext(spr_optionMeter, gameMusicVolume, x + 114, y - 65, 2.5, 2.5, 0, c_white, 1);
+	draw_sprite_ext(spr_optionMeter, gameEffectVolume, camera_get_view_x(view_camera[0]) + 223, camera_get_view_y(view_camera[0]) + 44, 2.5 * (480 / 1366), 2.5 * (270 / 768), 0, c_white, 1);
+	draw_sprite_ext(spr_optionMeter, gameMusicVolume, camera_get_view_x(view_camera[0]) + 223, camera_get_view_y(view_camera[0]) + 70, 2.5 * (480 / 1366), 2.5 * (270 / 768), 0, c_white, 1);
 } else if(optionGroup == 3) {
 	
 } else if(optionGroup == 5) {
 	
 }
-
-wheelAngle = (wheelAngle + 1) % 360;
-var _bossWheelCount = array_length(wheelMembers);
-var _drawAngle = wheelAngle;
-for(var _bossI = 0; _bossI < _bossWheelCount; _bossI++) {
-	var _sin = dsin(_drawAngle);
-	var _drawCenterness = .67 + _sin / 3;
-	if(global.boss_selected == _bossI) {
-		draw_sprite_ext(wheelSprites[_bossI], 0, wheelCenterX + dcos(_drawAngle) * wheelWidth, wheelCenterY - _sin * wheelWidth, _drawCenterness * 5, _drawCenterness * 5, 0, make_color_rgb(127 + _drawCenterness * 128, 127 + _drawCenterness * 128, 127 + _drawCenterness * 128), 1);
-	} else {
-		shader_set(shd_greyScale);
-		draw_sprite_ext(wheelSprites[_bossI], 0, wheelCenterX + dcos(_drawAngle) * wheelWidth, wheelCenterY - _sin * wheelWidth, _drawCenterness * 5, _drawCenterness * 5, 0, make_color_rgb(_drawCenterness * 255, _drawCenterness * 255, _drawCenterness * 255), 1);
-		shader_reset();
-	}
-	_drawAngle += 360 / _bossWheelCount;
-}
-
-//if(optionGroup == 0) {
-//	var _sin = dsin(current_time / 30);
-//	draw_sprite_ext(spr_wanderlustTitle, 0, x + menuWidth / 2, y - 20, 1, 1, dsin(current_time / 15) * 3.4, make_color_rgb(255, 230 + _sin * 25, 230 + _sin * 25), 1);
-//} // draw the title at top

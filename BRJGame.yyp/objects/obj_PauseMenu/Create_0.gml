@@ -3,10 +3,9 @@ draw_set_font(fnt_menu);
 menuWidth = 300;
 menuHeight = 240;
 
-options[0][0] = "START GAME";
+options[0][0] = "RESUME";
 options[0][1] = "OPTIONS";
-options[0][2] = "CREDITS";
-options[0][3] = "EXIT";
+options[0][2] = "EXIT TO MENU";
 
 options[1][0] = "RETURN";
 options[1][1] = "SOUND SETTINGS";
@@ -23,10 +22,10 @@ options[3][1] = "RESOLUTION";
 options[3][2] = "FULLSCREEN";
 
 options[4][0] = "RETURN";
+options[4][1] = "DIFFICULTY";
+options[4][2] = "VIEW SHAKE";
 
 options[5][0] = "RETURN";
-options[5][1] = "DIFFICULTY";
-options[5][2] = "VIEW SHAKE";
 
 optionPosition = 0;
 optionGroup = 0;
@@ -51,8 +50,8 @@ global.gameMusicVolume = 5;
 global.boss_selected = 0;
 #endregion 
 
-x = room_width / 2 - menuWidth / 2;
-y = room_height / 2 - menuHeight / 2;
+pauseSurfaceBuffer = buffer_create(1920 * 1080 * 4, buffer_fixed, 1);
+pauseSurface = -1;
 
 //game settings in menu
 gameDifficultyDisplayOptions = ["POLITE", "EVERYMAN", "CHAMPION"];
@@ -70,14 +69,6 @@ gameFullscreenDisplayOptions = ["WINDOWED", "FULLSCREEN"];
 
 gameEffectVolume = global.gameEffectVolume;
 gameMusicVolume = global.gameMusicVolume;
-
-wheelAngle = 0;
-wheelMembers = [0, 1, 2];
-wheelSprites = [spr_temp_boss_1, spr_temp_boss_2, spr_temp_boss_3];
-
-wheelCenterX = x - 150;
-wheelCenterY = y + 140;
-wheelWidth = 110;
 
 #region initialize menu
 initializeMenu = function(){
@@ -112,7 +103,7 @@ menuChangeField = function(fieldChange){
 				gameFullscreenSelected = clamp(gameFullscreenSelected + fieldChange, 0, 1);
 				window_set_fullscreen(gameFullscreenOptions[gameFullscreenSelected]);
 			}
-		} else if(optionGroup == 5) {
+		} else if(optionGroup == 4) {
 			if(optionPosition == 1) {
 				gameDifficultySelected = clamp(gameDifficultySelected + fieldChange, 0, 2);
 			} else if(optionPosition == 2) {
@@ -127,17 +118,13 @@ menuChangeField = function(fieldChange){
 menuSelectOption = function(){
 	if(optionGroup == 0) {
 		if(optionPosition == 0) {
-			audio_play_sound(snd_menuBeep, 100, false);
-			//load game!
-			room_goto(rm_grassyArena);
-			global.gameManager.bossSummon = global.boss_selected;
+			audio_play_sound(snd_menuStart, 100, false);
+			script_setPauseState(false);
+			instance_destroy();
 		} else if(optionPosition == 1) {
 			menuSwitchOptionGroup(1);
 		} else if(optionPosition == 2) {
-			audio_play_sound(snd_menuBeep, 100, false);
-			//room_goto(rm_credits);
-		} else if(optionPosition == 3) {
-			game_end();
+			room_goto(rm_Main_Menu);
 		}
 	} else if(optionGroup == 1) {
 		if(optionPosition == 0) {
@@ -147,9 +134,9 @@ menuSelectOption = function(){
 		} else if(optionPosition == 2) {
 			menuSwitchOptionGroup(3, 1);
 		} else if(optionPosition == 3) {
-			menuSwitchOptionGroup(5, 1);
-		} else if(optionPosition == 4) {
 			menuSwitchOptionGroup(4, 1);
+		} else if(optionPosition == 4) {
+			menuSwitchOptionGroup(5, 1);
 		}
 	} else if(optionGroup == 2) {
 		if(optionPosition == 0) {
@@ -220,16 +207,13 @@ menuSwitchOptionGroup = function(newOptionGroup, hardCoded = 0){
 			menuAlign = fa_right;
 			menuWidth = 900;
 			menuHeight = menuBorder * 2 + optionAmount * optionHeight;
-		} else if(newOptionGroup == 5) {
+		} else if(newOptionGroup == 4) {
 			menuAlign = fa_right;
 			menuWidth = 900;
 			menuHeight = menuBorder * 2 + optionAmount * optionHeight;
 		}
 	}
 
-	//x = camera_get_view_x(view_camera[0]) + 240 - menuWidth / 2;
-	//y = camera_get_view_y(view_camera[0]) + 135 - menuHeight / 2;
-	
 	//play sound for switching screen thing
 	audio_play_sound(snd_menuBeep, 100, false);
 }
@@ -248,15 +232,4 @@ menuSwitchOptionGroup(0);
 
 initializeMenu();
 
-// load the sound groups
-if(!audio_group_is_loaded(ag_Music))
-{
-	audio_group_load(ag_Music);
-};
-if(!audio_group_is_loaded(ag_SFX))
-{
-	audio_group_load(ag_SFX);
-};
-
-//DRAW the stuff from this pause menu pushed off to the side llike in a lot
-//of AAA games. Then blur or something the background to make it look cool...
+script_setPauseState(true, true);

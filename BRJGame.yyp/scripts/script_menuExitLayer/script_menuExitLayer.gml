@@ -1,7 +1,7 @@
 function script_menuExitLayer(){
 	if(object_index != obj_MainMenu) {
 		optionPosition = 0;
-		pauseMenuSelectOption();
+		menuSelectOption();
 	} else {
 		if(optionGroup != 0) {
 			optionPosition = 0;

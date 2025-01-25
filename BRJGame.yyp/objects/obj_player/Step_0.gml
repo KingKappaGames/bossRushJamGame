@@ -30,6 +30,7 @@ if(state == "idle") {
 	
 	if(keyboard_check_released(ord("E"))) {
 		var _orb = instance_create_layer(x, y, "Instances", array_get([obj_fireOrb, obj_webOrb, obj_iceOrb], orbSpawnType));
+		audio_play_sound(snd_orbPlaceHuff, 1, 0, 2);
 	}
 } else if(state == "spin") {
 	if(keyboard_check_released(vk_shift)) {

@@ -1,3 +1,8 @@
+if(instance_number(obj_gameManager) > 1) {
+	instance_destroy();
+	exit;
+}
+
 depth = -2000;
 
 game_set_speed(60, gamespeed_fps);
@@ -201,10 +206,27 @@ if(!audio_group_is_loaded(ag_SFX))
 };
 
 global.fmodSys = fmod_studio_system_create();
-fmod_studio_system_init(1024, FMOD_STUDIO_INIT.NORMAL);
+show_debug_message("fmod_studio_system_create: " + string(fmod_last_result()));
+fmod_studio_system_init(1024, FMOD_STUDIO_INIT.LIVEUPDATE, FMOD_INIT.NORMAL);
+show_debug_message("fmod_studio_system_init: " + string(fmod_last_result()));
 fmod_main_system = fmod_studio_system_get_core_system();
 
 rollerSound = fmod_studio_system_load_bank_file(fmod_path_bundle("Boss Theme 3.bank"), FMOD_STUDIO_LOAD_BANK.NORMAL);
-event_description_ref = fmod_studio_system_get_event("event:/Ambience/Country");
+strings_bank_ref = fmod_studio_system_load_bank_file(fmod_path_bundle("Master.strings.bank"), FMOD_STUDIO_LOAD_BANK.NORMAL);
+
+show_debug_message(fmod_studio_system_get_bank_count());
+show_debug_message("$###########################################")
+
+event_description_ref = fmod_studio_system_get_event("event:/Boss Theme 3 Loop");
+show_debug_message("get the event: " + string(fmod_last_result()))
 event_description_instance_ref = fmod_studio_event_description_create_instance(event_description_ref);
+show_debug_message("create event desc instance? : " + string(fmod_last_result()))
+show_debug_message("created instance is valid? : " + string(fmod_studio_event_instance_is_valid()))
+
+show_debug_message("event valid? : " + string(fmod_studio_event_instance_is_valid(event_description_instance_ref)))
+
 fmod_studio_event_instance_start(event_description_instance_ref);
+
+show_debug_message("event valid? : " + string(fmod_studio_event_instance_is_valid(event_description_instance_ref)))
+
+show_debug_message("start instance event: " + string(fmod_last_result()));

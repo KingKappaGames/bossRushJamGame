@@ -127,10 +127,13 @@ menuChangeField = function(fieldChange){
 menuSelectOption = function(){
 	if(optionGroup == 0) {
 		if(optionPosition == 0) {
-			audio_play_sound(snd_menuBeep, 100, false);
+			audio_play_sound(snd_menuStart, 100, false);
 			//load game!
 			room_goto(rm_grassyArena);
 			global.gameManager.bossSummon = global.boss_selected;
+			audio_stop_sound(snd_bossGenericTheme);
+			audio_stop_sound(snd_mainMenuSong); // stop all other songs to start in other place
+			script_setPauseState(false);
 		} else if(optionPosition == 1) {
 			menuSwitchOptionGroup(1);
 		} else if(optionPosition == 2) {

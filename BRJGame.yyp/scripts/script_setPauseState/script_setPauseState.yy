@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"script_OpenMenuItem",
+  "%Name":"script_setPauseState",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"script_OpenMenuItem",
+  "name":"script_setPauseState",
   "parent":{
     "name":"script_group_menuStuff",
     "path":"folders/bitMenu/script_group_menuStuff.yy",

@@ -4,14 +4,8 @@ if(!global.is_paused) {
 	menu_close = false;
 	if(keyboard_check_released(vk_escape) && room != rm_Main_Menu) {
 		
-		global.is_paused = true;
-		//room_goto(rm_Main_Menu);
-		instance_deactivate_all(true);
-		instance_activate_object(obj_Menu_Manager);
-		instance_activate_object(obj_DebugManager);
-		
-		obj_Menu_Manager.clearButtons();
-		obj_Menu_Manager.menu_up = true;
+		//instance_deactivate_all(true);
+		instance_create_layer(room_width / 2, room_width / 2, "Instances", obj_PauseMenu);
 		
 		exit; // break out of the non paused stuff when pausing initially
 	}
@@ -23,7 +17,13 @@ if(!global.is_paused) {
 		}
 	} else if(gameState == "respawn") {
 		if(mouse_check_button_released(mb_left) || mouse_check_button_released(mb_right)) {
-			setGameState("fight");
+			setGameState("prefight");
+			instance_destroy(obj_player);
+			instance_destroy(obj_bossBase);
+			instance_destroy(obj_webOrb);
+			instance_destroy(obj_bullet);
+		
+			instance_create_layer(-300, room_height / 2, "Instances", obj_player);
 		}
 	} else if(gameState == "victory") {
 		gameStateTimer--;
@@ -62,19 +62,22 @@ if(!global.is_paused) {
 		}
 	}
 }
-else
-{
-	if(keyboard_check_released(vk_escape) || menu_close)
-	{
-		global.is_paused = false;
-		//instance_activate_all();
-		alarm_set(1, 5);
-		
-		obj_Menu_Manager.menu_up = false;
-	};
-};
 
 fmod_studio_system_update();
+
+//if(fmod_studio_event_instance_is_valid(event_description_instance_ref) == false) {
+//	event_description_ref = fmod_studio_system_get_event("event:/Boss Theme 3 Loop");
+//	event_description_instance_ref = fmod_studio_event_description_create_instance(event_description_ref);
+
+//	fmod_studio_event_instance_start(event_description_instance_ref);
+//}
+
+show_debug_message(global.is_paused)
+show_debug_message("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+show_debug_message(fmod_studio_event_instance_is_valid(event_description_instance_ref));
+show_debug_message(fmod_studio_event_instance_get_playback_state(event_description_instance_ref));
+
+show_debug_message(gameState);
 
 /*
 show_debug_message("#");
@@ -82,3 +85,4 @@ show_debug_message(view_wport[0]);
 show_debug_message(view_hport[0]);
 show_debug_message(camera_get_view_width(view_camera[0]));
 show_debug_message(camera_get_view_height(view_camera[0]));
+

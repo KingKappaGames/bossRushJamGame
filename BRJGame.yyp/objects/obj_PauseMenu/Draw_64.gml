@@ -18,7 +18,7 @@ if(optionGroup == 3) {
 	}
 	draw_text_transformed(_screenRight - 624, 165, string(gameWindowResolutionOptions[gameWindowResolutionSelected][0]) + ", " + string(gameWindowResolutionOptions[gameWindowResolutionSelected][1]) + _fullscreenVar, 2, 2.5, 0);
 	draw_text_transformed(_screenRight - 624, 270, string(gameFullscreenDisplayOptions[gameFullscreenSelected]), 2, 2.5, 0);
-} else if(optionGroup == 5) {
+} else if(optionGroup == 4) {
 	draw_set_halign(fa_right)
 	draw_text_transformed(_screenRight - 624, 165, string(gameDifficultyDisplayOptions[gameDifficultySelected]), 2, 2.5, 0);
 	draw_text_transformed(_screenRight - 624, 270, string(gameScreenShakeDisplayOptions[gameScreenShakeSelected]), 2, 2.5, 0);
