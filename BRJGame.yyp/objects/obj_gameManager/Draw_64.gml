@@ -13,7 +13,7 @@ if(!global.is_paused) {
 }
 
 
-
+draw_text_transformed(view_wport[0] / 2, view_hport[0] / 10 + 100, gameState, 3.5, 3.5, 0);
 
 /* // version using room coords...
 if(gameState == "gameOver") {

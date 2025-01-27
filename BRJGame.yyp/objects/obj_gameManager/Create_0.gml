@@ -11,8 +11,6 @@ global.gameManager = id;
 global.bossStickingOrbs = 0;
 global.linksTotalThisFrame = [];
 
-global.shadowRotation = 140;
-
 global.player = noone;
 
 global.is_paused = false;
@@ -42,7 +40,7 @@ setGameState = function(state, timer = -1, titleText = 0) {
 	} else {
 		gameStateText = "";
 	}
-	if(timer == -1) {
+	if(timer != -1) {
 		gameStateTimer = timer; // establishing default values for non set states
 	} else {
 		gameStateTimer = 0;
@@ -55,27 +53,9 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		_stateText = "You died!";
 		_stateTimer = 120;
 	} else if(state == "fight") {
-		instance_destroy(obj_player);
-		instance_destroy(obj_bossBase);
-		instance_destroy(obj_webOrb);
-		instance_destroy(obj_bullet);
-		
-		instance_create_layer(200, 400, "Instances", obj_player);
-
-		if(bossSummon != -1) {
-			if(bossSummon == 0) {
-				instance_create_layer(300, 400, "Instances", obj_bossRoller);
-			} else if(bossSummon == 1) {
-				instance_create_layer(300, 400, "Instances", obj_bossSpider);
-			} else if(bossSummon == 2) {
-				instance_create_layer(300, 400, "Instances", obj_bossRoller);
-			}
-			
-			bossSummon = -1;
-		} else {
-			instance_create_layer(300, 400, "Instances", choose(obj_bossRoller, obj_bossSpider));
-		}
+		global.player.setState("idle");
 	} else if(state == "victory") {
+		bossSummon = (bossSummon + 1) % 3; // randomize future boss summon
 		_stateText = "You won!";
 		_stateTimer = 120;
 	} else if(state == "respawn") {
@@ -86,14 +66,34 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		_stateTimer = 0;
 	} else if(state == "sail") {
 		//... nothing for sailing
-	} else if(state == "bossIntro") {
+	} else if(state == "intro") {
+		global.player.setState("intro"); // player
 		
+		audio_stop_sound(global.musicPlaying);
+		
+		var _boss = -1;
+		if(bossSummon != -1) {
+			if(bossSummon == 0) {
+				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossRoller);
+			} else if(bossSummon == 1) {
+				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossSpider);
+			} else if(bossSummon == 2) {
+				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossMantis);
+			}
+		} else {
+			var _ind = irandom(2); // boss count
+			var _bossInd = array_get([obj_bossRoller, obj_bossSpider, obj_bossMantis], _ind);
+			_boss = instance_create_layer(room_width / 2, -200, "Instances", _bossInd);
+		}
+		_boss.setState("intro");
 	} else if(state == "prefight") {
 		
 	}
 	
 	if(gameStateTimer != 0) {
-		gameStateTimer = _stateTimer;
+		if(timer == -1) {
+			gameStateTimer = _stateTimer; // if no time given and game state timer unset.. do i need to check game state timer?
+		}
 	}
 	if(gameStateText == "") {
 		gameStateText = _stateText;
@@ -117,6 +117,15 @@ part_type_alpha2(_fluff, 1, 0);
 part_type_direction(_fluff, 0, 360, 0, 0);
 part_type_speed(_fluff, .1, 1.5, -.01, 0);
 
+global.dustPart = part_type_create();
+var _dust = global.dustPart;
+part_type_shape(_dust, pt_shape_square);
+part_type_size(_dust, .1, .3, .01, 0);
+part_type_life(_dust, 30, 120);
+part_type_alpha2(_dust, 1, 0);
+part_type_direction(_dust, 0, 360, 0, 0);
+part_type_speed(_dust, .3, 2.5, -.05, 0);
+
 global.swirlParticles = part_type_create();
 var _swirly = global.swirlParticles;
 part_type_shape(_swirly, pt_shape_square);
@@ -132,11 +141,23 @@ var _plow = global.trailPlowParticles;
 part_type_shape(_plow, pt_shape_square);
 part_type_size(_plow, .3, .5, .004, 0);
 part_type_color_mix(_plow, #47371a, #9e7f55);
-part_type_life(_plow, 40, 130);
+part_type_life(_plow, 40, 90);
 part_type_alpha3(_plow, 1, .5, 0);
-part_type_direction(_plow, 0, 360, 0, 0);
+part_type_direction(_plow, 0, 0, 0, 0);
 part_type_orientation(_plow, 0, 360, 0, 0, 0);
-part_type_speed(_plow, .7, 1.6, -.03, 0);
+part_type_speed(_plow, .7, 1.2, -.03, 0);
+
+global.quakeTrailPart = part_type_create();
+var _quakeTrail = global.quakeTrailPart;
+part_type_shape(_quakeTrail, pt_shape_square);
+part_type_size(_quakeTrail, .1, .3, .002, 0);
+part_type_color_mix(_quakeTrail, #47371a, #9e7f55);
+part_type_life(_quakeTrail, 30, 70);
+part_type_alpha3(_quakeTrail, 1, .4, 0);
+part_type_direction(_quakeTrail, 0, 360, 0, 0);
+part_type_orientation(_quakeTrail, 0, 360, 0, 0, 0);
+part_type_speed(_quakeTrail, .2, 1.1, -.03, 0);
+part_type_gravity(_quakeTrail, 130, .005);
 
 global.projectileTrail = part_type_create();
 var _trail = global.projectileTrail;
@@ -205,28 +226,28 @@ if(!audio_group_is_loaded(ag_SFX))
 	audio_group_load(ag_SFX);
 };
 
-global.fmodSys = fmod_studio_system_create();
-show_debug_message("fmod_studio_system_create: " + string(fmod_last_result()));
-fmod_studio_system_init(1024, FMOD_STUDIO_INIT.LIVEUPDATE, FMOD_INIT.NORMAL);
-show_debug_message("fmod_studio_system_init: " + string(fmod_last_result()));
-fmod_main_system = fmod_studio_system_get_core_system();
+//global.fmodSys = fmod_studio_system_create();
+//show_debug_message("fmod_studio_system_create: " + string(fmod_last_result()));
+//fmod_studio_system_init(1024, FMOD_STUDIO_INIT.LIVEUPDATE, FMOD_INIT.NORMAL);
+//show_debug_message("fmod_studio_system_init: " + string(fmod_last_result()));
+//fmod_main_system = fmod_studio_system_get_core_system();
 
-rollerSound = fmod_studio_system_load_bank_file(fmod_path_bundle("Boss Theme 3.bank"), FMOD_STUDIO_LOAD_BANK.NORMAL);
-strings_bank_ref = fmod_studio_system_load_bank_file(fmod_path_bundle("Master.strings.bank"), FMOD_STUDIO_LOAD_BANK.NORMAL);
+//rollerSound = fmod_studio_system_load_bank_file(fmod_path_bundle("Boss Theme 3.bank"), FMOD_STUDIO_LOAD_BANK.NORMAL);
+//strings_bank_ref = fmod_studio_system_load_bank_file(fmod_path_bundle("Master.strings.bank"), FMOD_STUDIO_LOAD_BANK.NORMAL);
 
-show_debug_message(fmod_studio_system_get_bank_count());
-show_debug_message("$###########################################")
+//show_debug_message(fmod_studio_system_get_bank_count());
+//show_debug_message("$###########################################")
 
-event_description_ref = fmod_studio_system_get_event("event:/Boss Theme 3 Loop");
-show_debug_message("get the event: " + string(fmod_last_result()))
-event_description_instance_ref = fmod_studio_event_description_create_instance(event_description_ref);
-show_debug_message("create event desc instance? : " + string(fmod_last_result()))
-show_debug_message("created instance is valid? : " + string(fmod_studio_event_instance_is_valid()))
+//event_description_ref = fmod_studio_system_get_event("event:/Boss Theme 3 Loop");
+//show_debug_message("get the event: " + string(fmod_last_result()))
+//event_description_instance_ref = fmod_studio_event_description_create_instance(event_description_ref);
+//show_debug_message("create event desc instance? : " + string(fmod_last_result()))
+//show_debug_message("created instance is valid? : " + string(fmod_studio_event_instance_is_valid()))
 
-show_debug_message("event valid? : " + string(fmod_studio_event_instance_is_valid(event_description_instance_ref)))
+//show_debug_message("event valid? : " + string(fmod_studio_event_instance_is_valid(event_description_instance_ref)))
 
-fmod_studio_event_instance_start(event_description_instance_ref);
+//fmod_studio_event_instance_start(event_description_instance_ref);
 
-show_debug_message("event valid? : " + string(fmod_studio_event_instance_is_valid(event_description_instance_ref)))
+//show_debug_message("event valid? : " + string(fmod_studio_event_instance_is_valid(event_description_instance_ref)))
 
-show_debug_message("start instance event: " + string(fmod_last_result()));
+//show_debug_message("start instance event: " + string(fmod_last_result()));

@@ -9,7 +9,7 @@ if(optionGroup == 4) { // custom draw groups
 	
 }
 
-wheelAngle = (wheelAngle + 1) % 360;
+wheelAngle = (wheelAngle + wheelSpinSpeed) % 360;
 var _bossWheelCount = array_length(wheelMembers);
 var _drawAngle = wheelAngle;
 for(var _bossI = 0; _bossI < _bossWheelCount; _bossI++) {

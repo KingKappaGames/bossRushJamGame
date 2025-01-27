@@ -36,8 +36,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_bossIdle",
-    "path":"sprites/spr_bossIdle/spr_bossIdle.yy",
+    "name":"spr_rollieForwardStand",
+    "path":"sprites/spr_rollieForwardStand/spr_rollieForwardStand.yy",
   },
   "spriteMaskId":null,
   "visible":true,

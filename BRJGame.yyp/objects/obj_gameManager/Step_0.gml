@@ -20,10 +20,12 @@ if(!global.is_paused) {
 			setGameState("prefight");
 			instance_destroy(obj_player);
 			instance_destroy(obj_bossBase);
-			instance_destroy(obj_webOrb);
+			instance_destroy(obj_orbParent);
 			instance_destroy(obj_bullet);
+			instance_destroy(obj_attackWebNode);
 		
 			instance_create_layer(-300, room_height / 2, "Instances", obj_player);
+			camera_set_view_pos(view_camera[0], -300 - camWidth / 2, room_height / 2 - camHeight / 2);
 		}
 	} else if(gameState == "victory") {
 		gameStateTimer--;
@@ -37,6 +39,18 @@ if(!global.is_paused) {
 		
 			debrisSaveTimer = 600;
 		}
+	} else if(gameState == "prefight") {
+		if(instance_exists(global.player)) {
+			if(global.player.x > room_width / 3) {
+				//start cutscene and then boss "fight" state
+				setGameState("intro", 320);
+			}
+		}
+	} else if(gameState == "intro") {
+		gameStateTimer--;
+		if(gameStateTimer <= 0) {
+			setGameState("fight");
+		}
 	}
 
 	//if(gameState == "fight") {
@@ -49,40 +63,40 @@ if(!global.is_paused) {
 	camShake *= .98;
 
 	if(gameState != "sail") {
-		var _player = instance_nearest(room_width / 2, room_height / 2, obj_player);
-		if(instance_exists(_player)) {
-			var _camGoalX = ((_player.x * 3 + mouse_x) / 4) - camWidth / 2;
-			var _camGoalY = ((_player.y * 3 + mouse_y) / 4) - camHeight / 2;
+		if(gameState != "intro") {
+			var _player = instance_nearest(room_width / 2, room_height / 2, obj_player);
+			if(instance_exists(_player)) {
+				var _camGoalX = ((_player.x * 3 + mouse_x) / 4) - camWidth / 2;
+				var _camGoalY = ((_player.y * 3 + mouse_y) / 4) - camHeight / 2;
 
-			if(_player.x > room_width || _player.x < 0) {
-				_camGoalY = room_height / 2 - camHeight / 2 - 10; // set to middle of room if along extra area to water
-			}
+				if(_player.x > room_width || _player.x < 0) {
+					_camGoalY = room_height / 2 - camHeight / 2 - 10; // set to middle of room if along extra area to water
+				}
 		
-			camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .05) + irandom_range(-camShake, camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .05) + irandom_range(-camShake * .5, camShake * .5), 0, room_height - camHeight)); // loosely follow player and clamp without room bounds of camera
+				camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .05) + irandom_range(-camShake, camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .05) + irandom_range(-camShake * .5, camShake * .5), 0, room_height - camHeight)); // loosely follow player and clamp without room bounds of camera
+			}
+		} else {
+			var _boss = instance_find(obj_bossBase, 0);
+			
+			var _camGoalX = _boss.x - camWidth / 2;
+			var _camGoalY = _boss.y - camHeight / 2 + 60;
+			var _camShake = array_get([0, .7, 1, 1.25, 1.8], global.gameScreenShakeSelected) * camShake;
+			camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .05) + irandom_range(-_camShake, _camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .05) + irandom_range(-_camShake * .5, _camShake * .5), 0, room_height - camHeight)); // follow boss during intro, roughly
 		}
 	}
 }
 
-fmod_studio_system_update();
-
-//if(fmod_studio_event_instance_is_valid(event_description_instance_ref) == false) {
-//	event_description_ref = fmod_studio_system_get_event("event:/Boss Theme 3 Loop");
-//	event_description_instance_ref = fmod_studio_event_description_create_instance(event_description_ref);
-
-//	fmod_studio_event_instance_start(event_description_instance_ref);
-//}
-
-show_debug_message(global.is_paused)
-show_debug_message("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-show_debug_message(fmod_studio_event_instance_is_valid(event_description_instance_ref));
-show_debug_message(fmod_studio_event_instance_get_playback_state(event_description_instance_ref));
-
-show_debug_message(gameState);
-
-/*
-show_debug_message("#");
-show_debug_message(view_wport[0]);
-show_debug_message(view_hport[0]);
-show_debug_message(camera_get_view_width(view_camera[0]));
-show_debug_message(camera_get_view_height(view_camera[0]));
-
+var _song = global.musicPlaying;
+if(_song != -1) {
+	if(!audio_is_playing(_song)) { // if no menu music start the first and start the second from then on
+		if(_song == snd_rollerSongInitial) {
+			global.musicPlaying = snd_rollerSongLoop;
+		} else if(_song == snd_spiderSongInitial) {
+			global.musicPlaying = snd_spiderSongLoop;
+		} else if(_song == snd_mantisSongInitial) {
+			global.musicPlaying = snd_mantisSongLoop;
+		}
+	
+		audio_play_sound(global.musicPlaying, 10, true);
+	}
+}

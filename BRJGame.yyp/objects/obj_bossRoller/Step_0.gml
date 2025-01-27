@@ -11,8 +11,8 @@ if(xChange >= 0) { // face in direction you're moving (depends on the sprite art
 if(stateType == "idle") {
 	var _moveDir = point_direction(x, y, moveGoalX, moveGoalY);
 
-	xChange += dcos(_moveDir) * moveSpeed  * (1 - clamp(global.bossStickingOrbs / 10, 0, 1));
-	yChange += -dsin(_moveDir) * moveSpeed * (1 - clamp(global.bossStickingOrbs / 10, 0, 1)); // with at speed but also move slower the more stuck you are in webs
+	xChange += (dcos(_moveDir) * moveSpeed)  * (1 - clamp(global.bossStickingOrbs / 10, 0, 1));
+	yChange += (-dsin(_moveDir) * moveSpeed) * (1 - clamp(global.bossStickingOrbs / 10, 0, 1)); // with at speed but also move slower the more stuck you are in webs
 	
 	if(yChange >= 0) {
 		//face camera
@@ -39,11 +39,7 @@ if(stateType == "idle") {
 				var _shotDir = point_direction(x, y, player.x, player.y);
 				script_createBullet(1 + irandom(2), x, y, _shotDir + irandom_range(-7, 7), 3);
 			} else if(irandom(300) == 0) {
-				var _shotDir = irandom(360);
-				repeat(8) {
-					script_createBullet(2 + irandom(1), x, y, _shotDir + irandom_range(-10, 10), 3);
-					_shotDir += 45;
-				}
+				setState("chargingBurst", 50);
 			}
 		}
 		
@@ -66,13 +62,13 @@ if(stateType == "idle") {
 		if((_dirMoving > 135 && _dirMoving < 225) || (_dirMoving < 45 || _dirMoving > 315)) { // if largely going horizontal (otherwise you slide on the sides but don't "collide", i dunno, take this out if you don't like the soft wall touches... One of the sides has to collide like this so...
 			if(x <= 40 || x >= room_width - 40) { // if hit wall horizontal
 				xChange *= -.3;
-				script_cameraShake(13);
+				script_cameraShake(16);
 				setState("idle");
 			}
 		} else if((_dirMoving < 315 && _dirMoving > 225) || (_dirMoving > 45 && _dirMoving < 135)) { // if largely going horizontal (otherwise you slide on the sides but don't "collide", i dunno, take this out if you don't like the soft wall touches... One of the sides has to collide like this so...
 			if(y <= 40 || y >= room_width - 40) { // if hit wall horizontal
 				yChange *= -.3;
-				script_cameraShake(13);
+				script_cameraShake(16);
 				setState("idle");
 			}
 		}
@@ -104,5 +100,41 @@ if(stateType == "idle") {
 			
 			setState("rolling", 180);
 		}
+	} else if(state == "chargingBurst") {
+		if(stateTimer <= 0) {
+			setState("shot", 40);
+		}
+	}
+} else if(stateType == "intro") {
+	if(stateTimer < stateTimerMax * .1) {
+		if(global.musicPlaying == -1) {
+			global.musicPlaying = snd_rollerSongInitial;
+			audio_play_sound(global.musicPlaying, 100, 0);
+		}
+		yChange = 0;
+	} else if(stateTimer < stateTimerMax * .5) {
+		if(image_xscale < 1) {
+			script_cameraShake(.038);
+			part_particles_create_color(partSys, x + irandom_range(-40, 40), y + irandom_range(-40, 40), dustParticle, #553920, 2);
+			image_xscale += .01;
+			image_yscale += .01;
+		}
+	} else {
+		script_cameraShake(.028);
+	}
+	
+	if(stateTimer <= 0) {
+		setState("idle", 180);
+	}
+} else if(state == "shot") {
+	if(stateTimer == 15) {
+		repeat(irandom_range(5, 9)) {
+			var _shotDir = dirToPlayer + irandom_range(-10, 10) + irandom_range(-10, 10) + irandom_range(-10, 10); // stacked variance
+			script_createBullet(4 + irandom(3), x + dcos(dirToPlayer) * 17, y - dsin(dirToPlayer) * 17, _shotDir, irandom_range(2.6, 4.8), true, obj_terrainShot, irandom_range(50, 90));
+		}
+	}
+	
+	if(stateTimer <= 0) {
+		setState("idle");
 	}
 }

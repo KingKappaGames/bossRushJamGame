@@ -72,11 +72,35 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		sprite_index = spr_bossCharge;
 		image_speed = (60 / stateTimer) * image_number;
 		stateType = "charge";
+	} else if(stateGoal == "chargingBurst") {
+		xChange = 0;
+		yChange = 0;
+		
+		speedDecay = .5;
+		
+		image_speed = (60 / stateTimer) * image_number;
+		stateType = "charge";
+	} else if(stateGoal == "shot") {
+		stateType = "shot";
+		
+		image_angle = 300;
 	} else if(stateGoal == "dead") {
 		stateType = "dead";
 		
 		sprite_index = spr_bossIdle;
 		image_speed = 0;
 		image_angle = 90;
+	} else if(stateGoal == "intro") {
+		stateType = "intro";
+		
+		image_xscale = 0;
+		image_yscale = 0;
+		
+		stateTimer = 360; // force set this here since I can't specifiy lengths anywhere else more easily. Not ideal but this isn't main game, it doesn't need to be ideal
+		stateTimerMax = 360;
+		
+		speedDecay = 1;
+		xChange = 0;
+		yChange = .62;
 	}
 }

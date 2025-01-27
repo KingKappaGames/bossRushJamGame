@@ -18,6 +18,9 @@ hitColorTimer = 0;
 
 healthBarFade = 0;
 
+introGoalX = 0; // point to move to when intro is playing, set by intro state in game manager
+introGoalY = 0;
+
 xChange = 0;
 yChange = 0;
 
@@ -35,7 +38,7 @@ spinDist = 0;
 spinCenterX = 0;
 spinCenterY = 0;
 
-handDist = 50;
+handDist = 54;
 handX = 0;
 handY = 0;
 
@@ -148,7 +151,12 @@ setState = function(stateSet, stateTimerSet = infinity) {
 	} else if(stateSet == "sail") {
 		xChange = 0;
 		yChange = 0;
-		image_angle = 270;
+	} else if(stateSet == "intro") {
+		xChange = 0;
+		yChange = 0;
+		
+		introGoalX = room_width / 2;
+		introGoalY = room_height * .47; // generic start position of intro
 	} else {
 		speedDecay = .7;
 	}

@@ -1,0 +1,1 @@
+draw_sprite_part_ext(sprite_index, 0, 0, 0, sprite_width, sprite_height * height, x, y - sprite_height * height, image_xscale, image_yscale, image_blend, image_alpha);

@@ -6,7 +6,7 @@ Health = HealthMax;
 moveSpeed = .5;
 speedDecay = .8;
 
-legUpdateDistance = 80;
+legUpdateDistance = 62;
 legStepDist = 44;
 legSegLen = 56;
 legPositions = array_create(8, 0);
@@ -17,13 +17,13 @@ legStepDistances = array_create(8, 50);
 strafeDir = 1;
 
 for(var _i = 0; _i < 8; _i++) {
-	legPositions[_i][1] = y;
+	legPositions[_i][1] = -200;
 	legPositions[_i][0] = x;
 	
-	legPositionGoals[_i][1] = y;
+	legPositionGoals[_i][1] = -200;
 	legPositionGoals[_i][0] = x;
 	
-	legOrigins[_i][1] = y;
+	legOrigins[_i][1] = -200;
 	legOrigins[_i][0] = x;
 }
 
@@ -130,6 +130,17 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		}
 		
 		part_particles_create(global.partSys, x, y, global.fluffPart, 50);
+	} else if(stateGoal == "intro") {
+		image_angle = 270;
+		
+		stateType = "move";
+		
+		stateTimer = 320; // force set this here since I can't specifiy lengths anywhere else more easily. Not ideal but this isn't main game, it doesn't need to be ideal
+		stateTimerMax = 320;
+		
+		speedDecay = 1;
+		xChange = 0;
+		yChange = .9;
 	}
 	
 	//attackHit = false;

@@ -3,7 +3,7 @@ weight = 1;
 
 xChange = 0;
 yChange = 0;
-speedDecay = .9;
+speedDecay = .945;
 
 type = 0;
 fakeOrb = false;
@@ -46,7 +46,7 @@ linkOrb = function(otherOrb) {
 			var _boss = _bosses[_i];
 			if(script_pointInComplexPolygon(_boss.x, _boss.y, _collisionPoints)) {
 				var _damageExtraFromDifficulty = (2 - global.gameDifficultySelected) * 2.5;
-				_boss.hit(10 + _damageExtraFromDifficulty);
+				_boss.hit(8 + _damageExtraFromDifficulty);
 			}
 		}
 	}

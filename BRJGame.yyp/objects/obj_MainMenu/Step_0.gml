@@ -12,9 +12,12 @@ if(keyboard_check_released(vk_space) || keyboard_check_released(ord("E")) || (mo
 		if(mouse_x < x + 130) {
 			var _bossCount = array_length(wheelMembers);
 			global.boss_selected = wheelMembers[(((360 - wheelAngle) + 140) div (360 / _bossCount)) % _bossCount];
+			wheelSpinSpeed += 1;
 		}
 	}
 }
+
+wheelSpinSpeed = lerp(wheelSpinSpeed, 1.25, .018);
 
 if(window_mouse_get_delta_x() != 0 || window_mouse_get_delta_y() != 0) {
 	mouseSelecting = true;
@@ -33,19 +36,11 @@ if(mouse_x > x + 350) {
 	mouseSelecting = false;
 }
 
-
-
-//x = camera_get_view_x(view_camera[0]) + camera_get_view_width(view_camera[0]) / 2 - menuWidth / 2;
-//y = camera_get_view_y(view_camera[0]) + camera_get_view_height(view_camera[0]) / 2 - menuHeight / 2;
-
-//if(optionGroup == 0) {
-//	y = camera_get_view_y(view_camera[0]) + camera_get_view_height(view_camera[0]) / 2 - menuHeight / 2 + 20;
-//} else {
-//	y = camera_get_view_y(view_camera[0]) + camera_get_view_height(view_camera[0]) / 2 - menuHeight / 2;
-//}
-
-if(audio_group_is_loaded(ag_Music)) { // force music if no music... yeh
-	if(!audio_is_playing(snd_mainMenuSong)) {
-		audio_play_sound(snd_mainMenuSong, 10, true);
+if(global.musicPlaying != -1) {
+	if(audio_group_is_loaded(ag_Music)) { // force music if no music... yeh
+		if(!audio_is_playing(snd_mainMenuSongLoop) && !audio_is_playing(snd_mainMenuSongInitial)) { // if no menu music start the first and start the second from then on
+			audio_play_sound(global.musicPlaying, 10, true);
+			global.musicPlaying = snd_mainMenuSongLoop;
+		}
 	}
 }

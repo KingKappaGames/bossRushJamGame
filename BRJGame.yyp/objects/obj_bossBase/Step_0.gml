@@ -26,7 +26,7 @@ xChange *= speedDecay;
 yChange *= speedDecay;
 
 if(frozenSpeedMult < .98) { // cut off for mathing and draw
-	frozenSpeedMult = 1 - (1 - frozenSpeedMult) * .995;
+	frozenSpeedMult = 1 - (1 - frozenSpeedMult) * .997;
 } else {
 	frozenSpeedMult = 1;
 }

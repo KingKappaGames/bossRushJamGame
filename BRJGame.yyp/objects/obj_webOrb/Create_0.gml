@@ -3,7 +3,7 @@ weight = 1;
 
 xChange = 0;
 yChange = 0;
-speedDecay = .9;
+speedDecay = .93;
 
 type = 0;
 fakeOrb = false;

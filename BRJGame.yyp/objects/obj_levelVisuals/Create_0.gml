@@ -1,8 +1,8 @@
 depth = -y;
 
-image_index = irandom(image_number - 1);
+wiggle = 0;
+wiggleAdd = irandom_range(-30, 30);
 
-image_xscale = 2;
-image_yscale = 2;
+image_index = irandom(image_number - 1);
 
 //shadow = noone;

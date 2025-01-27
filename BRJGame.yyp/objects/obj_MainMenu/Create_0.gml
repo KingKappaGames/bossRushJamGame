@@ -1,5 +1,7 @@
 draw_set_font(fnt_menu);
 
+global.musicPlaying = snd_mainMenuSongInitial;
+
 menuWidth = 300;
 menuHeight = 240;
 
@@ -78,6 +80,7 @@ wheelSprites = [spr_temp_boss_1, spr_temp_boss_2, spr_temp_boss_3];
 wheelCenterX = x - 150;
 wheelCenterY = y + 140;
 wheelWidth = 110;
+wheelSpinSpeed = 1.25;
 
 #region initialize menu
 initializeMenu = function(){
@@ -127,13 +130,13 @@ menuChangeField = function(fieldChange){
 menuSelectOption = function(){
 	if(optionGroup == 0) {
 		if(optionPosition == 0) {
+			global.musicPlaying = -1; // clear music for entry area before boss
+			audio_stop_all();
 			audio_play_sound(snd_menuStart, 100, false);
 			//load game!
+			script_setPauseState(false);
 			room_goto(rm_grassyArena);
 			global.gameManager.bossSummon = global.boss_selected;
-			audio_stop_sound(snd_bossGenericTheme);
-			audio_stop_sound(snd_mainMenuSong); // stop all other songs to start in other place
-			script_setPauseState(false);
 		} else if(optionPosition == 1) {
 			menuSwitchOptionGroup(1);
 		} else if(optionPosition == 2) {

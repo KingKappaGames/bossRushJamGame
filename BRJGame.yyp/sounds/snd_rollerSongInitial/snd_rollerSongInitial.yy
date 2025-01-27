@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_rollerSongInitial",
+  "audioGroupId":{
+    "name":"ag_Music",
+    "path":"audiogroups/ag_Music",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":172.44,
+  "name":"snd_rollerSongInitial",
+  "parent":{
+    "name":"Music",
+    "path":"folders/Sound/Music.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_rollerSongInitial.mp3",
+  "type":0,
+  "volume":1.0,
+}

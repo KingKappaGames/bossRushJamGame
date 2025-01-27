@@ -24,7 +24,7 @@ if(stateType == "idle") {
 				setState("bite", 60);
 			}
 		} else if(_playerDist < 200) {
-			if(irandom(120) == 0) {
+			if(irandom(110) == 0) {
 				setState("strafe", 90); // pursue the player for bite
 			}
 			
@@ -132,11 +132,32 @@ if(stateType == "idle") {
 				setState("chargeCast", 120);
 			}
 		}
+	} else if(state == "intro") {
+		//?
+		if(stateTimer < 120) {
+			if(stateTimer < 60) {
+				if(global.musicPlaying == -1) {
+					global.musicPlaying = snd_rollerSongInitial;
+					audio_play_sound(global.musicPlaying, 100, 0);
+				}
+			}
+			xChange = 0;
+			yChange = 0;
+		} // play some kind of animation here?
+		
+		if(stateTimer <= 0) {
+			setState("strafe");
+		}
 	}
 } else if(stateType == "cast") {
-	if(irandom(26 - global.gameDifficultySelected * 2) == 0) {
+	
+	y += dsin(current_time * 1.5) * 1.2 - .25;
+	
+	if(stateTimer % (26 - global.gameDifficultySelected * 2) == 0) {
 		var _speed = random_range(3, 9.5);
-		script_createOrbProjectile(x - dcos(image_angle) * 10, y + dsin(image_angle) * 10, irandom(360), _speed, sqr(_speed + 4) + 25);
+		var _dirToCenter = point_direction(x, y, room_width / 2, room_height / 2);
+		
+		script_createOrbProjectile(x - dcos(image_angle) * 10, y + dsin(image_angle) * 10, lerp(_dirToCenter, irandom(360), random(1)), _speed, sqr(_speed + 4) + 25);
 	}
 	
 	if(stateTimer <= 0) {
@@ -144,7 +165,7 @@ if(stateType == "idle") {
 	}
 }
 
-if(state != "dead") {
+if(state != "dead" && state != "cast") {
 	var _legPos = 0;
 	var _legPosGoal = 0;
 	var _legOrigin = 0;
@@ -157,11 +178,11 @@ if(state != "dead") {
 		_legOrigin[0] = x + dcos(_legAngle) * 16;
 		_legOrigin[1] = y - dsin(_legAngle) * 16;
 	
-		var _goalX = _legOrigin[0] + dcos(_legAngle) * legStepDist + (x - xprevious) * 21; // maybe clamp the prediction values
-		var _goalY = _legOrigin[1] - dsin(_legAngle) * legStepDist + (y - yprevious) * 21; // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
+		var _goalX = _legOrigin[0] + dcos(_legAngle + random_range(-9, 9)) * legStepDist * random_range(.75, 1.25) + (x - xprevious) * 21; // maybe clamp the prediction values
+		var _goalY = _legOrigin[1] - dsin(_legAngle + random_range(-9, 9)) * legStepDist * random_range(.75, 1.25) + (y - yprevious) * 21; // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
 	
 		var _legStepDist = point_distance(_goalX, _goalY, _legPos[0], _legPos[1]);
-		if(_legStepDist > legUpdateDistance || irandom(210) == 0) {
+		if(_legStepDist > legUpdateDistance || irandom(180) == 0) {
 			legStepDistances[_legI] = point_distance(_legPos[0], _legPos[1], _goalX, _goalY);
 			_legPosGoal[0] = _goalX;
 			_legPosGoal[1] = _goalY; // set the next step point to the goal positions

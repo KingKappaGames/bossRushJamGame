@@ -124,6 +124,8 @@ menuSelectOption = function(){
 		} else if(optionPosition == 1) {
 			menuSwitchOptionGroup(1);
 		} else if(optionPosition == 2) {
+			audio_stop_all();
+
 			room_goto(rm_Main_Menu);
 		}
 	} else if(optionGroup == 1) {

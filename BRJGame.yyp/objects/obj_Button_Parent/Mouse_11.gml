@@ -1,4 +1,0 @@
-/// @description 
-
-selected = false;
-

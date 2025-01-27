@@ -5,6 +5,7 @@ player = global.player;
 partSys = global.partSys;
 swirlParticle = global.swirlParticles;
 fluffParticle = global.fluffPart;
+dustParticle = global.dustPart;
 plowParticle = global.trailPlowParticles;
 
 state = "idle";

@@ -72,6 +72,27 @@ if(state == "idle") {
 			spinDist += 2;
 		}
 	}
+} else if(state == "intro") {
+	x = lerp(x, introGoalX, .01);
+	y = lerp(y, introGoalY, .01);
+	image_angle += angle_difference(point_direction(xprevious, yprevious, x, y), image_angle) / 10;
+} else if(state == "jump") {
+	var _orb = instance_nearest(x, y, obj_orbParent);
+	if(instance_exists(_orb)) {
+		var _dist = point_distance(x, y, _orb.x, _orb.y);
+		if(_dist < 30) {
+			var _dir = point_direction(x, y, _orb.x, _orb.y);
+			xChange += dcos(_dir + 180) * 2;
+			yChange -= dsin(_dir + 180) * 2;
+			xChange *= .5;
+			yChange *= .5;
+			
+			_orb.xChange += dcos(_dir) * 2;
+			_orb.yChange -= dsin(_dir) * 2;
+			
+			setState("knock", 25);
+		}
+	}
 }
 
 if(global.gameManager.gameState == "fight") {
@@ -85,12 +106,6 @@ if(global.gameManager.gameState == "fight") {
 	if(global.gameManager.gameState == "sail") {
 		//don't flip with sailing
 	} else { // other times...
-		if(global.gameManager.gameState == "prefight") {
-			if(x > room_width / 3) {
-				//start cutscene and then boss "fight" state
-				global.gameManager.setGameState("fight");
-			}
-		}
 		
 		x = clamp(x + xChange, -room_width * .72, room_width * 1.76); // how wide is continued area?
 	
@@ -122,9 +137,7 @@ if(state != "jump") {
 xChange *= speedDecay;
 yChange *= speedDecay;
 
-if(state == "idle") {
-	
-} else {
+if(state != "idle") {
 	if(stateTimer != infinity) {
 		stateTimer--;
 		if(stateTimer <= 0) {
@@ -183,7 +196,7 @@ if(state != "dead" && state != "sail") {
 	var _bulletNearest = instance_nearest(x, y, obj_bullet);
 	if(_bulletNearest != noone) {
 		if(point_distance(x, y, _bulletNearest.x, _bulletNearest.y) < 12) { // 12 is just player width plus a little
-			takeHit(_bulletNearest.damage, undefined, point_direction(_bulletNearest.x, _bulletNearest.y, x, y), 120); // random stuff related to combat that doesn't need to run while sailing...
+			takeHit(_bulletNearest.damage, 1, point_direction(_bulletNearest.x, _bulletNearest.y, x, y), 25); // random stuff related to combat that doesn't need to run while sailing...
 			_bulletNearest.hit();
 		}
 	}

@@ -1,4 +1,7 @@
-//shadow = instance_create_depth(x, y, 1000, obj_levelShadow);
-//shadow.image_index = image_index;
-//shadow.image_xscale = image_xscale;
-//shadow.image_yscale = image_yscale;
+if(image_index > 3) {
+	if(image_index == 9 || image_index == 7 || image_index == 4) {
+		wiggle = 2;
+	} else {
+		wiggle = 1;
+	}
+}
