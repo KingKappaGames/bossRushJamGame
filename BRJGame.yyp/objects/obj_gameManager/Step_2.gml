@@ -31,6 +31,8 @@ with(obj_orbParent) { // with each orb draw links but not duplicates
 	}
 }
 
-if(array_length(_webLinks) > 0) {
-	global.boss.blockingLinksRef = _webLinks;
+if(instance_exists(global.boss)) {
+	if(array_length(_webLinks) > 0) {
+		global.boss.blockingLinksRef = _webLinks;
+	}
 }

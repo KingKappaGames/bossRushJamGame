@@ -8,6 +8,8 @@ depth = -2000;
 game_set_speed(60, gamespeed_fps);
 
 global.gameManager = id;
+global.boss = noone;
+
 global.bossStickingOrbs = 0;
 global.linksTotalThisFrame = [];
 
@@ -15,14 +17,18 @@ global.player = noone;
 
 global.is_paused = false;
 menu_close = false;
+
 randomize();
+
+global.fontPixel = font_add_sprite_ext(spr_fontMenuCustom, "abcdefghijklmnopqrstuvwxyz", true, 2);
 
 #endregion surface / buffer stuff for floor debris and markings
 global.debrisSurface = 0;
 global.debrisBuffer = 0;
 
+global.fogSurface = surface_create(1920, 1080);
+
 debrisSaveTimer = 0;
-instance_create_layer(x, y, "Instances", obj_surfaceDrawer);
 
 camWidth = camera_get_view_width(view_camera[0]);
 camHeight = camera_get_view_height(view_camera[0]);
@@ -69,15 +75,17 @@ setGameState = function(state, timer = -1, titleText = 0) {
 	} else if(state == "intro") {
 		global.player.setState("intro"); // player
 		
-		audio_stop_sound(global.musicPlaying);
+		audio_stop_sound(global.musicActualPlaying);
+		global.musicPlaying = -1;
+		global.musicActualPlaying = -1;
 		
 		var _boss = -1;
 		if(bossSummon != -1) {
-			if(bossSummon == 0) {
+			if(bossSummon == 2) {
 				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossRoller);
-			} else if(bossSummon == 1) {
+			} else if(bossSummon == 0) {
 				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossSpider);
-			} else if(bossSummon == 2) {
+			} else if(bossSummon == 1) {
 				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossMantis);
 			}
 		} else {
@@ -125,6 +133,19 @@ part_type_life(_dust, 30, 120);
 part_type_alpha2(_dust, 1, 0);
 part_type_direction(_dust, 0, 360, 0, 0);
 part_type_speed(_dust, .3, 2.5, -.05, 0);
+part_type_color_mix(_dust, #887856, #503020);
+
+global.dustLittlePart = part_type_create();
+var _dustLittle = global.dustLittlePart;
+part_type_shape(_dustLittle, pt_shape_square);
+part_type_size(_dustLittle, .08, .12, .003, 0);
+part_type_life(_dustLittle, 30, 90);
+part_type_alpha2(_dustLittle, 1, 0);
+part_type_direction(_dustLittle, 0, 360, 0, 0);
+part_type_speed(_dustLittle, .3, 1.7, -.04, 0);
+part_type_color_mix(_dustLittle, #887856, #503020);
+part_type_orientation(_dustLittle, 0, 360, 0, 0, 0);
+part_type_gravity(_dustLittle, .001, 140);
 
 global.swirlParticles = part_type_create();
 var _swirly = global.swirlParticles;
@@ -150,14 +171,14 @@ part_type_speed(_plow, .7, 1.2, -.03, 0);
 global.quakeTrailPart = part_type_create();
 var _quakeTrail = global.quakeTrailPart;
 part_type_shape(_quakeTrail, pt_shape_square);
-part_type_size(_quakeTrail, .1, .3, .002, 0);
+part_type_size(_quakeTrail, .1, .1, .001, 0);
 part_type_color_mix(_quakeTrail, #47371a, #9e7f55);
-part_type_life(_quakeTrail, 30, 70);
-part_type_alpha3(_quakeTrail, 1, .4, 0);
+part_type_life(_quakeTrail, 60, 150);
+part_type_alpha3(_quakeTrail, 1, .3, 0);
 part_type_direction(_quakeTrail, 0, 360, 0, 0);
 part_type_orientation(_quakeTrail, 0, 360, 0, 0, 0);
-part_type_speed(_quakeTrail, .2, 1.1, -.03, 0);
-part_type_gravity(_quakeTrail, 130, .005);
+part_type_speed(_quakeTrail, .2, .8, -.03, 0);
+//part_type_gravity(_quakeTrail, 130, .005);
 
 global.projectileTrail = part_type_create();
 var _trail = global.projectileTrail;
@@ -169,6 +190,30 @@ part_type_direction(_trail, 0, 360, 0, 30);
 part_type_orientation(_trail, 0, 360, 0, 10, 0);
 part_type_color_mix(_trail, #bbbbbb, #777777); 
 part_type_alpha1(_trail, 1);
+
+global.waveArcTrail = part_type_create();
+var _waveTrail = global.waveArcTrail;
+part_type_life(_waveTrail, 38, 55);
+part_type_shape(_waveTrail, pt_shape_line);
+part_type_size(_waveTrail, .08, .15, -.0012, 0);
+part_type_speed(_waveTrail, 0, .1, -.01, 0);
+part_type_direction(_waveTrail, 0, 360, 0, 30);
+part_type_orientation(_waveTrail, 0, 360, 0, 10, 0);
+part_type_color2(_waveTrail, #ffffff, #bbbbbb); 
+part_type_alpha1(_waveTrail, 1);
+
+global.cloneBurstParts = part_type_create();
+var _cloneBurstParts = global.cloneBurstParts;
+part_type_life(_cloneBurstParts, 55, 82);
+part_type_shape(_cloneBurstParts, pt_shape_line);
+part_type_size(_cloneBurstParts, .12, .24, -.001, 0);
+part_type_speed(_cloneBurstParts, 1, 5, -.04, 0);
+part_type_direction(_cloneBurstParts, -10, 190, 0, 0);
+part_type_orientation(_cloneBurstParts, 0, 0, 0, 0, 1);
+part_type_color2(_cloneBurstParts, #ffffff, #dddddd); 
+part_type_alpha1(_cloneBurstParts, 1);
+part_type_gravity(_cloneBurstParts, .04, 270);
+part_type_step(_cloneBurstParts, -6, global.projectileTrail);
 
 global.webLineSnap = part_type_create();
 var _webLineSnap = global.webLineSnap;
@@ -189,17 +234,14 @@ part_type_alpha2(_water, 1, 0);
 part_type_direction(_water, 280, 290, 0, 15);
 part_type_speed(_water, .9, 1.1, -.01, 0);
 
-//
-//	var createdParticle = part_type_create();
-//	part_type_life(createdParticle, 50, 70);
-//	part_type_shape(createdParticle, pt_shape_square);
-//	part_type_size(createdParticle, .1, .2, -.003, .03);
-//	part_type_speed(createdParticle, 0.2, .8, -.01, .1);
-//	part_type_direction(createdParticle, 0, 360, 0, 30);
-//	part_type_orientation(createdParticle, 0, 360, 0, 10, 0);
-		
-//	part_type_alpha2(createdParticle, 1, .4);
-//	part_type_color_mix(createdParticle, merge_color(#bbbbbb, color, colorStrength), merge_color(#777777, color, colorStrength));
+var _splat = part_type_create();
+global.splatPart = _splat;
+part_type_shape(_splat, pt_shape_disk);
+part_type_size(_splat, .2, .4, -.005, 0);
+part_type_life(_splat, 35, 60);
+part_type_direction(_splat, 0, 360, 0, 0);
+part_type_speed(_splat, .1, 1.5, 0, 0);
+part_type_gravity(_splat, .01, 270);
 
 #endregion
 

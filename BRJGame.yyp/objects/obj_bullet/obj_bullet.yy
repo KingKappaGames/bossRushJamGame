@@ -31,7 +31,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_rockThrown",
+    "path":"sprites/spr_rockThrown/spr_rockThrown.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

@@ -1,31 +1,33 @@
-draw_set_font(fnt_menu);
+draw_set_font(global.fontPixel);
+
+depth = -1000;
 
 menuWidth = 300;
 menuHeight = 240;
 
-options[0][0] = "RESUME";
-options[0][1] = "OPTIONS";
-options[0][2] = "EXIT TO MENU";
-
-options[1][0] = "RETURN";
-options[1][1] = "SOUND SETTINGS";
-options[1][2] = "VISUAL SETTINGS";
-options[1][3] = "GAME SETTINGS";
-options[1][4] = "CONTROLS";
-
-options[2][0] = "RETURN";
-options[2][1] = "EFFECT VOLUME";
-options[2][2] = "MUSIC VOLUME";
-
-options[3][0] = "RETURN";
-options[3][1] = "RESOLUTION";
-options[3][2] = "FULLSCREEN";
-
-options[4][0] = "RETURN";
-options[4][1] = "DIFFICULTY";
-options[4][2] = "VIEW SHAKE";
-
-options[5][0] = "RETURN";
+options[0][0] = "resume";
+options[0][1] = "options";
+options[0][2] = "main menu";
+				       
+options[1][0] = "return";
+options[1][1] = "sounds";
+options[1][2] = "visuals";
+options[1][3] = "settings";
+options[1][4] = "controls";
+				         
+options[2][0] = "return";
+options[2][1] = "effects";
+options[2][2] = "music";
+				        
+options[3][0] = "return";
+options[3][1] = "screen";
+options[3][2] = "window";
+				         
+options[4][0] = "return";
+options[4][1] = "difficulty";
+options[4][2] = "view shake";
+			    
+options[5][0] = "return";
 
 optionPosition = 0;
 optionGroup = 0;
@@ -54,10 +56,10 @@ pauseSurfaceBuffer = buffer_create(1920 * 1080 * 4, buffer_fixed, 1);
 pauseSurface = -1;
 
 //game settings in menu
-gameDifficultyDisplayOptions = ["POLITE", "EVERYMAN", "CHAMPION"];
+gameDifficultyDisplayOptions = ["hardnt", "normal", "spinner"];
 gameDifficultySelected = global.gameDifficultySelected;
 
-gameScreenShakeDisplayOptions = ["NONE", "MINIMAL", "DEFAULT", "JITTERY", "MISTAKES"];
+gameScreenShakeDisplayOptions = ["none", "minimal", "default", "shakey", "awful"];
 gameScreenShakeSelected = global.gameScreenShakeSelected;
 
 gameWindowResolutionSelected = global.gameWindowResolutionSelected;
@@ -65,7 +67,7 @@ gameWindowResolutionOptions = [[480, 270], [1280, 720], [1920, 1080], [2560, 144
 
 gameFullscreenSelected = global.gameFullscreenSelected;
 gameFullscreenOptions = [false, true];
-gameFullscreenDisplayOptions = ["WINDOWED", "FULLSCREEN"];
+gameFullscreenDisplayOptions = ["windowed", "fullscreen"];
 
 gameEffectVolume = global.gameEffectVolume;
 gameMusicVolume = global.gameMusicVolume;

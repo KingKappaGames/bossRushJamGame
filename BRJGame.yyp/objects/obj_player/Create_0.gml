@@ -50,7 +50,7 @@ camWidth = camera_get_view_width(view_camera[0]);
 camHeight = camera_get_view_height(view_camera[0]);
 
 #region leg stuff
-legUpdateDistance = 56;
+legUpdateDistance = 52;
 legStepDist = 25;
 legSegLen = 31;
 legPositions = array_create(8, 0);
@@ -73,6 +73,7 @@ takeHit = function(damage, knockback = 0, hitDirection = 0, immunityFramesSet = 
 	if(immunityFrames <= 0) { // no immunity (ergo do hits and stuff)
 		var _damageExtraFromDifficulty = 1 - ((1 - global.gameDifficultySelected) * .25);
 		Health = clamp(Health - (damage * _damageExtraFromDifficulty), 0, HealthMax); // .75, 1, 1.25 for the three difficulties
+		part_particles_create_color(global.partSys, x, y, global.splatPart, #baff85, damage * _damageExtraFromDifficulty); 
 		
 		if(damage > 2) {
 			script_cameraShake(damage * (damage / 2));
@@ -86,6 +87,10 @@ takeHit = function(damage, knockback = 0, hitDirection = 0, immunityFramesSet = 
 		if(Health <= 0) {
 			die();
 		}
+	}
+	
+	if(global.boss.state == "slam") {
+		setState("squish", 110);
 	}
 	
 	if(knockback != 0) {
@@ -121,7 +126,7 @@ setState = function(stateSet, stateTimerSet = infinity) {
 		image_angle = directionToMouse;
 	} else if(stateSet == "knock") {
 		speedDecay = .92;
-	} else if(stateSet == "dead") {
+	} else if(stateSet == "dead" || stateSet == "squish") {
 		xChange = 0;
 		yChange = 0;
 		
@@ -155,8 +160,8 @@ setState = function(stateSet, stateTimerSet = infinity) {
 		xChange = 0;
 		yChange = 0;
 		
-		introGoalX = room_width / 2;
-		introGoalY = room_height * .47; // generic start position of intro
+		introGoalX = room_width * .39;
+		introGoalY = room_height * .52; // generic start position of intro
 	} else {
 		speedDecay = .7;
 	}

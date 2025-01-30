@@ -19,7 +19,7 @@
   "height":128,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"08db134c-646a-4363-892d-0111dbb917ab","blendMode":0,"displayName":"default","isLocked":false,"name":"08db134c-646a-4363-892d-0111dbb917ab","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"cc47a0cf-5e7b-439c-bee0-873cb8413148","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"cc47a0cf-5e7b-439c-bee0-873cb8413148","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_bossRoll",
   "nineSlice":null,

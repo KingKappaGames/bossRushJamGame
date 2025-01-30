@@ -46,11 +46,22 @@ if(!global.is_paused) {
 				setGameState("intro", 320);
 			}
 		}
+		
+		if(global.musicPlaying != -1) {
+			if(global.musicActualPlaying != -1) {
+				audio_sound_gain(global.musicActualPlaying, 0, 3000);
+				global.musicPlaying = -1;
+			}
+		}
 	} else if(gameState == "intro") {
 		gameStateTimer--;
 		if(gameStateTimer <= 0) {
 			setGameState("fight");
 		}
+	}
+	
+	if(irandom(60) == 0) {
+		instance_create_layer(0, -100, "Instances", obj_fogVisual);
 	}
 
 	//if(gameState == "fight") {
@@ -71,18 +82,29 @@ if(!global.is_paused) {
 
 				if(_player.x > room_width || _player.x < 0) {
 					_camGoalY = room_height / 2 - camHeight / 2 - 10; // set to middle of room if along extra area to water
+					camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .04) + irandom_range(-camShake, camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .08) + irandom_range(-camShake * .5, camShake * .5), 0, room_height - camHeight));
+				} else { // in main fight area
+					_camGoalX = clamp(_camGoalX, 0, room_width - camWidth); // clamp horizontal to battle area (well, don't clamp but clamp the goal so that it quickly follows the left and right limits, it's not an issue if a player sneaks a little peak..)
+					camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .06) + irandom_range(-camShake, camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .06) + irandom_range(-camShake * .5, camShake * .5), 0, room_height - camHeight));
 				}
-		
-				camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .05) + irandom_range(-camShake, camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .05) + irandom_range(-camShake * .5, camShake * .5), 0, room_height - camHeight)); // loosely follow player and clamp without room bounds of camera
 			}
 		} else {
 			var _boss = instance_find(obj_bossBase, 0);
 			
-			var _camGoalX = _boss.x - camWidth / 2;
-			var _camGoalY = _boss.y - camHeight / 2 + 60;
-			var _camShake = array_get([0, .7, 1, 1.25, 1.8], global.gameScreenShakeSelected) * camShake;
-			camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .05) + irandom_range(-_camShake, _camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .05) + irandom_range(-_camShake * .5, _camShake * .5), 0, room_height - camHeight)); // follow boss during intro, roughly
+			if(_boss.object_index != obj_bossMantis) { // mantis does it's own control
+				var _camGoalX = _boss.x - camWidth / 2;
+				var _camGoalY = _boss.y - camHeight / 2 + 60;
+				var _camShake = array_get([0, .7, 1, 1.25, 1.8], global.gameScreenShakeSelected) * camShake;
+				camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .05) + irandom_range(-_camShake, _camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .05) + irandom_range(-_camShake * .5, _camShake * .5), 0, room_height - camHeight)); // follow boss during intro, roughly
+			}
 		}
+	}
+}
+
+if(global.musicActualPlaying != -1) {
+	if(audio_sound_get_gain(global.musicActualPlaying) <= .06) {
+		audio_stop_sound(global.musicActualPlaying);
+		global.musicActualPlaying = -1;
 	}
 }
 
@@ -97,6 +119,6 @@ if(_song != -1) {
 			global.musicPlaying = snd_mantisSongLoop;
 		}
 	
-		audio_play_sound(global.musicPlaying, 10, true);
+		global.musicActualPlaying = audio_play_sound(global.musicPlaying, 10, true);
 	}
 }

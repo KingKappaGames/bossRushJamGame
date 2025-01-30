@@ -19,8 +19,13 @@ if(player != noone) {
 	}
 }
 
-x = clamp(x + xChange * frozenSpeedMult, 0, room_width);
-y = clamp(y + yChange * frozenSpeedMult, 0, room_height);
+if(state == "intro") {
+	x = x + xChange;
+	y = y + yChange;
+} else {
+	x = clamp(x + xChange * frozenSpeedMult, 15, room_width - 15);
+	y = clamp(y + yChange * frozenSpeedMult, 40, room_height - 40);
+}
 
 xChange *= speedDecay;
 yChange *= speedDecay;

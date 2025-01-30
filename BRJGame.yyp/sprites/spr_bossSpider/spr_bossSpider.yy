@@ -1,7 +1,7 @@
 {
   "$GMSprite":"",
   "%Name":"spr_bossSpider",
-  "bboxMode":0,
+  "bboxMode":2,
   "bbox_bottom":65,
   "bbox_left":23,
   "bbox_right":82,

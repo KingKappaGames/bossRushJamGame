@@ -136,9 +136,10 @@ if(stateType == "idle") {
 		//?
 		if(stateTimer < 120) {
 			if(stateTimer < 60) {
-				if(global.musicPlaying == -1) {
-					global.musicPlaying = snd_rollerSongInitial;
-					audio_play_sound(global.musicPlaying, 100, 0);
+				if(!audio_is_playing(snd_spiderSongInitial)) {
+					audio_stop_sound(global.musicActualPlaying);
+					global.musicPlaying = snd_spiderSongInitial;
+					global.musicActualPlaying = audio_play_sound(global.musicPlaying, 100, 0);
 				}
 			}
 			xChange = 0;
@@ -151,7 +152,7 @@ if(stateType == "idle") {
 	}
 } else if(stateType == "cast") {
 	
-	y += dsin(current_time * 1.5) * 1.2 - .25;
+	y += dsin(current_time * 1.5) * 1.2;
 	
 	if(stateTimer % (26 - global.gameDifficultySelected * 2) == 0) {
 		var _speed = random_range(3, 9.5);

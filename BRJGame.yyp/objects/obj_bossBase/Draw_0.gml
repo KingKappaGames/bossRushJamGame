@@ -1,5 +1,4 @@
 shader_set(shd_greyScale);
-show_debug_message(frozenSpeedMult)
 shader_set_uniform_f((shader_get_uniform(shd_greyScale, "u_GrayscaleAmount")), clamp((1 - frozenSpeedMult) * 2, 0, 1));
 
 draw_sprite_ext(sprite_index, image_index, x, y, image_xscale * directionFacing, image_yscale, image_angle, make_color_rgb(255, 255 * (Health / HealthMax), 255 * (Health / HealthMax)), 1);

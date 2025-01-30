@@ -1,29 +1,16 @@
+if(textBlurFadeX < room_width + 5) {
+	draw_sprite_ext(spr_sideBarMenu, 0, textBlurFadeX, 0, 1.25, 1, 0, c_white, 1);
+}
+
 if(optionGroup == 4) { // custom draw groups
 	draw_sprite(spr_controlDiagram, 0, x, y);
 } else if(optionGroup == 2) {
-	draw_sprite_ext(spr_optionMeter, gameEffectVolume, x + 114, y - 141, 2.5, 2.5, 0, c_white, 1);
-	draw_sprite_ext(spr_optionMeter, gameMusicVolume, x + 114, y - 65, 2.5, 2.5, 0, c_white, 1);
+	draw_sprite_ext(spr_optionMeter, gameEffectVolume, x + 320, y - 141, 2.5, 2.5, 0, c_white, 1);
+	draw_sprite_ext(spr_optionMeter, gameMusicVolume, x + 320, y - 65, 2.5, 2.5, 0, c_white, 1);
 } else if(optionGroup == 3) {
 	
 } else if(optionGroup == 5) {
 	
-}
-
-wheelAngle = (wheelAngle + wheelSpinSpeed) % 360;
-var _bossWheelCount = array_length(wheelMembers);
-var _drawAngle = wheelAngle;
-for(var _bossI = 0; _bossI < _bossWheelCount; _bossI++) {
-	var _sin = dsin(_drawAngle);
-	var _drawCenterness = .67 + _sin / 3;
-	if(global.boss_selected == _bossI) {
-		draw_sprite_ext(wheelSprites[_bossI], 0, wheelCenterX + dcos(_drawAngle) * wheelWidth, wheelCenterY - _sin * wheelWidth, _drawCenterness * 5, _drawCenterness * 5, 0, make_color_rgb(127 + _drawCenterness * 128, 127 + _drawCenterness * 128, 127 + _drawCenterness * 128), 1);
-	} else {
-		shader_set(shd_greyScale);
-		shader_set_uniform_f((shader_get_uniform(shd_greyScale, "u_GrayscaleAmount")), 1);
-		draw_sprite_ext(wheelSprites[_bossI], 0, wheelCenterX + dcos(_drawAngle) * wheelWidth, wheelCenterY - _sin * wheelWidth, _drawCenterness * 5, _drawCenterness * 5, 0, make_color_rgb(_drawCenterness * 255, _drawCenterness * 255, _drawCenterness * 255), 1);
-		shader_reset();
-	}
-	_drawAngle += 360 / _bossWheelCount;
 }
 
 //if(optionGroup == 0) {

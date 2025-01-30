@@ -102,5 +102,20 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		speedDecay = 1;
 		xChange = 0;
 		yChange = .62;
+	} else if(stateGoal == "slam") {
+		stateType = "attack";
+		
+		speedDecay = .9;
+		
+		xChange = dcos(dirToPlayer) * 1.5;
+		yChange = -dsin(dirToPlayer) * 1.5;
+		
+		attackHit = false;
+		
+		attackTimings = [   [[.65, .75], 50, 50, -60, 0, [10, 0, 0, 120]]  ];
+	} else if(stateGoal == "follow") {
+		stateType = "move";
+		
+		speedDecay = .85;
 	}
 }

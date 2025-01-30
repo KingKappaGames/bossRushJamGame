@@ -12,8 +12,17 @@ if(!global.is_paused) {
 	draw_set_halign(fa_left);
 }
 
-
-draw_text_transformed(view_wport[0] / 2, view_hport[0] / 10 + 100, gameState, 3.5, 3.5, 0);
+if(room == rm_Main_Menu) {
+	if(global.boss_selected > -1) {
+		var _halign = draw_get_halign();
+		var _bossName = array_get(["spider", "praying mantis", "rollie"], global.boss_selected);
+		draw_set_halign(fa_left);
+		draw_sprite_ext(spr_textBlurBG, 0, view_wport[0] * -.05, view_hport[0] * -.05, string_width(_bossName) / sprite_get_width(spr_textBlurBG) + 2, 3, 0, c_white, 1);
+		draw_text_transformed(view_wport[0] * .04, view_hport[0] * .03, _bossName, 1.2, 1.2, 0);
+		draw_set_halign(_halign);
+	}
+}
+//draw_text_transformed(view_wport[0] / 2, view_hport[0] / 10 + 100, global.musicActualPlaying, 3.5, 3.5, 0);
 
 /* // version using room coords...
 if(gameState == "gameOver") {

@@ -38,7 +38,7 @@ if(state == "idle") {
 	} else {
 		var _dirFromCenter = point_direction(spinCenterX, spinCenterY, x, y);
 		
-		if(abs(angle_difference(spinLastAngleOrb, _dirFromCenter)) > 1200 / spinDist) { // well... this basically creates an orb web every few degrees of travel but more on bigger circles becauese bigger circle = more distance per angle traveleed.... Don't ask me to be reasonable
+		if(abs(angle_difference(spinLastAngleOrb, _dirFromCenter)) > 2100 / spinDist) { // well... this basically creates an orb web every few degrees of travel but more on bigger circles becauese bigger circle = more distance per angle traveleed.... Don't ask me to be reasonable
 			var _orb = instance_create_layer(x, y, "Instances", obj_webOrb);
 			if(instance_exists(spinLastOrbId)) {
 				_orb.linkOrb(spinLastOrbId);
@@ -93,11 +93,13 @@ if(state == "idle") {
 			setState("knock", 25);
 		}
 	}
+} else if(state == "squish") {
+	// haha you are squish
 }
 
 if(global.gameManager.gameState == "fight") {
 	x = clamp(x + xChange, 0, room_width);
-	y = clamp(y + yChange, 0, room_height);
+	y = clamp(y + yChange, 60, room_height - 60);
 } else {
 	repeat(10) {
 		part_particles_create(underSys, irandom_range(room_width * 1.7, room_width * 2), irandom(room_height), waterParts, 1);
@@ -107,7 +109,7 @@ if(global.gameManager.gameState == "fight") {
 		//don't flip with sailing
 	} else { // other times...
 		
-		x = clamp(x + xChange, -room_width * .72, room_width * 1.76); // how wide is continued area?
+		x = clamp(x + xChange, -room_width * .71, room_width * 1.755); // how wide is continued area?
 	
 		if(abs(y - room_height / 2) > 50) { // the middle path in the rooma
 			if(x > room_width) {
@@ -118,7 +120,7 @@ if(global.gameManager.gameState == "fight") {
 		}
 	
 		if(x <= room_width + 1 && x >= 0) { // if in extra area
-			y = clamp(y + yChange, 0, room_height);
+			y = clamp(y + yChange, 50, room_height - 30);
 		} else {
 			y = clamp(y + yChange, room_height / 2 - 49, room_height / 2 + 49);
 		}
@@ -128,7 +130,9 @@ if(global.gameManager.gameState == "fight") {
 if(state != "jump") {
 	//var _anglePushSpiderDirection = angle_difference(point_direction(0, 0, xChange, yChange), directionFacing);
 	if(state != "jump" && state != "knock") {
-		image_angle += angle_difference(point_direction(0, 0, xChange, yChange), image_angle) / 10;
+		if(abs(xChange) + abs(yChange) > .1) {
+			image_angle += angle_difference(point_direction(0, 0, xChange, yChange), image_angle) / 10;
+		}
 	} else if(state == "knock") {
 		image_angle += 10;
 	}
@@ -159,7 +163,7 @@ if(hitColorTimer > 0) {
 
 highlightHealth = lerp(highlightHealth, Health, .035);
 
-if(state != "dead" && state != "sail") {
+if(state != "dead" && state != "sail" && state != "squish") {
 	if(mouse_check_button_released(mb_left)) {
 		var _heldOrbType = obj_orbParent;
 		if(instance_exists(orbLinkFromId)) {
@@ -195,9 +199,11 @@ if(state != "dead" && state != "sail") {
 
 	var _bulletNearest = instance_nearest(x, y, obj_bullet);
 	if(_bulletNearest != noone) {
-		if(point_distance(x, y, _bulletNearest.x, _bulletNearest.y) < 12) { // 12 is just player width plus a little
-			takeHit(_bulletNearest.damage, 1, point_direction(_bulletNearest.x, _bulletNearest.y, x, y), 25); // random stuff related to combat that doesn't need to run while sailing...
-			_bulletNearest.hit();
+		if(_bulletNearest.flying) {
+			if(point_distance(x, y, _bulletNearest.x, _bulletNearest.y) < _bulletNearest.hitRadius) { // 12 is just player width plus a little
+				takeHit(_bulletNearest.damage, 1, point_direction(_bulletNearest.x, _bulletNearest.y, x, y), 25); // random stuff related to combat that doesn't need to run while sailing...
+				_bulletNearest.hit();
+			}
 		}
 	}
 
@@ -207,7 +213,7 @@ if(state != "dead" && state != "sail") {
 }
 
 #region leg stuff
-if(state != "dead") {
+if(state != "dead" && state != "squish") {
 	var _legPos = 0;
 	var _legPosGoal = 0;
 	var _legOrigin = 0;
@@ -220,8 +226,8 @@ if(state != "dead") {
 		_legOrigin[0] = x + dcos(_legAngle) * 7;
 		_legOrigin[1] = y - dsin(_legAngle) * 7;
 	
-		var _goalX = _legOrigin[0] + dcos(_legAngle) * legStepDist + clamp((x - xprevious) * 15, -60, 60);
-		var _goalY = _legOrigin[1] - dsin(_legAngle) * legStepDist + clamp((y - yprevious) * 15, -60, 60); // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
+		var _goalX = _legOrigin[0] + dcos(_legAngle + random_range(-9, 9)) * legStepDist * random_range(.75, 1.25) + clamp((x - xprevious) * 15, -60, 60);
+		var _goalY = _legOrigin[1] - dsin(_legAngle + random_range(-9, 9)) * legStepDist * random_range(.75, 1.25) + clamp((y - yprevious) * 15, -60, 60); // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
 	
 		var _legStepDist = point_distance(_goalX, _goalY, _legPos[0], _legPos[1]);
 		if(_legStepDist > legUpdateDistance || irandom(180) == 0) { // randly replace the step even if it's not out of range, this helps to center a stopped leg and also add random choice to the leg pattern

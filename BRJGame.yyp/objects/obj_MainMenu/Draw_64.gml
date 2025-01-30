@@ -7,7 +7,8 @@ for(var _iterator = 0; _iterator < optionAmount; _iterator++) {
 	if(_iterator == optionPosition) {
 		_textColor = c_yellow;
 	}
-	draw_text_transformed_color(_screenRight - 70, menuBorder + _iterator * optionHeight, options[optionGroup][_iterator], 2, 2.5, 0, _textColor, _textColor, _textColor, _textColor, 1);
+	
+	draw_text_transformed_color(_screenRight - 70, menuBorder + _iterator * optionHeight, options[optionGroup][_iterator], 1.2, 1.2, 0, _textColor, _textColor, _textColor, _textColor, 1);
 }
 
 if(optionGroup == 3) {
@@ -16,12 +17,15 @@ if(optionGroup == 3) {
 	if(window_get_fullscreen()) {
 		_fullscreenVar = "*";
 	}
-	draw_text_transformed(_screenRight - 624, 165, string(gameWindowResolutionOptions[gameWindowResolutionSelected][0]) + ", " + string(gameWindowResolutionOptions[gameWindowResolutionSelected][1]) + _fullscreenVar, 2, 2.5, 0);
-	draw_text_transformed(_screenRight - 624, 270, string(gameFullscreenDisplayOptions[gameFullscreenSelected]), 2, 2.5, 0);
+	
+	draw_set_font(fnt_menu);
+	draw_text_transformed(_screenRight - 454, 165, string(gameWindowResolutionOptions[gameWindowResolutionSelected][0]) + ", " + string(gameWindowResolutionOptions[gameWindowResolutionSelected][1]) + _fullscreenVar, 2.5, 2.5, 0);
+	draw_set_font(global.fontPixel);
+	draw_text_transformed(_screenRight - 454, 270, string(gameFullscreenDisplayOptions[gameFullscreenSelected]), 1.2, 1.2, 0);
 } else if(optionGroup == 5) {
 	draw_set_halign(fa_right)
-	draw_text_transformed(_screenRight - 624, 165, string(gameDifficultyDisplayOptions[gameDifficultySelected]), 2, 2.5, 0);
-	draw_text_transformed(_screenRight - 624, 270, string(gameScreenShakeDisplayOptions[gameScreenShakeSelected]), 2, 2.5, 0);
+	draw_text_transformed(_screenRight - 624, 165, string(gameDifficultyDisplayOptions[gameDifficultySelected]), 1.2, 1.2, 0);
+	draw_text_transformed(_screenRight - 624, 270, string(gameScreenShakeDisplayOptions[gameScreenShakeSelected]), 1.2, 1.2, 0);
 }
 
 draw_set_halign(fa_left); // default

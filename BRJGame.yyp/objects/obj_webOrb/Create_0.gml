@@ -14,6 +14,23 @@ linked = false;
 
 connections = [];
 
+snap = function(connection = -1) {
+	audio_play_sound(snd_webSnap, 0, 0);
+	
+	if(connection == -1) {
+		for(var _connections = array_length(connections) - 1; _connections >= 0; _connections--) {
+			script_severLink(id, connections[_connections][0]);
+		}
+		instance_destroy();
+	} else {
+		script_severLink(id, connections[connection][0]);
+	}
+	
+	if(array_length(connections) == 0) {
+		instance_destroy();
+	}
+}
+
 linkOrb = function(otherOrb) {
 	var _dist = point_distance(x, y, otherOrb.x, otherOrb.y);
 	

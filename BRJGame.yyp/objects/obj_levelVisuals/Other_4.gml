@@ -1,7 +1,7 @@
-if(image_index > 3) {
-	if(image_index == 9 || image_index == 7 || image_index == 4) {
-		wiggle = 2;
-	} else {
-		wiggle = 1;
-	}
+if(image_index > 5) {
+	wiggle = 1;
+}
+
+if(image_index == 0 || image_index == 1 || image_index == 9) {
+	wiggle = 2;
 }

@@ -5,6 +5,8 @@ if(instance_exists(global.player)) {
 			active = 0;
 			global.player.setState("idle");
 			global.gameManager.setGameState("prefight");
+			
+			interactionRange = 0; // cancel the boat..
 		}
 		
 		if(y > room_height + 80) {
@@ -37,8 +39,6 @@ if(instance_exists(global.player)) {
 				_feetPos[_i][1] += y - prevY;
 			}
 			
-			show_debug_message(x - xprevious)
-		
 			camera_set_view_pos(view_camera[0], x - camera_get_view_width(view_camera[0]) / 2, clamp(y - camera_get_view_height(view_camera[0]) / 2, 0, room_height - camera_get_view_height(view_camera[0])));
 		}
 		

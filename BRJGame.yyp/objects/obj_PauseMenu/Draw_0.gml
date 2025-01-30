@@ -9,10 +9,10 @@ if(surface_exists(pauseSurface)) {
 }
 
 if(optionGroup == 5) { // custom draw groups
-	draw_sprite(spr_controlDiagram, 0, x, y);
+	draw_sprite(spr_controlDiagram, 0, camera_get_view_x(view_camera[0]) + 17, camera_get_view_y(view_camera[0]) + 10);
 } else if(optionGroup == 2) {
-	draw_sprite_ext(spr_optionMeter, gameEffectVolume, camera_get_view_x(view_camera[0]) + 223, camera_get_view_y(view_camera[0]) + 44, 2.5 * (320 / 1366), 2.5 * (180 / 768), 0, c_white, 1);
-	draw_sprite_ext(spr_optionMeter, gameMusicVolume, camera_get_view_x(view_camera[0]) + 223, camera_get_view_y(view_camera[0]) + 70, 2.5 * (320 / 1366), 2.5 * (180 / 768), 0, c_white, 1);
+	draw_sprite_ext(spr_optionMeter, gameEffectVolume, camera_get_view_x(view_camera[0]) + 295, camera_get_view_y(view_camera[0]) + 44, 2.5 * (480 / 1366), 2.5 * (270 / 768), 0, c_white, 1);
+	draw_sprite_ext(spr_optionMeter, gameMusicVolume, camera_get_view_x(view_camera[0]) + 295, camera_get_view_y(view_camera[0]) + 70, 2.5 * (480 / 1366), 2.5 * (270 / 768), 0, c_white, 1);
 } else if(optionGroup == 3) {
 	
 } else if(optionGroup == 5) {

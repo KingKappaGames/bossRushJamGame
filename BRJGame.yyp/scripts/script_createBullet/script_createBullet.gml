@@ -3,6 +3,7 @@ function script_createBullet(damage, xx, yy, bulletDirection, bulletSpeed, hitsP
 	
 	_bullet.xChange = dcos(bulletDirection) * bulletSpeed;
 	_bullet.yChange = -dsin(bulletDirection) * bulletSpeed;
+	_bullet.currentSpeed = bulletSpeed;
 	_bullet.currentDirection = bulletDirection;
 	
 	_bullet.damage = damage;

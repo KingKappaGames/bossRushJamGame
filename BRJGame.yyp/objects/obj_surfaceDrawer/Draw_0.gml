@@ -1,3 +1,5 @@
 if(room != rm_Main_Menu) {
-	draw_surface(script_getDebrisSurface(), 0, 0);
+	if(surfaceType == 0) {
+		draw_surface(script_getDebrisSurface(), room_width * -.25, 0);
+	}
 }

@@ -1,5 +1,5 @@
 radius = 5;
-time = 30;
+time = 120;
 
 shape = "circle"; // circle, rectangle, line, quadRect
 

@@ -1,0 +1,1 @@
+show_debug_message($"Orb sticking: {global.bossStickingOrbs}")

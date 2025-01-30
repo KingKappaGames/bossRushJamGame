@@ -17,13 +17,13 @@ legStepDistances = array_create(8, 50);
 strafeDir = 1;
 
 for(var _i = 0; _i < 8; _i++) {
-	legPositions[_i][1] = -200;
+	legPositions[_i][1] = y;
 	legPositions[_i][0] = x;
 	
-	legPositionGoals[_i][1] = -200;
+	legPositionGoals[_i][1] = y;
 	legPositionGoals[_i][0] = x;
 	
-	legOrigins[_i][1] = -200;
+	legOrigins[_i][1] = y;
 	legOrigins[_i][0] = x;
 }
 

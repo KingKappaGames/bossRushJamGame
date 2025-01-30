@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"script_getFogSurface",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"script_getFogSurface",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

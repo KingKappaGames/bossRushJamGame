@@ -5,7 +5,7 @@ function script_pullAndBreakLinks(sourceOrb, previousOrb = noone){
 			var _dist = point_distance(_connectedOrb.x, _connectedOrb.y, sourceOrb.x, sourceOrb.y);
 			var _distMax = sourceOrb.connections[_linkI][1] * 1.25 + 15;
 			if(_dist > _distMax) { // distance max for this link
-				script_severLink(_connectedOrb, sourceOrb);
+				sourceOrb.snap(_linkI);
 			} else {
 				var _pullNormalRange = ((_distMax - 15) * .8);
 				var _overPullDist = _dist - _pullNormalRange;

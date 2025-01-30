@@ -31,8 +31,8 @@ yChange = 0;
 
 dirToPlayer = 0;
 directionFacing = 1;
-moveGoalX = 0;
-moveGoalY = 0;
+moveGoalX = 300;
+moveGoalY = 200;
 
 attackHit = false; // if the current attack has already landed on player
 
@@ -69,9 +69,6 @@ setStateCore = function(stateGoal, stateDuration) {
 
 
 setState = function(stateGoal, stateDuration = -1) {
-	
-	show_debug_message("RUNNING STATE SET")
-	
 	state = stateGoal;
 	stateTimer = stateDuration;
 	stateTimerMax = stateDuration;
