@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_rollerRumble",
+  "audioGroupId":{
+    "name":"ag_SFX",
+    "path":"audiogroups/ag_SFX",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":3.0,
+  "name":"snd_rollerRumble",
+  "parent":{
+    "name":"SFX",
+    "path":"folders/Sound/SFX.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_rollerRumble.wav",
+  "type":0,
+  "volume":1.0,
+}

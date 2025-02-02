@@ -1,6 +1,9 @@
 // placeholder
 global.boat = id;
 
+sys = global.partSys;
+splashPart = global.splashPart;
+
 depth = 1000; // ?
 
 active = 0;

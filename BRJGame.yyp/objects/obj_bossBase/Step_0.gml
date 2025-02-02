@@ -30,8 +30,8 @@ if(state == "intro") {
 xChange *= speedDecay;
 yChange *= speedDecay;
 
-if(frozenSpeedMult < .98) { // cut off for mathing and draw
-	frozenSpeedMult = 1 - (1 - frozenSpeedMult) * .997;
+if(frozenSpeedMult < .99) { // cut off for mathing and draw
+	frozenSpeedMult = 1 - (1 - frozenSpeedMult) * .999;
 } else {
 	frozenSpeedMult = 1;
 }

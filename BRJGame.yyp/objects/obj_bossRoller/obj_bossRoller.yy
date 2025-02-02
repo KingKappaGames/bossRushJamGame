@@ -36,8 +36,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_rollieForwardStand",
-    "path":"sprites/spr_rollieForwardStand/spr_rollieForwardStand.yy",
+    "name":"spr_rollieForwardCrawl",
+    "path":"sprites/spr_rollieForwardCrawl/spr_rollieForwardCrawl.yy",
   },
   "spriteMaskId":null,
   "visible":true,

@@ -1,5 +1,10 @@
 event_inherited();
 
+cloneBurstParts = global.cloneBurstParts;
+swordTrail = global.swordParts;
+
+part_type_color_mix(global.projectileTrail, #bbbbbb, #777777); // this shouldn't matter unless it's the second time this boss is being faught, on death it overrides the pt color to make it green but it can't undo that before it dies so the next user (this id now) will simply reset before the fight
+
 headFacing = 1;
 
 HealthMax = 40;
@@ -18,12 +23,25 @@ legStepDistances = array_create(4, 30);
 
 strafeDir = 1;
 
+shotsCooldown = 0;
+
 armSprite = -1;
 armSwingStartTime = 0;
 armSwingEndTime = 0;
 
 backArmSwingAngle = 0;
 frontArmSwingAngle = 0;
+
+deathCamX = 0;
+deathCamY = 0;
+deathIntact = true;
+
+partSwingDir = 0;
+partSwingX = 0;
+partSwingY = 0;
+partJumpAngle = 0;
+
+extraMoveUsed = false;
 
 for(var _i = 0; _i < 4; _i++) {
 	legPositions[_i][1] = y;
@@ -50,12 +68,21 @@ for(var _i = 0; _i < 4; _i++) {
 //	}
 //}
 
-//die = function() {
-//	global.gameManager.setGameState("victory");
-//	//play death animation
-//	//clear or do other set up to level..?
-//	//endGame();
-//}
+die = function() {
+	if(state != "dead") {
+		audio_play_sound(snd_mantisRoar, 0, 0, 1.2);
+		
+		with(obj_cloneMantis) {
+			die();
+		}
+		
+		with(obj_slashWave) {
+			duration = 1; // end the projectiles
+		}
+		
+		setState("dead", 320);
+	}
+}
 
 ///@desc The state setting info specific to the boss of this kind, runs within setState that does the basic set up for all bosses (this is a basic way of doing script inheritance, not ideal but works well)
 setStateCore = function(stateGoal, stateDuration = -1) {
@@ -71,37 +98,18 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 			stateTimer = 0;
 			stateTimerMax = 0;
 		}
-	} else if(stateGoal == "spinAttack") {
-		stateType = "attack";
-		
-		speedDecay = .4;
-		
-		attackHit = false;
-		
-		attackTimings = [   [[.55, .95], 54, 44, 0, -10, [10, 12, 0, 120]]  ];
-	} else if(stateGoal == "rolling") {
-		stateType = "attack";
-		
-		speedDecay = 1;
-		
-		attackHit = false;
-		
-		attackTimings = [   [[.05, .95], 30, 30, 0, -8, [10, 9, 0, 120]]  ];
-	} else if(stateGoal == "chargingRoll") {
-		xChange = 0;
-		yChange = 0;
-		
-		speedDecay = .5;
-		
-		stateType = "charge";
 	} else if(stateGoal == "chargeCast") {
 		xChange = 0;
 		yChange = 0;
+		
+		audio_play_sound(snd_mantisRoar, 0, 0, .9);
 		
 		speedDecay = .5;
 		
 		stateType = "charge";
 	} else if(stateGoal == "cast") {
+		shotsCooldown = 360;
+		
 		directionFacing = 1;
 		if(dirToPlayer > 90 && dirToPlayer < 270) {
 			directionFacing = -1;
@@ -114,36 +122,38 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 	} else if(stateGoal == "dead") {
 		stateType = "dead";
 		
+		speedDecay = 0;
+		
 	} else if(stateGoal == "intro") {
 		stateType = "intro";
 		
 		stateTimer = 360; // force set this here since I can't specifiy lengths anywhere else more easily. Not ideal but this isn't main game, it doesn't need to be ideal
 		stateTimerMax = 360;
 		
+		audio_play_sound(snd_mantisRoar, 0, 0, .7);
+		
 		speedDecay = 0;
 		xChange = 0;
 		yChange = 0;
 	} else if(stateGoal == "slashBasic") {
-		directionFacing = 1;
-		if(dirToPlayer > 90 && dirToPlayer < 270) {
-			directionFacing = -1;
-		}
+		directionFacing = (dirToPlayer < 270 && dirToPlayer > 90) ? -1 : 1; // face the player!
 		
-		armSwingStartTime = current_time + 300;
-		armSwingEndTime = current_time + 800;
+		partSwingDir = dirToPlayer + 200;
+		partSwingX = x + dcos(dirToPlayer) * -18;
+		partSwingY = y - dsin(dirToPlayer) * -18;
 		
 		stateType = "attack";
 		
-		speedDecay = .85;
-		
-		xChange = dcos(dirToPlayer) * 2.5;
-		yChange = -dsin(dirToPlayer) * 2.5;
+		speedDecay = .92;
 		
 		attackHit = false;
+		extraMoveUsed = false;
 		
-		attackTimings = [   [[.25, .35], 30, 30, -40, 0, [8, 0, 0, 75]]  ];
+		attackTimings = [   [[.14, .22], 26, 26, abs(dcos(dirToPlayer)) * -40, dsin(dirToPlayer) * 40, [8, 0, 0, 75]]  ]; // place hitbox towards swing
 	} else if(stateGoal == "chase") {
 		stateType = "move";
+		
+		audio_play_sound(snd_mantisRoar, 0, 0, 1);
 		
 		xChange = dcos(dirToPlayer) * moveSpeed * 2.5;
 		yChange = -dsin(dirToPlayer) * moveSpeed * 2.5;

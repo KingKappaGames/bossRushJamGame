@@ -16,6 +16,8 @@ legStepDistances = array_create(8, 50);
 
 strafeDir = 1;
 
+biteCooldown = 0;
+
 for(var _i = 0; _i < 8; _i++) {
 	legPositions[_i][1] = y;
 	legPositions[_i][0] = x;
@@ -82,10 +84,14 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		
 		speedDecay = .7;
 		
+		biteCooldown = 360;
+		
 		attackHit = false;
-		attackTimings = [   [[.6, .95], 60, 60, 0, -8, [15, 0, 0, 120]]  ]; // bite (generalized attack for something that should be guaranteed..)
+		attackTimings = [   [[.6, .95], 60, 60, 0, -8, [12, 0, 0, 180]]  ]; // bite (generalized attack for something that should be guaranteed..)
 	} else if(stateGoal == "chase") { // charge towards player and land bite when close
 		stateType = "move";
+		
+		audio_play_sound(snd_spiderRoar, 0, 0, 1);
 		
 		speedDecay = .88;
 	} else if(stateGoal == "chargeCast") {
@@ -93,6 +99,8 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		yChange = 0;
 		
 		speedDecay = .5;
+		
+		audio_play_sound(snd_spiderRoar, 0, 0, .9);
 		
 		//sprite_index = spr_bossCharge;
 		//image_speed = (60 / stateTimer) * image_number;
@@ -104,6 +112,8 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		stateType = "cast";
 	} else if(stateGoal == "dead") {
 		stateType = "dead";
+		
+		audio_play_sound(snd_spiderRoar, 0, 0, .9);
 		
 		xChange = 0;
 		yChange = 0;
@@ -135,8 +145,10 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		
 		stateType = "move";
 		
-		stateTimer = 320; // force set this here since I can't specifiy lengths anywhere else more easily. Not ideal but this isn't main game, it doesn't need to be ideal
-		stateTimerMax = 320;
+		stateTimer = 350; // force set this here since I can't specifiy lengths anywhere else more easily. Not ideal but this isn't main game, it doesn't need to be ideal
+		stateTimerMax = 350;
+		
+		audio_play_sound(snd_spiderRoar, 0, 0, .72);
 		
 		speedDecay = 1;
 		xChange = 0;

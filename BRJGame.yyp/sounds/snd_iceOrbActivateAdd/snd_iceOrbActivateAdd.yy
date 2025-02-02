@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_iceOrbActivateAdd",
+  "audioGroupId":{
+    "name":"ag_SFX",
+    "path":"audiogroups/ag_SFX",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":1.828571,
+  "name":"snd_iceOrbActivateAdd",
+  "parent":{
+    "name":"SFX",
+    "path":"folders/Sound/SFX.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_iceOrbActivateAdd.mp3",
+  "type":0,
+  "volume":1.0,
+}

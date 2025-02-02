@@ -2,9 +2,7 @@ if(textBlurFadeX < room_width + 5) {
 	draw_sprite_ext(spr_sideBarMenu, 0, textBlurFadeX, 0, 1.25, 1, 0, c_white, 1);
 }
 
-if(optionGroup == 4) { // custom draw groups
-	draw_sprite(spr_controlDiagram, 0, x, y);
-} else if(optionGroup == 2) {
+if(optionGroup == 2) {
 	draw_sprite_ext(spr_optionMeter, gameEffectVolume, x + 320, y - 141, 2.5, 2.5, 0, c_white, 1);
 	draw_sprite_ext(spr_optionMeter, gameMusicVolume, x + 320, y - 65, 2.5, 2.5, 0, c_white, 1);
 } else if(optionGroup == 3) {

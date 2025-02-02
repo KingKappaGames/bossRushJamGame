@@ -1,16 +1,21 @@
 global.player = id;
 
+sys = global.partSys;
 underSys = global.partUnderSys;
 waterParts = global.waterPart;
 
+fluffPart = global.fluffPart;
+
 state = "idle"; // idle, jump, stun
 stateTimer = 0;
+stateTimerMax = 0; // eh
 
 HealthMax = 30;
 Health = HealthMax;
 highlightHealth = HealthMax;
 
 immunityFrames = 0;
+jumpCooldown = 0;
 
 image_index = 0;
 image_blend = c_white;
@@ -38,7 +43,7 @@ spinDist = 0;
 spinCenterX = 0;
 spinCenterY = 0;
 
-handDist = 54;
+handDist = 58;
 handX = 0;
 handY = 0;
 
@@ -70,40 +75,49 @@ for(var _i = 0; _i < 8; _i++) {
 #endregion
 
 takeHit = function(damage, knockback = 0, hitDirection = 0, immunityFramesSet = 0) {
-	if(immunityFrames <= 0) { // no immunity (ergo do hits and stuff)
-		var _damageExtraFromDifficulty = 1 - ((1 - global.gameDifficultySelected) * .25);
-		Health = clamp(Health - (damage * _damageExtraFromDifficulty), 0, HealthMax); // .75, 1, 1.25 for the three difficulties
-		part_particles_create_color(global.partSys, x, y, global.splatPart, #baff85, damage * _damageExtraFromDifficulty); 
+	if(Health > 0) {
+		if(immunityFrames <= 0) { // no immunity (ergo do hits and stuff)
+			audio_play_sound(snd_playerHit, 0, 0);
+			
+			var _damageExtraFromDifficulty = 1 - ((1 - global.gameDifficultySelected) * .25);
+			Health = clamp(Health - (damage * _damageExtraFromDifficulty), 0, HealthMax); // .75, 1, 1.25 for the three difficulties
+			part_particles_create_color(global.partSys, x, y, global.splatPart, #baff85, damage * _damageExtraFromDifficulty); 
 		
-		if(damage > 2) {
-			script_cameraShake(damage * (damage / 2));
+			if(damage > 2) {
+				script_cameraShake(damage * (damage / 2));
+			}
+		
+			immunityFrames = immunityFramesSet;
+	
+			image_blend = c_red;
+			hitColorTimer = 20;
+	
+			if(Health <= 0) {
+				die();
+			}
 		}
-		
-		immunityFrames = immunityFramesSet;
 	
-		image_blend = c_red;
-		hitColorTimer = 20;
-	
-		if(Health <= 0) {
-			die();
+		if(instance_exists(global.boss)) {
+			if(global.boss.state == "slam") {
+				setState("squish", 85);
+			}
 		}
-	}
 	
-	if(global.boss.state == "slam") {
-		setState("squish", 110);
-	}
-	
-	if(knockback != 0) {
-		xChange += dcos(hitDirection) * knockback;
-		yChange -= dsin(hitDirection) * knockback;
+		if(knockback != 0) {
+			xChange += dcos(hitDirection) * knockback;
+			yChange -= dsin(hitDirection) * knockback;
 		
-		if(knockback > 7) {
-			setState("knock", 55);
+			if(knockback > 7) {
+				setState("knock", 55);
+			}
 		}
 	}
 }
 
 die = function() {
+	with(obj_cloneMantis) {
+		die();
+	}
 	setState("dead");
 	global.gameManager.setGameState("gameOver");
 }
@@ -112,6 +126,7 @@ setState = function(stateSet, stateTimerSet = infinity) {
 	if(state == "dead") { exit; } // exit immediately if the player already dead, simple solution
 	state = stateSet;
 	stateTimer = stateTimerSet;
+	stateTimerMax = stateTimerSet;
 	
 	if(stateSet == "spin") {
 		spinLastOrbId = noone;
@@ -120,10 +135,13 @@ setState = function(stateSet, stateTimerSet = infinity) {
 		spinCenterY = mouse_y;
 		spinDist = point_distance(x, y, mouse_x, mouse_y);
 	} else if(stateSet == "jump") {
+		jumpCooldown = 40;
 		speedDecay = 1;
-		xChange =  dcos(directionToMouse) * 6.5;
-		yChange = -dsin(directionToMouse) * 6.5;
+		xChange =  dcos(directionToMouse) * 6.2;
+		yChange = -dsin(directionToMouse) * 6.2;
 		image_angle = directionToMouse;
+		
+		audio_play_sound(snd_jump, 0, 0);
 	} else if(stateSet == "knock") {
 		speedDecay = .92;
 	} else if(stateSet == "dead" || stateSet == "squish") {

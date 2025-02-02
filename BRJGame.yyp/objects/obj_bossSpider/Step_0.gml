@@ -6,8 +6,8 @@ var _stuckMoveMultiplier = clamp(1 - global.bossStickingOrbs / 10, .1, 1);
 if(stateType == "idle") {
 	var _moveDir = point_direction(x, y, moveGoalX, moveGoalY);
 	
-	xChange += dcos(_moveDir) * moveSpeed  * _stuckMoveMultiplier;
-	yChange += -dsin(_moveDir) * moveSpeed * _stuckMoveMultiplier; // with at speed but also move slower the more stuck you are in webs
+	xChange += dcos(_moveDir) * moveSpeed * .85 * _stuckMoveMultiplier;
+	yChange += -dsin(_moveDir) * moveSpeed * .85 * _stuckMoveMultiplier; // with at speed but also move slower the more stuck you are in webs
 	
 	var _goalDist = point_distance(x, y, moveGoalX, moveGoalY);
 	if(_goalDist < 40) {
@@ -20,7 +20,7 @@ if(stateType == "idle") {
 	if(player != noone) {
 		var _playerDist = point_distance(x, y, player.x, player.y);
 		 if(_playerDist < 40) {
-			if(irandom(75) == 0) { // random chance to bite attack when very close (change as you see fit)
+			if(biteCooldown <= 0 && irandom(75) == 0) { // random chance to bite attack when very close (change as you see fit)
 				setState("bite", 60);
 			}
 		} else if(_playerDist < 200) {
@@ -30,11 +30,11 @@ if(stateType == "idle") {
 			
 			if(irandom(1600) == 0) {
 				//random state with no conditions..?
-				setState("chargeCast", 130);
+				setState("chargeCast", 150 - global.gameDifficultySelected * 20);
 			}
 		} else if(_playerDist < 320) {
-			if(irandom(240) == 0) {
-				setState("chargeCast", 130);
+			if(irandom(280) == 0) {
+				setState("chargeCast", 150 - global.gameDifficultySelected * 20);
 			}
 		}
 	}
@@ -74,13 +74,19 @@ if(stateType == "idle") {
 	 if(state == "chase") {
 		image_angle += _stuckMoveMultiplier * angle_difference(dirToPlayer, image_angle) / 12; // target player
 		 
-		 var _speedMultFromDifficulty = array_get([.8, .99, 1.05], global.gameDifficultySelected); // get speeds from difficulty selection, that being said, the speed is very close to being too much so 1.03 is harder than 1 while .85 is quite easy
+		 var _speedMultFromDifficulty = array_get([.8, .98, 1.03], global.gameDifficultySelected); // get speeds from difficulty selection, that being said, the speed is very close to being too much so 1.03 is harder than 1 while .85 is quite easy
 		 
 		xChange += dcos(dirToPlayer) * moveSpeed * .8 * _stuckMoveMultiplier * _speedMultFromDifficulty;
 		yChange -= dsin(dirToPlayer) * moveSpeed * .8 * _stuckMoveMultiplier * _speedMultFromDifficulty;
 		
-		if(point_distance(x, y, player.x, player.y) < 45) {
+		if(biteCooldown <= 0 && point_distance(x, y, player.x, player.y) < 45) {
 			setState("bite", 90);
+		}
+		
+		with(obj_webOrb) {
+			if(irandom(480) == 0) {
+				snap();
+			}
 		}
 		
 		if(stateTimer <= 0) {
@@ -89,6 +95,9 @@ if(stateType == "idle") {
 	} else if(state == "strafe") {
 		if(irandom(300) == 0) {
 			strafeDir = choose(-1, 1);
+			if(!audio_is_playing(snd_spiderRoar)) {
+				audio_play_sound(snd_spiderRoar, 0, 0, .8);
+			}
 		}
 		
 		image_angle += _stuckMoveMultiplier * angle_difference(dirToPlayer, image_angle) / 14; // target player
@@ -100,15 +109,15 @@ if(stateType == "idle") {
 				setState("chase", 80); // pursue the player for bite
 			}
 			
-			xChange += dcos(dirToPlayer + 150 * strafeDir) * moveSpeed * .26 * _stuckMoveMultiplier;
-			yChange -= dsin(dirToPlayer + 150 * strafeDir) * moveSpeed * .26 * _stuckMoveMultiplier;
+			xChange += dcos(dirToPlayer + 150 * strafeDir) * moveSpeed * .21 * _stuckMoveMultiplier;
+			yChange -= dsin(dirToPlayer + 150 * strafeDir) * moveSpeed * .21 * _stuckMoveMultiplier;
 		} else if(_distToPlayer < 90) {
 			if(irandom(270) == 0) {
 				setState("chase", 120); // pursue the player for bite
 			}
 			
-			xChange += dcos(dirToPlayer + 105 * strafeDir) * moveSpeed * .13 * _stuckMoveMultiplier;
-			yChange -= dsin(dirToPlayer + 105 * strafeDir) * moveSpeed * .13 * _stuckMoveMultiplier;
+			xChange += dcos(dirToPlayer + 105 * strafeDir) * moveSpeed * .12 * _stuckMoveMultiplier;
+			yChange -= dsin(dirToPlayer + 105 * strafeDir) * moveSpeed * .12 * _stuckMoveMultiplier;
 		} else if(_distToPlayer < 170) {
 			if(irandom(370) == 0) {
 				setState("chase", 150); // pursue the player for bite
@@ -116,19 +125,19 @@ if(stateType == "idle") {
 				setState("chargeCast", 120); // pursue the player for bite
 			}
 			
-			xChange += dcos(dirToPlayer + 50 * strafeDir) * moveSpeed * .23 * _stuckMoveMultiplier;
-			yChange -= dsin(dirToPlayer + 50 * strafeDir) * moveSpeed * .23 * _stuckMoveMultiplier;
+			xChange += dcos(dirToPlayer + 50 * strafeDir) * moveSpeed * .2 * _stuckMoveMultiplier;
+			yChange -= dsin(dirToPlayer + 50 * strafeDir) * moveSpeed * .2 * _stuckMoveMultiplier;
 		} else if(_distToPlayer > 250) {
 			if(irandom(180) == 0) {
 				setState("idle");
-			} else if(irandom(300) == 0) {
+			} else if(irandom(320) == 0) {
 				setState("chargeCast", 130);
 			}
 		} else { // 170 - 250 ?
-			xChange += dcos(dirToPlayer + 50 * strafeDir) * moveSpeed * .38 * _stuckMoveMultiplier;
-			yChange -= dsin(dirToPlayer + 50 * strafeDir) * moveSpeed * .38 * _stuckMoveMultiplier;
+			xChange += dcos(dirToPlayer + 50 * strafeDir) * moveSpeed * .30 * _stuckMoveMultiplier;
+			yChange -= dsin(dirToPlayer + 50 * strafeDir) * moveSpeed * .30 * _stuckMoveMultiplier;
 			
-			 if(irandom(700) == 0) {
+			 if(irandom(750) == 0) {
 				setState("chargeCast", 120);
 			}
 		}
@@ -137,6 +146,7 @@ if(stateType == "idle") {
 		if(stateTimer < 120) {
 			if(stateTimer < 60) {
 				if(!audio_is_playing(snd_spiderSongInitial)) {
+					audio_play_sound(snd_spiderRoar, 0, 0, 1);
 					audio_stop_sound(global.musicActualPlaying);
 					global.musicPlaying = snd_spiderSongInitial;
 					global.musicActualPlaying = audio_play_sound(global.musicPlaying, 100, 0);
@@ -154,7 +164,7 @@ if(stateType == "idle") {
 	
 	y += dsin(current_time * 1.5) * 1.2;
 	
-	if(stateTimer % (26 - global.gameDifficultySelected * 2) == 0) {
+	if(stateTimer % (23 - global.gameDifficultySelected * 2) == 0) {
 		var _speed = random_range(3, 9.5);
 		var _dirToCenter = point_direction(x, y, room_width / 2, room_height / 2);
 		
@@ -164,6 +174,10 @@ if(stateType == "idle") {
 	if(stateTimer <= 0) {
 		setState("strafe");
 	}
+}
+
+if(biteCooldown > 0) {
+	biteCooldown--;
 }
 
 if(state != "dead" && state != "cast") {
@@ -187,6 +201,9 @@ if(state != "dead" && state != "cast") {
 			legStepDistances[_legI] = point_distance(_legPos[0], _legPos[1], _goalX, _goalY);
 			_legPosGoal[0] = _goalX;
 			_legPosGoal[1] = _goalY; // set the next step point to the goal positions
+			if(state == "intro") {
+				audio_play_sound(snd_thudStep, 0, 0);
+			}
 		}
 	
 		// moving the legs to the goals

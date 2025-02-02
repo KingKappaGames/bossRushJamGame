@@ -1,0 +1,1 @@
+instance_create_layer(x + irandom_range(-140, 140), y + irandom_range(-140, 140), "Instances", obj_bossSpider);

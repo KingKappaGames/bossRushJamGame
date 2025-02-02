@@ -45,6 +45,7 @@ hitGround = function(blocked = false) {
 	if(object_index == obj_bullet) {
 		if(_speed > .8) {
 			part_particles_create(sys, x, y, dustLittle, irandom_range(4, 12));
+			audio_play_sound(choose(snd_shotHit, snd_shotHit2), 0, 0);
 		}
 	}
 	

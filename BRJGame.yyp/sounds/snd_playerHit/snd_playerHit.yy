@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_playerHit",
+  "audioGroupId":{
+    "name":"ag_SFX",
+    "path":"audiogroups/ag_SFX",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":1.712,
+  "name":"snd_playerHit",
+  "parent":{
+    "name":"SFX",
+    "path":"folders/Sound/SFX.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_playerHit.wav",
+  "type":0,
+  "volume":0.6,
+}

@@ -6,19 +6,6 @@ if(!instance_exists(player)) {
 	dirToPlayer = point_direction(x, y, player.x, player.y);
 }
 
-if(player != noone) {
-	if(blockingLinksRef != 0) { // get web blocks
-		for(var _i = array_length(blockingLinksRef) - 1; _i >= 0; _i--) {
-			var _orbPair = blockingLinksRef[_i];
-			if(_orbPair[0].fakeOrb == false && _orbPair[1].fakeOrb == false) {
-				if(script_checkLineIntersectsLine(_orbPair[0].x, _orbPair[0].y, _orbPair[1].x, _orbPair[1].y, x - xChange * 2, y - yChange * 2, x + xChange * 2, y + yChange * 2, true) != 0) { // check all web links for collision with this boss and create fake collision point if so
-					die(); // dissapate when hit by web
-				}
-			}
-		}
-	}
-}
-
 x = clamp(x + xChange, 15, room_width - 15);
 y = clamp(y + yChange, 40, room_height - 40);
 
@@ -46,12 +33,26 @@ if(xChange > 0) { // face in direction you're moving (depends on the sprite art 
 _dirMoving = point_direction(0, 0, xChange, yChange);
 
 if(state == "slashBasic") {
-	x = lerp(x, player.x, .02);
-	y = lerp(y, player.y, .02); // lock tf on
-		
-	if(point_distance(x, y, player.x, player.y) < 27) {
-		x = player.x - dcos(dirToPlayer) * 27;
-		y = player.y + dsin(dirToPlayer) * 27;
+	if(stateTimer / stateTimerMax > .75) {
+		partJumpAngle = dirToPlayer;
+	} else if(stateTimer / stateTimerMax > .18) {
+		var _progress = 0;
+		repeat(36) {
+			part_particles_create_color(partSys, partSwingX + dcos(partSwingDir) * _progress + random_range(-7, 7), partSwingY - dsin(partSwingDir) * _progress + random_range(-7, 7), swordTrail, #bbffe0, 1);
+			_progress += 1.55;
+		}
+		if(stateTimer / stateTimerMax < .45) {
+			if(extraMoveUsed == false) {
+				xChange = dcos(partJumpAngle) * 5.8;
+				yChange = -dsin(partJumpAngle) * 5.8;
+				audio_play_sound(choose(snd_mantisSwing, snd_mantisSwing2), 0, 0, 1);
+				extraMoveUsed = true; // in this case extra move is speed, not a good way to do this but I don't care
+			}
+				
+			partSwingDir += 18.5;
+			partSwingX = lerp(partSwingX, x + dcos(partJumpAngle + 30) * 42, .3);
+			partSwingY = lerp(partSwingY, y - dsin(partJumpAngle + 30) * 42, .3);
+		}
 	}
 	
 	script_doHitboxCollisionsAndDamage();
@@ -60,6 +61,10 @@ if(state == "slashBasic") {
 		die();
 	}
 } else if(state == "chase") {
+	if(irandom(2) == 0) {
+		part_particles_create(partSys, x + 8 * directionFacing + irandom_range(-15, 15), y - 8 + irandom_range(-15, 15), fluff, 1);
+	}
+	
 	var _speedMultFromDifficulty = array_get([.8, .99, 1.05], global.gameDifficultySelected); // get speeds from difficulty selection, that being said, the speed is very close to being too much so 1.03 is harder than 1 while .85 is quite easy
 		 
 	xChange += dcos(dirToPlayer) * moveSpeed * 1 * _speedMultFromDifficulty;

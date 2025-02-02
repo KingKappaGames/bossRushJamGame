@@ -15,14 +15,13 @@ options[1][0] = "return";
 options[1][1] = "sounds";
 options[1][2] = "visuals";
 options[1][3] = "settings";
-options[1][4] = "controls";
 
 options[2][0] = "return";
 options[2][1] = "effects";
 options[2][2] = "music";
 
 options[3][0] = "return";
-options[3][1] = "screen";
+options[3][1] = "screen area";
 options[3][2] = "window";
 
 options[4][0] = "return";
@@ -44,29 +43,31 @@ textBlurFadeX = room_width;
 
 #region options
 //game settings
-global.gameDifficultySelected = 1;
-global.gameScreenShakeSelected = 2;
-global.gameWindowResolutionSelected = 2;
-global.gameFullscreenSelected = 0;
+if(!variable_global_exists("gameDifficultySelected")) { // only create globals once
+	global.gameDifficultySelected = 1;
+	global.gameScreenShakeSelected = 2;
+	global.gameWindowResolutionSelected = 2;
+	global.gameFullscreenSelected = 0;
 
-global.gameEffectVolume = 5;
-global.gameMusicVolume = 5;
+	global.gameEffectVolume = 5;
+	global.gameMusicVolume = 5;
 
-global.boss_selected = 0;
+	global.boss_selected = 0;
+}
 #endregion 
 
 x = room_width / 2 - menuWidth / 2;
 y = room_height / 2 - menuHeight / 2;
 
 //game settings in menu
-gameDifficultyDisplayOptions = ["hardnt", "normal", "hero"];
+gameDifficultyDisplayOptions = ["simple", "normal", "spinner"];
 gameDifficultySelected = global.gameDifficultySelected;
 
 gameScreenShakeDisplayOptions = ["none", "minimal", "default", "shakey", "awful"];
 gameScreenShakeSelected = global.gameScreenShakeSelected;
 
 gameWindowResolutionSelected = global.gameWindowResolutionSelected;
-gameWindowResolutionOptions = [[480, 270], [1280, 720], [1920, 1080], [2560, 1440]];
+gameWindowResolutionOptions = ["small", "medium", "large", "xl"];
 
 gameFullscreenSelected = global.gameFullscreenSelected;
 gameFullscreenOptions = [false, true];
@@ -77,7 +78,8 @@ gameMusicVolume = global.gameMusicVolume;
 
 #region initialize menu
 initializeMenu = function(){
-	window_set_size(gameWindowResolutionOptions[gameWindowResolutionSelected][0], gameWindowResolutionOptions[gameWindowResolutionSelected][1]);
+	var _rezSize = [[480, 270], [1280, 720], [1920, 1080], [2560, 1440]];
+	window_set_size(_rezSize[gameWindowResolutionSelected][0], _rezSize[gameWindowResolutionSelected][1]);
 	window_center();
 			
 	audio_group_set_gain(ag_SFX, gameEffectVolume / 10, 0);
@@ -101,7 +103,8 @@ menuChangeField = function(fieldChange){
 			if(optionPosition == 1) {
 				//change resolution
 				gameWindowResolutionSelected = clamp(gameWindowResolutionSelected + fieldChange, 0, 3);
-				window_set_size(gameWindowResolutionOptions[gameWindowResolutionSelected][0], gameWindowResolutionOptions[gameWindowResolutionSelected][1]);
+				var _rezSize = [[480, 270], [1280, 720], [1920, 1080], [2560, 1440]];
+				window_set_size(_rezSize[gameWindowResolutionSelected][0], _rezSize[gameWindowResolutionSelected][1]);
 				window_center();
 			} else if(optionPosition == 2) {
 				//change window configuration
@@ -135,7 +138,7 @@ menuSelectOption = function(){
 			menuSwitchOptionGroup(1);
 		} else if(optionPosition == 2) {
 			audio_play_sound(snd_menuBeep, 100, false);
-			//room_goto(rm_credits);
+			room_goto(rm_credits);
 		} else if(optionPosition == 3) {
 			game_end();
 		}
@@ -148,8 +151,6 @@ menuSelectOption = function(){
 			menuSwitchOptionGroup(3, 1);
 		} else if(optionPosition == 3) {
 			menuSwitchOptionGroup(5, 1);
-		} else if(optionPosition == 4) {
-			menuSwitchOptionGroup(4, 1);
 		}
 	} else if(optionGroup == 2) {
 		if(optionPosition == 0) {

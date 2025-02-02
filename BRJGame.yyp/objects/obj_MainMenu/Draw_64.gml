@@ -13,14 +13,8 @@ for(var _iterator = 0; _iterator < optionAmount; _iterator++) {
 
 if(optionGroup == 3) {
 	draw_set_halign(fa_right);
-	var _fullscreenVar = "";
-	if(window_get_fullscreen()) {
-		_fullscreenVar = "*";
-	}
 	
-	draw_set_font(fnt_menu);
-	draw_text_transformed(_screenRight - 454, 165, string(gameWindowResolutionOptions[gameWindowResolutionSelected][0]) + ", " + string(gameWindowResolutionOptions[gameWindowResolutionSelected][1]) + _fullscreenVar, 2.5, 2.5, 0);
-	draw_set_font(global.fontPixel);
+	draw_text_transformed(_screenRight - 740, 168, string(gameWindowResolutionOptions[gameWindowResolutionSelected]), 1.2, 1.2, 0);
 	draw_text_transformed(_screenRight - 454, 270, string(gameFullscreenDisplayOptions[gameFullscreenSelected]), 1.2, 1.2, 0);
 } else if(optionGroup == 5) {
 	draw_set_halign(fa_right)

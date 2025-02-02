@@ -1,1 +1,1 @@
-hit(HealthMax / 10);
+hit(HealthMax / 5);

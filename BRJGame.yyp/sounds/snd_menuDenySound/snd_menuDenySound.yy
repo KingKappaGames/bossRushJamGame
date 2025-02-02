@@ -12,8 +12,8 @@
   "duration":0.08229,
   "name":"snd_menuDenySound",
   "parent":{
-    "name":"SFX",
-    "path":"folders/Sound/SFX.yy",
+    "name":"menu",
+    "path":"folders/Sound/SFX/menu.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

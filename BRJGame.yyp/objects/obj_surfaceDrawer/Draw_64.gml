@@ -2,7 +2,7 @@ if(room != rm_Main_Menu) {
 	if(surfaceType == 1) {
 		var _fogSurf = script_getFogSurface();
 		
-		draw_set_alpha(.55);
+		draw_set_alpha(.48);
 		draw_surface(_fogSurf, 0, 0); 
 		draw_set_alpha(1);
 		

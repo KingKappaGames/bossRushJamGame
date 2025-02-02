@@ -7,6 +7,7 @@ if(instance_exists(global.player)) {
 			global.gameManager.setGameState("prefight");
 			
 			interactionRange = 0; // cancel the boat..
+			persistent = false;
 		}
 		
 		if(y > room_height + 80) {
@@ -29,6 +30,10 @@ if(instance_exists(global.player)) {
 		} else {
 			if(transitionTime > 0) {
 				transitionTime--;
+			}
+			
+			if(irandom(6) == 0) {
+				part_particles_create(sys, x + irandom_range(-32, 32), y + 35, splashPart, 1 + irandom(5));
 			}
 	
 			global.player.x = lerp(global.player.x, x, .05);

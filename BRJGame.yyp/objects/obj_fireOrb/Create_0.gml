@@ -15,6 +15,8 @@ linked = false;
 connections = [];
 
 linkOrb = function(otherOrb) {
+	audio_play_sound(snd_orbConnect, 0, 0);
+	
 	var _dist = point_distance(x, y, otherOrb.x, otherOrb.y);
 	
 	array_push(connections, [otherOrb, _dist]);
@@ -26,6 +28,9 @@ linkOrb = function(otherOrb) {
 	var _orbsRing = script_checkOrbLoop(id, id);
 	
 	if(_orbsRing != -1) {
+		
+		audio_play_sound(snd_fireOrbActivate, 1, 0);
+		audio_play_sound(snd_fireOrbActivateAdd, 0, 0);
 		
 		var _collisionPoints = [];
 		var _orb = noone;
@@ -47,6 +52,19 @@ linkOrb = function(otherOrb) {
 			if(script_pointInComplexPolygon(_boss.x, _boss.y, _collisionPoints)) {
 				var _damageExtraFromDifficulty = (2 - global.gameDifficultySelected) * 2.5;
 				_boss.hit(8 + _damageExtraFromDifficulty);
+			}
+		}
+		
+		var _explosionSys = global.partSys;
+		var _explosionPart = global.orbActiveParts;
+		var _xx = 0;
+		var _yy = 0;
+		
+		repeat(100) {
+			_xx = irandom(room_width);
+			_yy = irandom(room_height);
+			if(script_pointInComplexPolygon(_xx, _yy, _collisionPoints)) {
+				part_particles_create_color(_explosionSys, _xx, _yy, _explosionPart, c_orange, irandom_range(15, 30));
 			}
 		}
 	}

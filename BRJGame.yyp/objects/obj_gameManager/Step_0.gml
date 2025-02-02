@@ -53,6 +53,10 @@ if(!global.is_paused) {
 				global.musicPlaying = -1;
 			}
 		}
+		
+		if(!audio_is_playing(snd_treeWind)) {
+			audio_play_sound(snd_treeWind, 0, 0, random_range(.8, 1.2), 0, random_range(.95, 1.05));
+		}
 	} else if(gameState == "intro") {
 		gameStateTimer--;
 		if(gameStateTimer <= 0) {
@@ -72,7 +76,7 @@ if(!global.is_paused) {
 
 
 	camShake *= .98;
-
+	
 	if(gameState != "sail") {
 		if(gameState != "intro") {
 			var _player = instance_nearest(room_width / 2, room_height / 2, obj_player);
@@ -81,6 +85,13 @@ if(!global.is_paused) {
 				var _camGoalY = ((_player.y * 3 + mouse_y) / 4) - camHeight / 2;
 
 				if(_player.x > room_width || _player.x < 0) {
+					if(_player.x > room_width) {
+						if(!audio_is_playing(global.musicActualPlaying)) {
+							global.musicPlaying = snd_riverSongInitial;
+							global.musicActualPlaying = audio_play_sound(global.musicPlaying, 100, 0);
+						}
+					}
+					
 					_camGoalY = room_height / 2 - camHeight / 2 - 10; // set to middle of room if along extra area to water
 					camera_set_view_pos(view_camera[0], clamp(lerp(camera_get_view_x(view_camera[0]), _camGoalX, .04) + irandom_range(-camShake, camShake), -room_width, room_width * 2 - camWidth), clamp(lerp(camera_get_view_y(view_camera[0]), _camGoalY, .08) + irandom_range(-camShake * .5, camShake * .5), 0, room_height - camHeight));
 				} else { // in main fight area
@@ -117,8 +128,20 @@ if(_song != -1) {
 			global.musicPlaying = snd_spiderSongLoop;
 		} else if(_song == snd_mantisSongInitial) {
 			global.musicPlaying = snd_mantisSongLoop;
+		} else if(_song == snd_riverSongInitial) {
+			global.musicPlaying = snd_riverSongLoop;
 		}
 	
 		global.musicActualPlaying = audio_play_sound(global.musicPlaying, 10, true);
+	}
+}
+
+if(room == rm_credits) {
+	if(keyboard_check_released(vk_escape) || keyboard_check_released(vk_space) || keyboard_check_released(ord("E")) || mouse_check_button_released(mb_left)) {
+		keyboard_clear(vk_escape);
+		keyboard_clear(vk_space);
+		keyboard_clear(ord("E"));
+		mouse_clear(mb_left);
+		room_goto(rm_Main_Menu);
 	}
 }

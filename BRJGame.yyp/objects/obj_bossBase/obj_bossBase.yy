@@ -36,8 +36,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_bossIdle",
-    "path":"sprites/spr_bossIdle/spr_bossIdle.yy",
+    "name":"spr_rollerStand",
+    "path":"sprites/spr_rollerStand/spr_rollerStand.yy",
   },
   "spriteMaskId":null,
   "visible":true,

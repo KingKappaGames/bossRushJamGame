@@ -8,6 +8,8 @@ effectDuration = 180;
 effectAlpha = 1;
 beamWidth = 0;
 
+audio_play_sound(snd_teleportation, 0, 0, 1);
+
 augmentEffect = function(scaleSet = 1, timeScaleSet = 1, colorSet = c_white, alphaSet = 1, volume = 1) {
 	effectScale = scaleSet;
 	effectTimeScale = timeScaleSet;

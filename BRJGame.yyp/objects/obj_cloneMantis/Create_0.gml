@@ -1,8 +1,10 @@
 player = global.player;
 
-sys = global.partSys;
+partSys = global.partSys;
 
 cloneBurstParts = global.cloneBurstParts;
+fluff = global.fluffPart;
+swordTrail = global.swordParts;
 
 state = "idle";
 stateType = "idle";
@@ -40,9 +42,14 @@ legPositionGoals = array_create(4, 0);
 legOrigins = array_create(4, 0);
 legStepDistances = array_create(4, 30);
 
-armSprite = -1;
 armSwingStartTime = 0;
 armSwingEndTime = 0;
+
+partSwingDir = 0;
+partSwingX = 0;
+partSwingY = 0;
+partJumpAngle = 0;
+extraMoveUsed = false;
 
 backArmSwingAngle = 0;
 frontArmSwingAngle = 0;
@@ -66,8 +73,8 @@ hit = function(damage, knockback = 0, knockbackDir = 0, immunityFrames = 0) {
 die = function() {
 	
 	repeat(30) {
-		part_particles_create(sys, x + 8 * directionFacing + irandom_range(-15, 15), y - 8 + irandom_range(-15, 15), cloneBurstParts, 1);
-		part_particles_create(sys, x + 8 * directionFacing + irandom_range(-15, 15), y - 8 + irandom_range(-15, 15), global.fluffPart, 1);
+		part_particles_create(partSys, x + 8 * directionFacing + irandom_range(-15, 15), y - 8 + irandom_range(-15, 15), cloneBurstParts, 1);
+		part_particles_create(partSys, x + 8 * directionFacing + irandom_range(-15, 15), y - 8 + irandom_range(-15, 15), fluff, 1);
 	}
 	instance_destroy();
 	//play death animation
@@ -95,18 +102,23 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		
 		speedDecay = .85;
 	} else if(stateGoal == "slashBasic") {
-		armSwingStartTime = current_time + 300;
-		armSwingEndTime = current_time + 800;
+		directionFacing = (dirToPlayer < 270 && dirToPlayer > 90) ? -1 : 1; // face the player!
 		
-		speedDecay = .85;
+		partSwingDir = dirToPlayer + 200;
+		partSwingX = x + dcos(dirToPlayer) * -18;
+		partSwingY = y - dsin(dirToPlayer) * -18;
 		
-		xChange = dcos(dirToPlayer) * 2.5;
-		yChange = -dsin(dirToPlayer) * 2.5;
+		stateType = "attack";
+		
+		speedDecay = .92;
 		
 		attackHit = false;
+		extraMoveUsed = false;
 		
-		attackTimings = [   [[.25, .35], 30, 30, -40, 0, [8, 0, 0, 75]]  ];
+		attackTimings = [   [[.14, .22], 26, 26, abs(dcos(dirToPlayer)) * -40, dsin(dirToPlayer) * 40, [8, 0, 0, 75]]  ]; // place hitbox towards swing
 	}
 }
 
 setState("chase", 180);
+
+audio_play_sound(snd_cloneSummon, 0, 0);

@@ -8,6 +8,8 @@ function script_setPauseState(pauseState, storeScreen = 0){
 		part_system_automatic_update(global.partSys, true); //update every particle system with pause effect
 		part_system_automatic_draw(global.partUnderSys, true); //update every particle system with pause effect
 		part_system_automatic_update(global.partUnderSys, true); //update every particle system with pause effect
+		part_system_automatic_draw(global.partFloorSys, true); //update every particle system with pause effect
+		part_system_automatic_update(global.partFloorSys, true); //update every particle system with pause effect
 	} else if(pauseState == true) {
 		global.is_paused = true;
 		if(storeScreen == 1) {
@@ -32,5 +34,7 @@ function script_setPauseState(pauseState, storeScreen = 0){
 		part_system_automatic_update(global.partSys, false); //update every particle system with pause effect
 		part_system_automatic_draw(global.partUnderSys, false); //update every particle system with pause effect
 		part_system_automatic_update(global.partUnderSys, false); //update every particle system with pause effect
+		part_system_automatic_draw(global.partFloorSys, false); //update every particle system with pause effect
+		part_system_automatic_update(global.partFloorSys, false); //update every particle system with pause effect
 	}
 }

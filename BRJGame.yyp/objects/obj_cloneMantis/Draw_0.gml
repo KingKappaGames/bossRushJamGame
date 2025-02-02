@@ -38,16 +38,11 @@ for(var _legI = 0; _legI < 5; _legI++) {
 
 		draw_sprite_ext(sprite_index, 1, x + 19 * directionFacing, y - 29, image_xscale * headFacing, image_yscale, image_angle, c_white, 1);
 
-		var _armImage = 1;
-		if(state == "slashBasic") {
-			if(armSwingStartTime < current_time) {
-				_armImage = ((current_time - armSwingStartTime) / (armSwingEndTime - armSwingStartTime)) * (sprite_get_number(spr_mantisArms) - 2) + 1; // progression fraction
-			}
-		}
-		
 		var _frontAngle = dsin(current_time / 3) * 20;
-		
-		draw_sprite_ext(spr_mantisArms, _armImage, x + 14 * directionFacing, y - 10, image_xscale * directionFacing, image_yscale, _frontAngle, c_white, 1);
+
+		if(current_time < armSwingStartTime || current_time > armSwingEndTime) {
+			draw_sprite_ext(spr_mantisArms, 1, x + 14 * directionFacing, y - 10, image_xscale * directionFacing, image_yscale, _frontAngle, c_white, 1);
+		}
 	} else {
 	
 		_legPos = [legPositions[_legDrawI][0], legPositions[_legDrawI][1]]; // rebuild the array to break reference

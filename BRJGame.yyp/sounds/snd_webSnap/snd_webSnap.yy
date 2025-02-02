@@ -2,14 +2,14 @@
   "$GMSound":"",
   "%Name":"snd_webSnap",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"ag_SFX",
+    "path":"audiogroups/ag_SFX",
   },
   "bitDepth":1,
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":2.784,
+  "duration":0.187938,
   "name":"snd_webSnap",
   "parent":{
     "name":"SFX",
@@ -19,7 +19,7 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_webSnap.mp3",
+  "soundFile":"snd_webSnap.wav",
   "type":0,
   "volume":1.0,
 }

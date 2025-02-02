@@ -20,8 +20,12 @@ if(state == "idle") {
 		xChange += moveSpeed;
 	}
 
-	if(keyboard_check_released(vk_space)) {
-		setState("jump", 28);
+	if(jumpCooldown <= 0) {
+		if(keyboard_check_released(vk_space)) {
+			setState("jump", 23 - global.gameDifficultySelected); // game difficulty shortens jumps lol
+		}
+	} else {
+		jumpCooldown--;
 	}
 	
 	if(keyboard_check_pressed(vk_shift)) {		
@@ -31,6 +35,7 @@ if(state == "idle") {
 	if(keyboard_check_released(ord("E"))) {
 		var _orb = instance_create_layer(x, y, "Instances", array_get([obj_fireOrb, obj_webOrb, obj_iceOrb], orbSpawnType));
 		audio_play_sound(snd_orbPlaceHuff, 1, 0, 2);
+		part_particles_create_color(sys, x, y + 4, fluffPart, array_get([c_orange, c_ltgray, #00ffff], orbSpawnType), irandom_range(3, 6));
 	}
 } else if(state == "spin") {
 	if(keyboard_check_released(vk_shift)) {
@@ -76,7 +81,39 @@ if(state == "idle") {
 	x = lerp(x, introGoalX, .01);
 	y = lerp(y, introGoalY, .01);
 	image_angle += angle_difference(point_direction(xprevious, yprevious, x, y), image_angle) / 10;
-} else if(state == "jump") {
+} else if(state == "jump") {	
+	#region pull legs in
+	var _legPos = 0;
+	var _legPosGoal = 0;
+	var _legOrigin = 0;
+	var _legAngle = image_angle + 40;
+	
+	var _jumpHeight = 27 * dsin(180 * (stateTimer / stateTimerMax));
+	var _feetJumpHeight = 33 * dsin(180 * clamp(-.4 + (stateTimer / stateTimerMax) * 1.8, 0, 1));
+	
+	for(var _legI = 0; _legI < 8; _legI++) {
+		_legPos = legPositions[_legI];
+		_legPosGoal = legPositionGoals[_legI];
+		_legOrigin = legOrigins[_legI];
+	
+		_legOrigin[0] = x + dcos(_legAngle) * 7;
+		_legOrigin[1] = y - dsin(_legAngle) * 7 - _jumpHeight;
+	
+		var _goalX = _legOrigin[0] + dcos(_legAngle) * legStepDist;
+		var _goalY = _legOrigin[1] - dsin(_legAngle) * legStepDist;
+		
+		_legPosGoal[0] = _goalX;
+		_legPosGoal[1] = _goalY + _jumpHeight - _feetJumpHeight; // set the next step point to the goal positions
+		_legPos[0] = _goalX;
+		_legPos[1] = _goalY + _jumpHeight - _feetJumpHeight;
+	
+		_legAngle += 33; // add between 40 and 140
+		if(_legI == 3) {
+			_legAngle += 47; // flip from left set of legs to right, these values are all hard coded so no they won't be correct if you change things. Basically though it's 4 legs between 40 and 140 counter clockwise from the head direction then add 80 to do 4 legs 220 to 320
+		}
+	}
+	#endregion
+	
 	var _orb = instance_nearest(x, y, obj_orbParent);
 	if(instance_exists(_orb)) {
 		var _dist = point_distance(x, y, _orb.x, _orb.y);
@@ -93,6 +130,11 @@ if(state == "idle") {
 			setState("knock", 25);
 		}
 	}
+	
+	if(stateTimer <= 1) {
+		xChange *= .68;
+		yChange *= .68; // slow down before last frame to avoid leg pushing
+	}
 } else if(state == "squish") {
 	// haha you are squish
 }
@@ -101,8 +143,26 @@ if(global.gameManager.gameState == "fight") {
 	x = clamp(x + xChange, 0, room_width);
 	y = clamp(y + yChange, 60, room_height - 60);
 } else {
-	repeat(10) {
-		part_particles_create(underSys, irandom_range(room_width * 1.7, room_width * 2), irandom(room_height), waterParts, 1);
+	if(x < -room_width * .4 || x > room_width * 1.4) {
+		if(!audio_is_playing(snd_waves)) {
+			if(irandom(70) == 0) {
+				audio_play_sound(snd_waves, 0, 0);
+			}
+		}
+	}
+	
+	var _left = 0;
+	var _right = 0;
+	if(sign(x) == -1) {
+		_left = -room_width * 1.5;
+		_right = -room_width * .73;
+	} else {
+		_left = room_width * 1.73;
+		_right = room_width * 2.5;
+	}
+	
+	repeat(2) {
+		part_particles_create(underSys, irandom_range(_left, _right), irandom(room_height), waterParts, 1);
 	}
 	
 	if(global.gameManager.gameState == "sail") {
@@ -127,7 +187,7 @@ if(global.gameManager.gameState == "fight") {
 	}
 }
 
-if(state != "jump") {
+if(state != "jump") {		
 	//var _anglePushSpiderDirection = angle_difference(point_direction(0, 0, xChange, yChange), directionFacing);
 	if(state != "jump" && state != "knock") {
 		if(abs(xChange) + abs(yChange) > .1) {
@@ -206,14 +266,10 @@ if(state != "dead" && state != "sail" && state != "squish") {
 			}
 		}
 	}
-
-	if(keyboard_check_released(vk_backspace)) {
-		instance_create_layer(x, y -100, "Instances", obj_bossSpider);
-	}
 }
 
 #region leg stuff
-if(state != "dead" && state != "squish") {
+if(state != "dead" && state != "squish" && state != "jump") {
 	var _legPos = 0;
 	var _legPosGoal = 0;
 	var _legOrigin = 0;
@@ -223,16 +279,19 @@ if(state != "dead" && state != "squish") {
 		_legPosGoal = legPositionGoals[_legI];
 		_legOrigin = legOrigins[_legI];
 	
-		_legOrigin[0] = x + dcos(_legAngle) * 7;
-		_legOrigin[1] = y - dsin(_legAngle) * 7;
+		_legOrigin[0] = x + dcos(_legAngle) * 6;
+		_legOrigin[1] = y - dsin(_legAngle) * 6;
 	
-		var _goalX = _legOrigin[0] + dcos(_legAngle + random_range(-9, 9)) * legStepDist * random_range(.75, 1.25) + clamp((x - xprevious) * 15, -60, 60);
-		var _goalY = _legOrigin[1] - dsin(_legAngle + random_range(-9, 9)) * legStepDist * random_range(.75, 1.25) + clamp((y - yprevious) * 15, -60, 60); // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
+		var _goalX = _legOrigin[0] + dcos(_legAngle + random_range(-9, 9)) * legStepDist * random_range(.75, 1.25) + clamp((x - xprevious) * 15, -36, 36);
+		var _goalY = _legOrigin[1] - dsin(_legAngle + random_range(-9, 9)) * legStepDist * random_range(.75, 1.25) + clamp((y - yprevious) * 15, -36, 36); // move feet to neutral positions pushed ahead 20x the position change for step pathing improvement
 	
 		var _legStepDist = point_distance(_goalX, _goalY, _legPos[0], _legPos[1]);
 		if(_legStepDist > legUpdateDistance || irandom(180) == 0) { // randly replace the step even if it's not out of range, this helps to center a stopped leg and also add random choice to the leg pattern
 			_legPosGoal[0] = _goalX;
 			_legPosGoal[1] = _goalY; // set the next step point to the goal positions
+			if(irandom(1) == 0) { // it's a lot of steps so.. cut out half of them
+				audio_play_sound(snd_playerStep, 0, 0);
+			}
 		}
 	
 		// moving the legs to the goals

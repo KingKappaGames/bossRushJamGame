@@ -1,5 +1,9 @@
-shader_set(shd_greyScale);
-shader_set_uniform_f((shader_get_uniform(shd_greyScale, "u_GrayscaleAmount")), clamp((1 - frozenSpeedMult) * 2, 0, 1));
+if(!deathIntact) {
+	exit;
+}
+
+shader_set(shd_frozenHue);
+shader_set_uniform_f((shader_get_uniform(shd_frozenHue, "u_GrayscaleAmount")), clamp((1 - frozenSpeedMult) * 2, 0, 1));
 
 var _legPos = 0;
 var _legPosGoal = 0;
@@ -21,9 +25,6 @@ array_sort(_legOrder, function(elm1, elm2)
     return elm1[1] - elm2[1]; // sort the position array by position 1 (y value) (thus giving you a sorted list of which indexs go in what order
 });
 
-shader_set(shd_greyScale); // SET SHADER FOR GREY SCALE WHEN FROZEN
-shader_set_uniform_f((shader_get_uniform(shd_greyScale, "u_GrayscaleAmount")), clamp((1 - frozenSpeedMult) * 2, 0, 1)); // twice as greyscale'd as value
-
 var _healthColor = make_color_rgb(255, 255 * (Health / HealthMax), 255 * (Health / HealthMax));
 
 var _legDrawI = -1;
@@ -39,17 +40,12 @@ for(var _legI = 0; _legI < 5; _legI++) {
 		draw_sprite_ext(sprite_index, 0, x, y, image_xscale * directionFacing, image_yscale, image_angle, _healthColor, 1);
 
 		draw_sprite_ext(sprite_index, 1, x + 19 * directionFacing, y - 29, image_xscale * headFacing, image_yscale, image_angle, _healthColor, 1);
-
-		var _armImage = 1;
-		if(state == "slashBasic") {
-			if(armSwingStartTime < current_time) {
-				_armImage = ((current_time - armSwingStartTime) / (armSwingEndTime - armSwingStartTime)) * (sprite_get_number(spr_mantisArms) - 2) + 1; // progression fraction
-			}
-		}
 		
 		var _frontAngle = state == "cast" ? frontArmSwingAngle : dsin(current_time / 3) * 20;
 		
-		draw_sprite_ext(spr_mantisArms, _armImage, x + 14 * directionFacing, y - 10, image_xscale * directionFacing, image_yscale, _frontAngle, _healthColor, 1);
+		if(current_time < armSwingStartTime || current_time > armSwingEndTime) {
+			draw_sprite_ext(spr_mantisArms, 1, x + 14 * directionFacing, y - 10, image_xscale * directionFacing, image_yscale, _frontAngle, _healthColor, 1);
+		}
 	} else {
 	
 		_legPos = [legPositions[_legDrawI][0], legPositions[_legDrawI][1]]; // rebuild the array to break reference

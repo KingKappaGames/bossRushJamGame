@@ -1,3 +1,6 @@
+sys = global.partSys;
+webPart = global.webLineSnap;
+
 radius = 8;
 weight = 1;
 
@@ -18,12 +21,31 @@ snap = function(connection = -1) {
 	audio_play_sound(snd_webSnap, 0, 0);
 	
 	if(connection == -1) {
+		var _connected = noone;
 		for(var _connections = array_length(connections) - 1; _connections >= 0; _connections--) {
-			script_severLink(id, connections[_connections][0]);
+			_connected = connections[_connections][0];
+			
+			var _webDir = point_direction(x, y, _connected.x, _connected.y);
+			part_type_orientation(webPart, _webDir, _webDir, .2, 7, 0);
+			repeat(connections[_connections][1] / 10) {
+				var _lineProgress = random(1);
+				part_particles_create(sys, lerp(x, other.x, _lineProgress), lerp(y, other.y, _lineProgress), webPart, 1);
+			}
+			
+			script_severLink(id, _connected);
 		}
 		instance_destroy();
 	} else {
-		script_severLink(id, connections[connection][0]);
+		var _connected = connections[connection][0];
+		
+		var _webDir = point_direction(x, y, _connected.x, _connected.y);
+		part_type_orientation(webPart, _webDir, _webDir, .2, 7, 0);
+		repeat(connections[connection][1] / 14) {
+			var _lineProgress = random(1);
+			part_particles_create(sys, lerp(x, other.x, _lineProgress), lerp(y, other.y, _lineProgress), webPart, 1);
+		}
+		
+		script_severLink(id, _connected);
 	}
 	
 	if(array_length(connections) == 0) {

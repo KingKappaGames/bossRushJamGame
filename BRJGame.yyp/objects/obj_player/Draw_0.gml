@@ -3,7 +3,16 @@ if(immunityFrames > 0) {
 	_alphaFlash = .4 + round(current_time % 250 / 250) * .6; // flashing while immune
 }
 
-draw_sprite_ext(sprite_index, orbSpawnType, x, y, 1, 1, image_angle + 90, image_blend, image_alpha * _alphaFlash);
+var _jumpHeight = 0;
+var _feetJumpHeight = 0;
+if(stateTimerMax > 0) {
+	if(state == "jump") {
+		_jumpHeight = 21 * dsin(180 * (stateTimer / stateTimerMax));
+	}
+}
+	
+
+draw_sprite_ext(sprite_index, orbSpawnType, x, y - _jumpHeight, 1, 1, image_angle + 90, image_blend, image_alpha * _alphaFlash);
 draw_set_alpha(1);
 draw_set_color(c_white); // undo hit and immune visual effects
 

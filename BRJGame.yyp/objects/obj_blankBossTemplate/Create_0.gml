@@ -30,7 +30,7 @@ speedDecay = .8;
 ///@desc The state setting info specific to the boss of this kind, runs within setState that does the basic set up for all bosses (this is a basic way of doing script inheritance, not ideal but works well)
 setStateCore = function(stateGoal, stateDuration = -1) {
 	if(stateGoal == "idle") {
-		sprite_index = spr_bossIdle;
+		sprite_index = spr_rollerStand;
 		image_speed = 2;
 		stateType = "idle";
 		
@@ -51,7 +51,7 @@ setStateCore = function(stateGoal, stateDuration = -1) {
 		
 		attackTimings = [   [[.55, .95], 54, 44, 0, -10, [10, 12, 0, 120]]  ];
 	} else if(stateGoal == "rolling") {
-		sprite_index = spr_bossRoll;
+		sprite_index = spr_rollerRoll;
 		image_speed = 5;
 		stateType = "attack";
 		

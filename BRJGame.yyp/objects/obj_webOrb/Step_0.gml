@@ -7,6 +7,10 @@ if(fakeOrb) {
 		
 		script_pullAndBreakLinks(id);
 		
+		if(irandom(12000) == 0) {
+			snap();
+		}
+		
 		if(array_length(connections) == 0) {
 			instance_destroy();
 		}

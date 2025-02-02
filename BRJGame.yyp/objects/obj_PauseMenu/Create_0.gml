@@ -20,7 +20,7 @@ options[2][1] = "effects";
 options[2][2] = "music";
 				        
 options[3][0] = "return";
-options[3][1] = "screen";
+options[3][1] = "screen area";
 options[3][2] = "window";
 				         
 options[4][0] = "return";
@@ -39,31 +39,18 @@ menuAlign = fa_right;
 
 mouseSelecting = false;
 
-#region options
-//game settings
-global.gameDifficultySelected = 1;
-global.gameScreenShakeSelected = 2;
-global.gameWindowResolutionSelected = 2;
-global.gameFullscreenSelected = 0;
-
-global.gameEffectVolume = 5;
-global.gameMusicVolume = 5;
-
-global.boss_selected = 0;
-#endregion 
-
 pauseSurfaceBuffer = buffer_create(1920 * 1080 * 4, buffer_fixed, 1);
 pauseSurface = -1;
 
 //game settings in menu
-gameDifficultyDisplayOptions = ["hardnt", "normal", "spinner"];
+gameDifficultyDisplayOptions = ["simple", "normal", "spinner"];
 gameDifficultySelected = global.gameDifficultySelected;
 
 gameScreenShakeDisplayOptions = ["none", "minimal", "default", "shakey", "awful"];
 gameScreenShakeSelected = global.gameScreenShakeSelected;
 
 gameWindowResolutionSelected = global.gameWindowResolutionSelected;
-gameWindowResolutionOptions = [[480, 270], [1280, 720], [1920, 1080], [2560, 1440]];
+gameWindowResolutionOptions = ["small", "medium", "large", "xl"];
 
 gameFullscreenSelected = global.gameFullscreenSelected;
 gameFullscreenOptions = [false, true];
@@ -74,7 +61,8 @@ gameMusicVolume = global.gameMusicVolume;
 
 #region initialize menu
 initializeMenu = function(){
-	window_set_size(gameWindowResolutionOptions[gameWindowResolutionSelected][0], gameWindowResolutionOptions[gameWindowResolutionSelected][1]);
+	var _rezSize = [[480, 270], [1280, 720], [1920, 1080], [2560, 1440]];
+	window_set_size(_rezSize[gameWindowResolutionSelected][0], _rezSize[gameWindowResolutionSelected][1]);
 	window_center();
 			
 	audio_group_set_gain(ag_SFX, gameEffectVolume / 10, 0);
@@ -98,7 +86,8 @@ menuChangeField = function(fieldChange){
 			if(optionPosition == 1) {
 				//change resolution
 				gameWindowResolutionSelected = clamp(gameWindowResolutionSelected + fieldChange, 0, 3);
-				window_set_size(gameWindowResolutionOptions[gameWindowResolutionSelected][0], gameWindowResolutionOptions[gameWindowResolutionSelected][1]);
+				var _rezSize = [[480, 270], [1280, 720], [1920, 1080], [2560, 1440]];
+				window_set_size(_rezSize[gameWindowResolutionSelected][0], _rezSize[gameWindowResolutionSelected][1]);
 				window_center();
 			} else if(optionPosition == 2) {
 				//change window configuration

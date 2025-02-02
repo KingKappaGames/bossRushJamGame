@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"script_createSpeechBubble",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"script_createSpeechBubble",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

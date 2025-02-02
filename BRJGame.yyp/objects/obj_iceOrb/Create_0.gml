@@ -15,6 +15,8 @@ linked = false;
 connections = [];
 
 linkOrb = function(otherOrb) {
+	audio_play_sound(snd_orbConnect, 0, 0);
+	
 	var _dist = point_distance(x, y, otherOrb.x, otherOrb.y);
 	
 	array_push(connections, [otherOrb, _dist]);
@@ -26,6 +28,8 @@ linkOrb = function(otherOrb) {
 	var _orbsRing = script_checkOrbLoop(id, id);
 	
 	if(_orbsRing != -1) {
+		audio_play_sound(snd_iceOrbActivate, 1, 0);
+		audio_play_sound(snd_iceOrbActivateAdd, 0, 0);
 		
 		var _collisionPoints = [];
 		var _orb = noone;
@@ -50,11 +54,24 @@ linkOrb = function(otherOrb) {
 				_boss.frozenSpeedMult *= .3 - _damageExtraFromDifficulty / 10; // difficulty would make this .1, .2, .3 respectively, both lowering the slow and decreasing the time scale of the unthaw (which is proportional to freeze strength)
 			}
 		}
+		
+		var _explosionSys = global.partSys;
+		var _explosionPart = global.orbActiveParts;
+		var _xx = 0;
+		var _yy = 0;
+		
+		repeat(100) {
+			_xx = irandom(room_width);
+			_yy = irandom(room_height);
+			if(script_pointInComplexPolygon(_xx, _yy, _collisionPoints)) {
+				part_particles_create_color(_explosionSys, _xx, _yy, _explosionPart, #99ccff, irandom_range(15, 30));
+			}
+		}
 	}
 }
 
 activateOrb = function() {
-	part_particles_create_color(global.partSys, x, y, global.fluffPart, c_yellow, irandom_range(15, 30));
+	part_particles_create_color(global.partSys, x, y, global.fluffPart, #00ffff, irandom_range(15, 30));
 	
 	for(var _disconnectI = array_length(connections) - 1; _disconnectI >= 0; _disconnectI--) {
 		var _orb = connections[_disconnectI][0];

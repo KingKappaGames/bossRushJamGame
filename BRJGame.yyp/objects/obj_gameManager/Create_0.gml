@@ -5,8 +5,6 @@ if(instance_number(obj_gameManager) > 1) {
 
 depth = -2000;
 
-game_set_speed(60, gamespeed_fps);
-
 global.gameManager = id;
 global.boss = noone;
 
@@ -64,12 +62,21 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		bossSummon = (bossSummon + 1) % 3; // randomize future boss summon
 		_stateText = "You won!";
 		_stateTimer = 120;
+		
+		if(global.musicPlaying != -1) {
+			if(global.musicActualPlaying != -1) {
+				audio_sound_gain(global.musicActualPlaying, 0, 3000);
+				global.musicPlaying = -1;
+			}
+		}
 	} else if(state == "respawn") {
 		_stateText = "Click to respawn!";
 		_stateTimer = 0;
 	} else if(state == "moveZone") {
 		_stateText = "Go to the right to find the boat";
 		_stateTimer = 0;
+		
+		instance_create_layer(1136, 319, "Instances", obj_boat);
 	} else if(state == "sail") {
 		//... nothing for sailing
 	} else if(state == "intro") {
@@ -82,20 +89,23 @@ setGameState = function(state, timer = -1, titleText = 0) {
 		var _boss = -1;
 		if(bossSummon != -1) {
 			if(bossSummon == 2) {
-				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossRoller);
+				_boss = instance_create_layer(room_width / 2, -30, "Instances", obj_bossRoller);
 			} else if(bossSummon == 0) {
-				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossSpider);
+				_boss = instance_create_layer(room_width / 2, -60, "Instances", obj_bossSpider);
 			} else if(bossSummon == 1) {
 				_boss = instance_create_layer(room_width / 2, -200, "Instances", obj_bossMantis);
 			}
 		} else {
 			var _ind = irandom(2); // boss count
 			var _bossInd = array_get([obj_bossRoller, obj_bossSpider, obj_bossMantis], _ind);
+			var _bossY = array_get([-30, -60, -200], _ind);
 			_boss = instance_create_layer(room_width / 2, -200, "Instances", _bossInd);
 		}
 		_boss.setState("intro");
 	} else if(state == "prefight") {
-		
+		if(instance_exists(global.player)) {
+			global.player.Health = global.player.HealthMax; // heal the player between fights
+		}
 	}
 	
 	if(gameStateTimer != 0) {
@@ -114,7 +124,10 @@ global.partSys = part_system_create();
 part_system_depth(global.partSys, -1000); // at the front! I think...
 
 global.partUnderSys = part_system_create();
-part_system_depth(global.partUnderSys, 3001); // at the front! I think...
+part_system_depth(global.partUnderSys, 3001); // in front of the background barely
+
+global.partFloorSys = part_system_create();
+part_system_depth(global.partFloorSys, 2999); // in front of the background barely
 
 global.fluffPart = part_type_create();
 var _fluff = global.fluffPart;
@@ -178,7 +191,6 @@ part_type_alpha3(_quakeTrail, 1, .3, 0);
 part_type_direction(_quakeTrail, 0, 360, 0, 0);
 part_type_orientation(_quakeTrail, 0, 360, 0, 0, 0);
 part_type_speed(_quakeTrail, .2, .8, -.03, 0);
-//part_type_gravity(_quakeTrail, 130, .005);
 
 global.projectileTrail = part_type_create();
 var _trail = global.projectileTrail;
@@ -191,15 +203,24 @@ part_type_orientation(_trail, 0, 360, 0, 10, 0);
 part_type_color_mix(_trail, #bbbbbb, #777777); 
 part_type_alpha1(_trail, 1);
 
+global.swordParts = part_type_create();
+var _swordPart = global.swordParts;
+part_type_life(_swordPart, 38, 45);
+part_type_shape(_swordPart, pt_shape_square);
+part_type_size(_swordPart, .11, .17, 0, 0);
+part_type_orientation(_swordPart, 0, 360, 0, 10, 0);
+part_type_color_mix(_swordPart, #d6d6d6, #bfbfbf); 
+part_type_alpha2(_swordPart, 1, .2);
+
 global.waveArcTrail = part_type_create();
 var _waveTrail = global.waveArcTrail;
-part_type_life(_waveTrail, 38, 55);
+part_type_life(_waveTrail, 70, 100);
 part_type_shape(_waveTrail, pt_shape_line);
-part_type_size(_waveTrail, .08, .15, -.0012, 0);
+part_type_size(_waveTrail, .12, .19, -.0012, 0);
 part_type_speed(_waveTrail, 0, .1, -.01, 0);
 part_type_direction(_waveTrail, 0, 360, 0, 30);
 part_type_orientation(_waveTrail, 0, 360, 0, 10, 0);
-part_type_color2(_waveTrail, #ffffff, #bbbbbb); 
+part_type_color2(_waveTrail, #ffffbb, #dddd89); 
 part_type_alpha1(_waveTrail, 1);
 
 global.cloneBurstParts = part_type_create();
@@ -226,13 +247,18 @@ part_type_direction(_webLineSnap, 145, 145, 0, 0);
 part_type_orientation(_webLineSnap, 0, 0, 0, 10, 0);
 
 global.waterPart = part_type_create();
-var _water = global.waterPart;
-part_type_shape(_water, pt_shape_square);
-part_type_size(_water, .3, .5, -.005, 0);
-part_type_life(_water, 50, 75);
-part_type_alpha2(_water, 1, 0);
-part_type_direction(_water, 280, 290, 0, 15);
-part_type_speed(_water, .9, 1.1, -.01, 0);
+var _oceanPart = global.waterPart;
+part_type_sprite(_oceanPart, spr_pixelShineWater, 1, 1, 1);
+part_type_size(_oceanPart,.4,.4,-.002,.1);
+part_type_scale(_oceanPart,1,1);
+part_type_color2(_oceanPart, c_white, c_aqua );
+part_type_alpha1(_oceanPart,0.4);
+part_type_speed(_oceanPart,0,0,0,0);
+part_type_direction(_oceanPart,270,270,0,0);
+part_type_gravity(_oceanPart,0,270);
+part_type_orientation(_oceanPart,0,0,0,0,1);
+part_type_blend(_oceanPart, false);
+part_type_life(_oceanPart,100,200);
 
 var _splat = part_type_create();
 global.splatPart = _splat;
@@ -242,6 +268,27 @@ part_type_life(_splat, 35, 60);
 part_type_direction(_splat, 0, 360, 0, 0);
 part_type_speed(_splat, .1, 1.5, 0, 0);
 part_type_gravity(_splat, .01, 270);
+
+var _splash = part_type_create();
+global.splashPart = _splash;
+part_type_sprite(_oceanPart, spr_pixelShineWater, 1, 0, 1);
+part_type_color_mix(_oceanPart, c_white, #99dddd);
+part_type_size(_splash, 3, 5, -.03, 0);
+part_type_life(_splash, 20, 30);
+part_type_direction(_splash, -50, 230, 0, 0);
+part_type_speed(_splash, .1, .4, 0, 0);
+part_type_gravity(_splash, .06, 270);
+
+global.orbActiveParts = part_type_create();
+var _orbShimmer = global.orbActiveParts;
+part_type_shape(_orbShimmer, pt_shape_square);
+part_type_size(_orbShimmer, .23, .35, .004, 0);
+part_type_life(_orbShimmer, 40, 120);
+part_type_alpha3(_orbShimmer, .8, .2, 0);
+part_type_direction(_orbShimmer, 0, 360, 0, 0);
+part_type_speed(_orbShimmer, .3, 1.7, -.025, 0);
+part_type_color2(_orbShimmer, #ffffff, #999999);
+part_type_blend(_orbShimmer, true);
 
 #endregion
 
